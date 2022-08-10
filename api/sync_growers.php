@@ -92,7 +92,7 @@ if ($response==0) {
 
    }
 
-}else{
+}else if ($response==1){
 
 	$lat_long_sql = "INSERT INTO lat_long(userid,growerid,latitude,longitude,seasonid,created_at) VALUES ($userid,$growerid,'$lat','$long',$seasonid,'$created_at')";
 	   //$sql = "select * from login";

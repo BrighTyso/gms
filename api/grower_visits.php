@@ -39,7 +39,7 @@ $sqliteid=validate($_GET['sqliteid']);
 
 
 
-$sql = "Select * grower_visits join growers on grower_visits.growerid=growers.id where  growers.grower_num='$grower'  and grower_visits.description='$description'  and grower_visits.condition='$condition' and grower_visits.created_at='$created_at'";
+$sql = "Select grower_visits.id from grower_visits join growers on grower_visits.growerid=growers.id where  growers.grower_num='$grower'  and grower_visits.description='$description' and grower_visits.conditions='$condition' and grower_visits.created_at='$created_at'";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
