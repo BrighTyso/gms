@@ -1,0 +1,251 @@
+create table rights(
+id integer primary key auto_increment,
+description varchar(100) not null,
+notes varchar(100) not null
+);
+
+
+create table seasons(
+id integer primary key auto_increment,
+name varchar(100) not null,
+active integer not null default 1,
+created_at varchar(100) not null
+);
+
+
+
+create table users(
+
+id integer primary key auto_increment,
+name varchar(100) not null,
+surname varchar(100) not null,
+username varchar(100) not null,
+hash varchar(100) not null,
+rightsid integer not null,
+active integer not null default 1,
+access_code integer not null,
+created_at varchar(100) not null,
+foreign key(rightsid) references rights(id)
+
+);
+
+
+
+create table user_home(
+id integer primary key auto_increment,
+userid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id)
+);
+
+
+
+
+create table products(
+id integer primary key auto_increment,
+name varchar(100) not null,
+units varchar(100) not null
+);
+
+
+
+create table prices(
+id integer primary key auto_increment,
+userid integer not null,
+productid integer not null,
+amount double(100,2) not null default 0,
+seasonid integer not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(productid) references products(id)
+);
+
+
+create table growers(
+id integer primary key auto_increment,
+userid integer not null,
+name varchar(100) not null,
+surname varchar(100) not null,
+grower_num varchar(100),
+area varchar(100) not null,
+province varchar(100),
+phone varchar(100),
+id_num varchar(100) not null,
+seasonid integer not null,
+created_at varchar(100),
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table grower_profile(
+id integer primary key auto_increment,
+growerid integer not null,
+image blob not null,
+created_at varchar(100) not null
+);
+
+create table assessments(
+id integer primary key auto_increment,
+name varchar(100) not null
+);
+
+
+create table lat_long(
+id integer primary key auto_increment,
+userid integer not null ,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table grower_visits(
+id integer primary key auto_increment,
+userid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+description varchar(100) not null,
+conditions varchar(100) not null,
+other varchar(100) not null,
+seasonid integer not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+
+create table loans(
+id integer primary key auto_increment,
+userid integer not null,
+growerid integer not null,
+productid integer not null,
+quantity integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+verified integer default 0,
+processed integer default 0,
+processed_by integer default 0,
+processed_at varchar(100),
+verified_by integer default 0,
+verified_at varchar(100),
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id),
+foreign key(productid) references products(id)
+);
+
+
+
+create table con_loan(
+id integer primary key auto_increment,
+loanid integer not null,
+foreign key(loanid) references loans(id)
+);
+
+
+
+
+create table confirm_user(
+id integer primary key auto_increment,
+userid integer not null,
+confirmid integer not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(confirmid) references con_loan(id)
+);
+
+
+
+create table sod(
+id integer primary key auto_increment,
+userid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+time varchar(100) not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table road_blocks(
+id integer primary key auto_increment,
+userid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+time varchar(100) not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table eod(
+id integer primary key auto_increment,
+userid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+time varchar(100) not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table off_route(
+
+id integer primary key auto_increment,
+userid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+time varchar(100) not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+DELIMITER $$
+create trigger on_loan_verification
+after insert on con_loan
+for each row
+BEGIN
+ UPDATE loans SET verified = 1  WHERE id = NEW.loanid;
+END;
+$$
+DELIMITER ;
+
+
+
+insert into rights(description,notes) value("Admin","system administrator");
+
+
+
+
+
+

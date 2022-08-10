@@ -1,0 +1,799 @@
+
+
+class MyDatabaseHelper extends SQLiteOpenHelper{
+
+private Context context;
+private static final String DATABASE_NAME="gms.db";
+private static final int DATABASE_VERSION=1;
+
+
+// table names starting with TABLE then name
+
+ private static final int TABLE_GROWERS="growers";
+ private static final int TABLE_SEASONS="seasons";
+ private static final int TABLE_USERS="users";
+ private static final int TABLE_USER_HOME="user_home";
+ private static final int TABLE_PRODUCTS="products";
+ private static final int TABLE_GROWER_PROFILE="grower_profile";
+ private static final int TABLE_LAT_LONG="lat_long";
+ private static final int TABLE_GROWER_VISITS="grower_visits";
+ private static final int TABLE_LOANS="loans";
+ private static final int TABLE_SOD="sod";
+
+ private static final int TABLE_ROAD_BLOCKS="road_blocks";
+ private static final int TABLE_EOD="eod";
+ private static final int TABLE_OFF_ROUTE="off_route";
+
+
+    
+
+
+
+
+public MyDatabaseHelper(@Nullable Context context){
+	super(context,DATABASE_NAME , null,DATABASE_VERSION);
+    this.context=context;
+
+}
+
+public void onCreate(SQLiteDatabase db){
+
+
+
+
+String seasons_query="create table if not exists seasons(
+id integer not null,
+name varchar(100) not null,
+active integer not null default 1,
+created_at varchar(100) not null
+);";
+
+db.execSQL(seasons_query);
+
+
+
+String users_query="create table if not exists users(
+
+id integer not null,
+name varchar(100) not null,
+surname varchar(100) not null,
+username varchar(100) not null,
+hash varchar(100) not null,
+rightsid integer not null,
+active integer not null default 1,
+access_code integer not null,
+created_at varchar(100) not null
+
+);";
+
+db.execSQL(users_query);
+
+
+
+
+String growers_query="create table if not exists growers(
+id integer primary key autoIncrement,
+userid integer not null,
+name varchar(100) not null,
+surname varchar(100) not null,
+grower_num varchar(100),
+area varchar(100) not null,
+province varchar(100),
+phone varchar(100),
+id_num varchar(100) not null,
+seasonid integer not null,
+sync integer not null default 0,
+created_at varchar(100),
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+";
+
+db.execSQL(growers_query);
+
+
+
+String user_home_query="create table if not exists user_home(
+id integer primary key autoIncrement,
+userid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id)
+);";
+
+db.execSQL(user_home_query);	
+
+
+
+String products_query="create table if not exists products(
+id integer primary key autoIncrement,
+name varchar(100) not null,
+units varchar(100) not null
+);";
+
+db.execSQL(products_query);
+
+
+
+String grower_profile_query="create table if not exists grower_profile(
+id integer primary key autoIncrement,
+growerid integer not null,
+image blob not null,
+created_at varchar(100) not null
+);";
+
+db.execSQL(grower_profile_query);
+
+
+
+
+
+String grower_visits_query="create table if not exists grower_visits(
+id integer primary key autoIncrement,
+userid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+description varchar(100) not null,
+conditions varchar(100) not null,
+other varchar(100) not null,
+seasonid integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);";
+
+
+
+db.execSQL(grower_visits_query);
+
+
+String lat_long_query="create table if not exists lat_long(
+id integer primary key autoIncrement,
+userid integer not null ,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);";
+
+db.execSQL(lat_long_query);
+
+
+
+String loans_query="create table if not exists loans(
+id integer primary key autoIncrement,
+userid integer not null,
+growerid integer not null,
+productid integer not null,
+quantity integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id),
+foreign key(productid) references products(id)
+);";
+
+db.execSQL(loans_query);
+
+
+
+
+String sod_query="create table if not exists sod(
+id integer primary key autoIncrement,
+userid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+time varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);";
+
+
+db.execSQL(sod_query);
+
+
+
+String road_blocks_query="create table if not exists road_blocks(
+id integer primary key autoIncrement,
+userid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+time varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);";
+
+db.execSQL(road_blocks_query);
+
+
+String eod_query="create table if not exists eod(
+id integer primary key autoIncrement,
+userid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+time varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);";
+
+db.execSQL(eod_query);
+
+
+
+String off_route_query="create table if not exists off_route(
+
+id integer primary key autoIncrement,
+userid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+time varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);";
+
+db.execSQL(off_route_query);
+
+
+}
+
+
+public void onUpgrade(SQLiteDatabese db,int i, int il){
+	db.execSQL("drop table if exists growers");
+	onCreate(db);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+void addUser(int id,String name,String surname,String username,String hash,int rightsid,int active,int access_code,String created_at){
+
+	SQLiteDatabese db=this.getWritableDatabase();
+	contenValues cv=new ContentValues();
+
+	cv.put("id",id);
+	cv.put("name","");
+	cv.put("active","");
+	cv.put("surname",surname);
+	cv.put("username",username);
+	cv.put("hash",hash);
+	cv.put("rightsid",rightsid);
+	cv.put("access_code",access_code);
+	cv.put("created_at",created_at);
+	
+
+
+
+	long result=db.insert(TABLE_USERS,null,cv);
+	if(result==-1){
+
+	//failed
+
+	}else{
+
+	//good
+	}
+	
+
+}
+
+
+
+void addSeason(String id,String name,int active,String created_at){
+
+	SQLiteDatabese db=this.getWritableDatabase();
+	contenValues cv=new ContentValues();
+
+	cv.put("id",userid);
+	cv.put("name","");
+	cv.put("active","");
+	cv.put("created_at","");
+
+	long result=db.insert(TABLE_SEASONS,null,cv);
+	if(result==-1){
+
+	//failed
+
+	}else{
+
+	//good
+	}
+	
+
+}
+
+
+
+
+
+void addUserHome(int userid,String latitude,String longitude,String created_at){
+
+	SQLiteDatabese db=this.getWritableDatabase();
+	contenValues cv=new ContentValues();
+
+	cv.put("userid",userid);
+	cv.put("latitude",latitude);
+	cv.put("longitude",longitude);
+	cv.put("created_at","");
+
+	long result=db.insert(TABLE_SEASONS,null,cv);
+	if(result==-1){
+
+	//failed
+
+	}else{
+
+	//good
+	}
+	
+
+}
+
+
+
+
+
+
+void addProducts(int id,String name,String units){
+
+	SQLiteDatabese db=this.getWritableDatabase();
+	contenValues cv=new ContentValues();
+
+	cv.put("id",id);
+	cv.put("name",name);
+	cv.put("units",units);
+	
+	long result=db.insert(TABLE_SEASONS,null,cv);
+	if(result==-1){
+
+	//failed
+
+	}else{
+
+	//good
+	}
+	
+
+}
+
+
+
+
+
+
+void addGrowers(int userid,String name,String surname,String grower_num,String area,String province,String phone,String id_num,int seasonid,String created_at){
+
+	SQLiteDatabese db=this.getWritableDatabase();
+	contenValues cv=new ContentValues();
+
+	cv.put("userid",userid);
+	cv.put("name",name);
+	cv.put("surname",surname);
+	cv.put("grower_num",grower_num);
+	cv.put("area",area);
+	cv.put("province",province);
+	cv.put("phone",phone);
+	cv.put("id_num",id_num);
+	cv.put("seasonid",seasonid);
+	cv.put("created_at",created_at);
+	
+	long result=db.insert(TABLE_SEASONS,null,cv);
+	if(result==-1){
+
+	//failed
+
+	}else{
+
+	//good
+	}
+	
+
+}
+
+
+
+
+
+void addGrowerProfile(int growerid,String image,String created_at){
+
+	SQLiteDatabese db=this.getWritableDatabase();
+	contenValues cv=new ContentValues();
+
+	cv.put("growerid",growerid);
+	cv.put("image",image);
+	cv.put("created_at",created_at);
+	
+	
+	long result=db.insert(TABLE_SEASONS,null,cv);
+	if(result==-1){
+
+	//failed
+
+	}else{
+
+	//good
+	}
+	
+
+}
+
+
+
+
+
+
+void addLatLong(int userid,int growerid,String latitude,String longitude,int seasonid,String created_at){
+
+	SQLiteDatabese db=this.getWritableDatabase();
+	contenValues cv=new ContentValues();
+
+	cv.put("userid",userid);
+	cv.put("growerid",growerid);
+	cv.put("latitude",latitude);
+	cv.put("longitude",longitude);
+	cv.put("seasonid",seasonid);
+	cv.put("created_at",created_at);
+	
+	
+	long result=db.insert(TABLE_SEASONS,null,cv);
+	if(result==-1){
+
+	//failed
+
+	}else{
+
+	//good
+	}
+	
+
+}
+
+
+
+
+
+
+void addLatLong(int userid,int growerid,String latitude,String longitude,String description,String conditions,String other,int seasonid,String created_at){
+
+	SQLiteDatabese db=this.getWritableDatabase();
+	contenValues cv=new ContentValues();
+
+	cv.put("userid",userid);
+	cv.put("growerid",growerid);
+	cv.put("latitude",latitude);
+	cv.put("longitude",longitude);
+	cv.put("description",description);
+	cv.put("conditions",conditions);
+
+	cv.put("other",other);
+	cv.put("seasonid",seasonid);
+	cv.put("created_at",created_at);
+	
+	
+	long result=db.insert(TABLE_SEASONS,null,cv);
+	if(result==-1){
+
+	//failed
+
+	}else{
+
+	//good
+	}
+	
+
+}
+
+
+
+
+
+
+
+
+void addLoans(int userid,int growerid,int productid,int quantity,String latitude,String longitude,int seasonid,String created_at){
+
+	SQLiteDatabese db=this.getWritableDatabase();
+	contenValues cv=new ContentValues();
+
+	cv.put("userid",userid);
+	cv.put("growerid",growerid);
+	cv.put("productid",productid);
+	cv.put("quantity",quantity);
+	cv.put("latitude",latitude);
+	cv.put("longitude",longitude);
+	cv.put("seasonid",seasonid);
+	cv.put("created_at",created_at);
+	
+	
+	long result=db.insert(TABLE_SEASONS,null,cv);
+	if(result==-1){
+
+	//failed
+
+	}else{
+
+	//good
+	}
+	
+
+}
+
+
+
+
+
+
+void addStartOfDay(int userid,String latitude,String longitude,int seasonid,String time,String created_at){
+
+	SQLiteDatabese db=this.getWritableDatabase();
+	contenValues cv=new ContentValues();
+
+	cv.put("userid",userid);
+	cv.put("latitude",latitude);
+	cv.put("longitude",longitude);
+	cv.put("seasonid",seasonid);
+	cv.put("time",time);
+	cv.put("created_at",created_at);
+	
+	
+	long result=db.insert(TABLE_SEASONS,null,cv);
+	if(result==-1){
+
+	//failed
+
+	}else{
+
+	//good
+	}
+	
+
+}
+
+
+
+
+void addRoadBlocks(int userid,String latitude,String longitude,int seasonid,String time,String created_at){
+
+	SQLiteDatabese db=this.getWritableDatabase();
+	contenValues cv=new ContentValues();
+
+	cv.put("userid",userid);
+	cv.put("latitude",latitude);
+	cv.put("longitude",longitude);
+	cv.put("seasonid",seasonid);
+	cv.put("time",time);
+	cv.put("created_at",created_at);
+	
+	
+	long result=db.insert(TABLE_SEASONS,null,cv);
+	if(result==-1){
+
+	//failed
+
+	}else{
+
+	//good
+	}
+	
+
+}
+
+
+
+void addEndOfDay(int userid,String latitude,String longitude,int seasonid,String time,String created_at){
+
+	SQLiteDatabese db=this.getWritableDatabase();
+	contenValues cv=new ContentValues();
+
+	cv.put("userid",userid);
+	cv.put("latitude",latitude);
+	cv.put("longitude",longitude);
+	cv.put("seasonid",seasonid);
+	cv.put("time",time);
+	cv.put("created_at",created_at);
+	
+	
+	long result=db.insert(TABLE_SEASONS,null,cv);
+	if(result==-1){
+
+	//failed
+
+	}else{
+
+	//good
+	}
+	
+
+}
+
+
+
+
+void addOffRoute(int userid,String latitude,String longitude,int seasonid,String time,String created_at){
+
+	SQLiteDatabese db=this.getWritableDatabase();
+	contenValues cv=new ContentValues();
+
+	cv.put("userid",userid);
+	cv.put("latitude",latitude);
+	cv.put("longitude",longitude);
+	cv.put("seasonid",seasonid);
+	cv.put("time",time);
+	cv.put("created_at",created_at);
+	
+	
+	long result=db.insert(TABLE_SEASONS,null,cv);
+	if(result==-1){
+
+	//failed
+
+	}else{
+
+	//good
+	}
+	
+
+}
+
+
+
+
+
+
+
+
+
+Curser  readGrowers(){
+	
+	String query="select * from growers";
+	SQLiteDatabase db=this.getReadableDatabase();
+
+	Cursor cursor =null;
+	if(db!=null){
+	curser=db.rawQuery(query,null);
+	}
+
+	return cursor;
+}
+
+
+
+Curser  readLoans(){
+	
+	String query="select * from loans";
+	SQLiteDatabase db=this.getReadableDatabase();
+
+	Cursor cursor =null;
+	if(db!=null){
+	curser=db.rawQuery(query,null);
+	}
+
+	return cursor;
+}
+
+
+
+Curser  login(String username,String access_code){
+	
+	String query="select * from users where username="+username + "and access_code="+ access_code ;
+	SQLiteDatabase db=this.getReadableDatabase();
+
+	Cursor cursor =null;
+	if(db!=null){
+	curser=db.rawQuery(query,null);
+	}
+
+	return cursor;
+}
+
+
+
+
+
+
+Curser  readGrowerVisits(){
+	
+	String query="select * from grower_visits";
+	SQLiteDatabase db=this.getReadableDatabase();
+
+	Cursor cursor =null;
+	if(db!=null){
+	curser=db.rawQuery(query,null);
+	}
+
+	return cursor;
+}
+
+
+
+
+Curser  readRoadBlocks(){
+	
+	String query="select * from road_blocks";
+	SQLiteDatabase db=this.getReadableDatabase();
+
+	Cursor cursor =null;
+	if(db!=null){
+	curser=db.rawQuery(query,null);
+	}
+
+	return cursor;
+}
+
+
+
+
+
+Curser  readStartOfDay(){
+	
+	String query="select * from sod";
+	SQLiteDatabase db=this.getReadableDatabase();
+
+	Cursor cursor =null;
+	if(db!=null){
+	curser=db.rawQuery(query,null);
+	}
+
+	return cursor;
+}
+
+
+
+
+Curser  readEndOfDay(){
+	
+	String query="select * from eod";
+	SQLiteDatabase db=this.getReadableDatabase();
+
+	Cursor cursor =null;
+	if(db!=null){
+	curser=db.rawQuery(query,null);
+	}
+
+	return cursor;
+}
+
+
+
+
+
+
+
+
+
+
+}
