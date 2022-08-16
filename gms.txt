@@ -173,6 +173,10 @@ foreign key(confirmid) references con_loan(id)
 
 
 
+
+
+
+
 create table sod(
 id integer primary key auto_increment,
 userid integer not null,
@@ -180,10 +184,40 @@ latitude varchar(100) not null,
 longitude varchar(100) not null,
 seasonid integer not null,
 time varchar(100) not null,
+eod integer not null default 0,
+created_at varchar(100) not null,
+eod_created_at TEXT not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table exemptions(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+exemption_date varchar(100) not null,
+description varchar(100) not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id)
+);
+
+
+
+create table if not exists recovery(
+id integer primary key auto_increment,
+grower_num varchar(100) not null,
+seasonid integer not null,
+userid integer not null,
+bales integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
 );
+
 
 
 
@@ -230,6 +264,44 @@ foreign key(seasonid) references seasons(id)
 
 
 
+
+
+create table parameters(
+id integer primary key auto_increment,
+name varchar(100) not null unique
+);
+
+
+
+create table charges(
+id integer primary key auto_increment,
+name varchar(100) not null unique
+);
+
+
+
+create table charges_amount(
+id integer primary key auto_increment,
+chargeid integer not null,
+seasonid integer not null,
+parameterid integer not null,
+userid integer not null,
+value double(100,2) not null,
+created_at varchar(100) not null
+);
+
+
+
+create table loan_balances(
+id integer primary key auto_increment,
+loanid integer not null,
+amount double(100,2) default 0,
+created_at varchar(100) not null
+);
+
+
+
+
 DELIMITER $$
 create trigger on_loan_verification
 after insert on con_loan
@@ -243,6 +315,14 @@ DELIMITER ;
 
 
 insert into rights(description,notes) value("Admin","system administrator");
+
+
+
+insert into parameters(names) value("Amount");
+insert into parameters(names) value("Percentage");
+
+insert into charges(names) value("Interest");
+insert into charges(names) value("Adminstration");
 
 
 

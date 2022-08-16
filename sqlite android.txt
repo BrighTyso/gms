@@ -150,11 +150,18 @@ latitude varchar(100) not null,
 longitude varchar(100) not null,
 seasonid integer not null,
 time varchar(100) not null,
+eod integer not null default 0 ,
 sync integer not null default 0,
 created_at varchar(100) not null,
+eod_created_at TEXT not null unique,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
 );
+
+
+
+
+
 
 
 
@@ -205,6 +212,48 @@ foreign key(seasonid) references seasons(id)
 
 
 
+create table if not exists last_eod_date(
+id integer primary key autoIncrement,
+created_at varchar(100) not null 
+);
 
 
+
+create table if not exists exemptions(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+exemption_date varchar(100) not null unique,
+description varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+create table if not exists recovery(
+id integer primary key autoIncrement,
+grower_num varchar(100) not null,
+seasonid integer not null,
+userid integer not null,
+bales integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists activation(
+id integer primary key autoIncrement,
+activation_key varchar(100) not null,
+startDate varchar(100) not null,
+endDate varchar(100) not null,
+functions integer not null default 0,
+created_at varchar(100) not null
+);
 

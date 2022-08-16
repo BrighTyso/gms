@@ -16,6 +16,7 @@ $productid=0;
 $amount="";
 $seasonid=0;
 $created_at="";
+$response=array();
 
 if (isset($data->userid) && isset($data->productid)  && isset($data->amount)  && isset($data->seasonid) && isset($data->created_at)){
 
@@ -31,11 +32,14 @@ $user_sql = "INSERT INTO prices(userid,productid,amount,seasonid,created_at) VAL
    if ($conn->query($user_sql)===TRUE) {
    
      $last_id = $conn->insert_id;
-     echo json_encode("success");
+     $temp=array("response"=>"success");
+     array_push($response,$temp);
 
    }else{
 
     echo json_encode($conn->error);
+    $temp=array("response"=>"success");
+     array_push($response,$temp);
 
    }
 
@@ -44,10 +48,15 @@ $user_sql = "INSERT INTO prices(userid,productid,amount,seasonid,created_at) VAL
 
 }else{
 
-	echo json_encode("field cant be empty");
+  $temp=array("response"=>"field cant be empty");
+     array_push($response,$temp);
+
+	//echo json_encode("field cant be empty");
 }
 
 
+
+echo json_encode($response);
 
 ?>
 

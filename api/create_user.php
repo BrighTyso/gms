@@ -31,7 +31,7 @@ $rightsid=$data->rightsid;
 $active=$data->active;
 
 
-$user_sql = "INSERT INTO users(name,surname,username,hash,rightsid,active,access_code,created_at) VALUES ('$name','$surname','$username','$hash',$rightsid,$active,1234,'23-23-3')";
+$user_sql = "INSERT INTO users(name,surname,username,hash,rightsid,active,access_code,created_at) VALUES ('$name','$surname','$username','$hash',$rightsid,$active,1234,'$created_at')";
    //$sql = "select * from login";
    if ($conn->query($user_sql)===TRUE) {
    

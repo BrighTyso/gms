@@ -13,6 +13,7 @@ $data = json_decode(file_get_contents("php://input"));
 
 $name="";
 $unit="";
+$response=array();
 
 
 if (isset($data->name) && isset($data->unit)){
@@ -26,21 +27,25 @@ $user_sql = "INSERT INTO products(name,units) VALUES ('$name','$unit')";
    if ($conn->query($user_sql)===TRUE) {
    
      $last_id = $conn->insert_id;
-     echo json_encode("success");
+     $temp=array("response"=>"success");
+     array_push($response,$temp);
 
    }else{
 
-    echo $conn->error;
+    $temp=array("response"=>"Failed To Insert");
+     array_push($response,$temp);
 
    }
 
 
-
-
 }else{
 
-	echo json_encode("field cant be empty");
+  $temp=array("response"=>"field cant be empty");
+     array_push($response,$temp);
+
 }
+
+  echo json_encode($response);
 
 
 

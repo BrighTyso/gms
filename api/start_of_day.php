@@ -8,6 +8,10 @@ $longitude="";
 $seasonid="";
 $time="";
 $created_at="";
+$created_at="";
+$eod_created_at="";
+$eod="";
+
 
 
 
@@ -25,7 +29,7 @@ $time=validate($_GET['time']);
 $seasonid=validate($_GET['seasonid']);
 $created_at=validate($_GET['created_at']);
 
-$sql = "INSERT INTO sod(userid,latitude,longitude,seasonid,time,created_at) VALUES ($userid,'$latitude','$longitude',$seasonid,'$time','$created_at')";
+$sql = "INSERT INTO sod(userid,latitude,longitude,seasonid,time,eod,created_at,eod_created_at) VALUES ($userid,'$latitude','$longitude',$seasonid,'$time','$eod','$created_at','$eod_created_at')";
 
    //$gr = "select * from login";
    if ($conn->query($sql)===TRUE) {
