@@ -92,6 +92,22 @@ growerid integer not null,
 latitude varchar(100) not null,
 longitude varchar(100) not null,
 seasonid integer not null,
+hectares varchar(100),
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists grower_farm(
+id integer primary key autoIncrement,
+userid integer not null ,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
@@ -121,6 +137,25 @@ foreign key(seasonid) references seasons(id)
 
 
 
+create table if not exists assessment_images(
+id integer primary key autoIncrement,
+userid integer not null,
+growerid integer not null,
+seasonid integer not null,
+url varchar(100) not null,
+image blob ,
+description varchar(100) not null,
+conditions varchar(100) not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
 
 create table if not exists loans(
 id integer primary key autoIncrement,
@@ -131,6 +166,7 @@ quantity integer not null,
 latitude varchar(100) not null,
 longitude varchar(100) not null,
 seasonid integer not null,
+hectares varchar(100),
 sync integer not null default 0,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),

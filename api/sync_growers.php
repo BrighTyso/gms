@@ -14,6 +14,7 @@ $id_num="";
 $created_at="";
 $sqlitegrowerid=0;
 $lat_longid=0;
+$hectares="";
 
 $data=array();
 
@@ -36,6 +37,7 @@ $created_at=$_GET['created_at'];
 $seasonid=$_GET['seasonid'];
 $sqlitegrowerid=$_GET['sqlitegrowerid'];
 $lat_longid=$_GET['sqlitelat_longid'];
+$hectares=$_GET['hectares'];
 
 
 
@@ -48,7 +50,7 @@ $growerid=0;
 
 // checks if grower is already in database
 
-$sql = "Select growers.id from growers join lat_long on growers.id=lat_long.growerid where name='$name' and surname='$surname'  and grower_num='$grower_num' and id_num='$id_num' and lat_long.seasonid=$seasonid";
+$sql = "Select growers.id from growers join lat_long on growers.id=lat_long.growerid where  grower_num='$grower_num' and id_num='$id_num' and lat_long.seasonid=$seasonid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -76,7 +78,7 @@ if ($response==0) {
      $last_id = $conn->insert_id;
      
 
-	$lat_long_sql = "INSERT INTO lat_long(userid,growerid,latitude,longitude,seasonid,created_at) VALUES ($userid,$last_id,'$lat','$long',$seasonid,'$created_at')";
+	$lat_long_sql = "INSERT INTO lat_long(userid,growerid,latitude,longitude,seasonid,hectares,created_at) VALUES ($userid,$last_id,'$lat','$long',$seasonid,'$hectares','$created_at')";
 	   //$sql = "select * from login";
 	   if ($conn->query($lat_long_sql)===TRUE) {
 	   
@@ -94,7 +96,28 @@ if ($response==0) {
 
 }else if ($response==1){
 
-	$lat_long_sql = "INSERT INTO lat_long(userid,growerid,latitude,longitude,seasonid,created_at) VALUES ($userid,$growerid,'$lat','$long',$seasonid,'$created_at')";
+     $response=0;
+
+		$sql = "Select id from lat_long where  growerid=$growerid and seasonid=$seasonid";
+		$result = $conn->query($sql);
+		 
+		 if ($result->num_rows > 0) {
+		   // output data of each row
+		   while($row = $result->fetch_assoc()) {
+
+		    // product id
+		   $response=1;
+		   
+		    
+		   }
+
+		 }
+
+
+
+   if ($response==0) {
+  
+	$lat_long_sql = "INSERT INTO lat_long(userid,growerid,latitude,longitude,seasonid,hectares,created_at) VALUES ($userid,$growerid,'$lat','$long',$seasonid,'$hectares','$created_at')";
 	   //$sql = "select * from login";
 	   if ($conn->query($lat_long_sql)===TRUE) {
 	   
@@ -107,9 +130,30 @@ if ($response==0) {
 
 	   }else{
 
-	    
+	   
 
 	   }
+
+   }else{
+
+ $user_sql = "update lat_long set latitude='$lat' and longitude='$long' where growerid=$growerid and seasonid=$seasonid";
+   //$sql = "select * from login";
+   if ($conn->query($user_sql)===TRUE) {
+   
+     $temp=array("growerid"=>$sqlitegrowerid,"lat_longid"=>$lat_longid);
+     array_push($data,$temp);
+
+   }else{
+
+   
+
+   }
+
+
+   }
+
+
+
 
 }
 

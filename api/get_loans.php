@@ -24,7 +24,7 @@ $seasonid=$data->seasonid;
 
 if ($description=="") {
 
-  $sql = "Select growers.name,loans.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username,amount from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and  prices.seasonid=$seasonid";
+  $sql = "Select distinct growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username,amount from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and  prices.seasonid=$seasonid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -41,7 +41,7 @@ $result = $conn->query($sql);
 }else{
 
 
-$sql = "Select growers.name,loans.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username, amount from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where grower_num='$description' and loans.seasonid=$seasonid and prices.seasonid=$seasonid";
+$sql = "Select distinct growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username, amount from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join lat_long on lat_long.growerid=growers.id join users on users.id=lat_long.userid join prices on prices.productid=loans.productid  where grower_num='$description' or  users.username='$description' or province='$description'  and loans.seasonid=$seasonid and prices.seasonid=$seasonid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

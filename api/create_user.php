@@ -29,6 +29,7 @@ $surname=$data->surname;
 $hash=$data->hash;
 $rightsid=$data->rightsid;
 $active=$data->active;
+$created_at=$data->created_at;
 
 
 $user_sql = "INSERT INTO users(name,surname,username,hash,rightsid,active,access_code,created_at) VALUES ('$name','$surname','$username','$hash',$rightsid,$active,1234,'$created_at')";

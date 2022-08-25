@@ -1,0 +1,8 @@
+
+create table subscribe(
+id integer primary key auto_increment,
+key varchar(100) not null,
+device_num integer not null default 15,
+endDate varchar(100) not null,
+created_at varchar(100) not null
+);

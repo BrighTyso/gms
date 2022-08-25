@@ -5,9 +5,17 @@ notes varchar(100) not null
 );
 
 
+
+
+create table province(
+id integer primary key auto_increment,
+names varchar(100) not null
+);
+
+
 create table seasons(
 id integer primary key auto_increment,
-name varchar(100) not null,
+name varchar(100) not null unique,
 active integer not null default 1,
 created_at varchar(100) not null
 );
@@ -68,7 +76,7 @@ id integer primary key auto_increment,
 userid integer not null,
 name varchar(100) not null,
 surname varchar(100) not null,
-grower_num varchar(100),
+grower_num varchar(100) unique,
 area varchar(100) not null,
 province varchar(100),
 phone varchar(100),
@@ -101,11 +109,52 @@ growerid integer not null,
 latitude varchar(100) not null,
 longitude varchar(100) not null,
 seasonid integer not null,
+hectares varchar(100),
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
 foreign key(seasonid) references seasons(id)
 );
+
+
+
+
+
+create table grower_farm(
+id integer primary key auto_increment,
+userid integer not null ,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+
+create table if not exists assessment_images(
+id integer primary key auto_increment,
+userid integer not null,
+growerid integer not null,
+seasonid integer not null,
+image varchar(1000000) not null,
+description varchar(100) not null,
+conditions varchar(100) not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
 
 
 
@@ -143,12 +192,26 @@ processed integer default 0,
 processed_by integer default 0,
 processed_at varchar(100),
 verified_by integer default 0,
+hectares varchar(100) default 0,
 verified_at varchar(100),
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
 foreign key(seasonid) references seasons(id),
 foreign key(productid) references products(id)
+);
+
+
+create table contracted_hectares(
+id integer primary key auto_increment,
+userid integer not null,
+growerid integer not null,
+seasonid integer not null,
+hectares varchar(100) not null,
+created varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id),
 );
 
 
@@ -190,6 +253,8 @@ eod_created_at TEXT not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
 );
+
+
 
 
 
@@ -292,6 +357,21 @@ created_at varchar(100) not null
 
 
 
+create table loan_payments(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+amount double(100,2) not null,
+mass double(100,2) not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
 create table loan_balances(
 id integer primary key auto_increment,
 loanid integer not null,
@@ -314,15 +394,38 @@ DELIMITER ;
 
 
 
-insert into rights(description,notes) value("Admin","system administrator");
+insert into rights(description,notes) value("System administrator","System administrator");
+insert into rights(description,notes) value("I.T Assistant","I.T Assistant");
+insert into rights(description,notes) value("Accountant","Accountant");
+insert into rights(description,notes) value("Account Clerk","Account Clerk");
+insert into rights(description,notes) value("Hr Admin","Account Clerk");
+insert into rights(description,notes) value("Hr Assistant","Hr Assistant");
+insert into rights(description,notes) value("Area Manager","Area Manager");
+insert into rights(description,notes) value("Field Officer","Field Officer");
+insert into rights(description,notes) value("Field Officer(Loans Access)","Field Officer");
 
 
 
-insert into parameters(names) value("Amount");
-insert into parameters(names) value("Percentage");
+insert into users(name,surname,username,hash,rightsid,active,access_code,created_at) value("sysadmin","sysadmin","sysadmin","sysadmin",1,1,0000,"2022-09-12");
 
-insert into charges(names) value("Interest");
-insert into charges(names) value("Adminstration");
+
+insert into province(names) value("Harare");
+insert into province(names) value("Mashonaland East");
+insert into province(names) value("Mashonaland West");
+insert into province(names) value("Mashonaland Central");
+insert into province(names) value("Manicaland");
+insert into province(names) value("Matebeleland North");
+insert into province(names) value("Matebeleland South");
+insert into province(names) value("Masvingo");
+insert into province(names) value("Midlands");
+insert into province(names) value("Bulawayo");
+
+
+insert into parameters(name) value("Amount");
+insert into parameters(name) value("Percentage");
+
+insert into charges(name) value("Interest");
+insert into charges(name) value("Adminstration");
 
 
 

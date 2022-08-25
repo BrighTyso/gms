@@ -19,7 +19,7 @@ $seasonid=$data->seasonid;
 
 if ($description!="" && $seasonid!=""){
 
-$sql = "Select grower_visits.id,grower_visits.latitude,grower_visits.longitude,grower_visits.description,grower_visits.conditions,grower_visits.other, users.username , growers.name as grower_name , growers.surname as grower_surname, growers.grower_num, grower_visits.created_at from grower_visits join users on users.id=grower_visits.userid  join growers on growers.id=grower_visits.growerid where  growers.grower_num=$description  or growers.phone=$description  or growers.surname=$description or growers.area=$description or users.username=$description and grower_visits.seasonid=$seasonid";
+$sql = "Select growers.id,grower_visits.latitude,grower_visits.longitude,grower_visits.description,grower_visits.conditions,grower_visits.other, users.username , growers.name as grower_name , growers.surname as grower_surname, growers.grower_num, grower_visits.created_at from grower_visits join users on users.id=grower_visits.userid  join growers on growers.id=grower_visits.growerid where  growers.grower_num='$description'  or growers.phone='$description'  or growers.surname='$description' or growers.area='$description' or users.username='$description' and grower_visits.seasonid=$seasonid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -38,7 +38,7 @@ $result = $conn->query($sql);
 
 }else if ($description=="" && $seasonid!=""){
 
-$sql = "Select grower_visits.id,grower_visits.latitude,grower_visits.longitude,grower_visits.description,grower_visits.conditions,grower_visits.other, users.username , growers.name as grower_name , growers.surname as grower_surname , growers.grower_num  , grower_visits.created_at from grower_visits join users on users.id=grower_visits.userid  join growers on growers.id=grower_visits.growerid where  grower_visits.seasonid='$seasonid'";
+$sql = "Select growers.id,grower_visits.latitude,grower_visits.longitude,grower_visits.description,grower_visits.conditions,grower_visits.other, users.username , growers.name as grower_name , growers.surname as grower_surname , growers.grower_num  , grower_visits.created_at from grower_visits join users on users.id=grower_visits.userid  join growers on growers.id=grower_visits.growerid where  grower_visits.seasonid='$seasonid'";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

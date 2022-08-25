@@ -84,7 +84,7 @@ chargeid,seasonid,parameterid,userid,value,created_at) VALUES ($chargeid,$season
      
    }else{
 
-   $temp=array("response"=>$conn->error);
+   $temp=array("response"=>"failed");
    array_push($response,$temp);
 
    }

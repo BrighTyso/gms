@@ -8,9 +8,11 @@ $longitude="";
 $seasonid="";
 $time="";
 $created_at="";
-$created_at="";
 $eod_created_at="";
-$eod="";
+$eod=0;
+$sqliteid="";
+
+$data=array();
 
 
 
@@ -28,25 +30,64 @@ $longitude=validate($_GET['longitude']);
 $time=validate($_GET['time']);
 $seasonid=validate($_GET['seasonid']);
 $created_at=validate($_GET['created_at']);
+$eod_created_at=validate($_GET['eod_created_at']);
+$sqliteid=validate($_GET['sqliteid']);
+$eod=validate($_GET['eod']);
+$found=0;
 
-$sql = "INSERT INTO sod(userid,latitude,longitude,seasonid,time,eod,created_at,eod_created_at) VALUES ($userid,'$latitude','$longitude',$seasonid,'$time','$eod','$created_at','$eod_created_at')";
+
+
+
+$sql1 = "Select * from sod where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+$result = $conn->query($sql1);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+   $found=1;
+   
+    
+   }
+
+ }
+
+
+if ($found==0) {
+  // code...
+$sql = "INSERT INTO sod(userid,latitude,longitude,seasonid,time,eod,created_at,eod_created_at) VALUES ($userid,'$latitude','$longitude',$seasonid,'$time',$eod,'$created_at','$eod_created_at')";
 
    //$gr = "select * from login";
    if ($conn->query($sql)===TRUE) {
    
      $last_id = $conn->insert_id;
-     echo "success";
+
+     $temp=array("id"=>$sqliteid);
+    array_push($data,$temp);
+     //echo "success";
 
    }else{
 
-    echo "failure";
+    
 
    }
+
+}else{
+
+
+}
+
+
+
 
 
 
 
 }
+
+
+echo json_encode($data);
 
 
 

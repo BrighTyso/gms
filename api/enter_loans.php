@@ -14,6 +14,7 @@ $productid=0;
 $seasonid=0;
 $sqliteid=0;
 $verifyLoan=0;
+$hectares=0;
 
 $data=array();
 
