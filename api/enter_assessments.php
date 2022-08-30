@@ -12,6 +12,7 @@ $data = json_decode(file_get_contents("php://input"));
 
 $name="";
 $userid="";
+$found=0;
 
 
 if (isset($data->name) && isset($data->userid)){
@@ -20,7 +21,24 @@ $name=$data->name;
 $userid=$data->userid;
 
 
-$user_sql = "INSERT INTO assessments(name) VALUES ('$name')";
+
+
+$sql = "Select * from assessments where name='$name' ";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+    $found=1;
+    
+   }
+ }
+
+
+if ($found==0) {
+ $user_sql = "INSERT INTO assessments(name) VALUES ('$name')";
    //$sql = "select * from login";
    if ($conn->query($user_sql)===TRUE) {
    
@@ -29,11 +47,17 @@ $user_sql = "INSERT INTO assessments(name) VALUES ('$name')";
 
    }else{
 
-    echo $conn->error;
+    
 
     echo json_encode("failed");
 
    }
+}else{
+
+   echo json_encode("Assessment Already In DB");
+}
+
+
 
 
 

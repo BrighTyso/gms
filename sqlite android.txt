@@ -7,6 +7,12 @@ created_at varchar(100) not null
 );
 
 
+create table province(
+id integer not null,
+names varchar(100) not null
+);
+
+
 
 create table if not exists users(
 
@@ -292,4 +298,6 @@ endDate varchar(100) not null,
 functions integer not null default 0,
 created_at varchar(100) not null
 );
+
+
 

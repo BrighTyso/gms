@@ -130,12 +130,8 @@ $result = $conn->query($sql1);
    }
 
 
-   }else{
-
-   
    }
     
-
 
 
    }else{
@@ -148,7 +144,21 @@ $result = $conn->query($sql1);
 
    }else{
 
-   
+    if ($productid==0) {
+       $temp=array("response"=>"Product Not Found");
+      array_push($data1,$temp);
+
+    }elseif ($growerid==0) {
+       $temp=array("response"=>"Grower Not Found");
+      array_push($data1,$temp);
+
+    }elseif($verifyLoan==1){
+ $temp=array("response"=>"Input Already Captured For Grower");
+      array_push($data1,$temp);
+    }
+
+  
+
    }
 
 

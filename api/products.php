@@ -13,6 +13,7 @@ $data = json_decode(file_get_contents("php://input"));
 
 $name="";
 $unit="";
+$found=0;
 $response=array();
 
 
@@ -22,7 +23,23 @@ $name=$data->name;
 $unit=$data->unit;
 
 
-$user_sql = "INSERT INTO products(name,units) VALUES ('$name','$unit')";
+
+
+$sql = "Select * from products where name='$name'";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+    $found=1;
+    
+   }
+ }
+
+ if ($found==0) {
+   $user_sql = "INSERT INTO products(name,units) VALUES ('$name','$unit')";
    //$sql = "select * from login";
    if ($conn->query($user_sql)===TRUE) {
    
@@ -36,6 +53,14 @@ $user_sql = "INSERT INTO products(name,units) VALUES ('$name','$unit')";
      array_push($response,$temp);
 
    }
+ }else{
+     $temp=array("response"=>"Product Already In DB");
+     array_push($response,$temp);
+
+ }
+
+
+
 
 
 }else{

@@ -20,10 +20,26 @@ if (isset($data->rightsid) && isset($data->username) && isset($data->userid)){
 $userid=$data->userid;
 $username=$data->username;
 $rightsid=$data->rightsid;
+$verifyid=0;
 
 
 
-$user_sql = "update users set rightsid=$rightsid where username='$username'";
+$sql = "Select * from users where username='$username'";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+   $verifyid=$row["id"];
+    
+   }
+ }
+
+
+if ($verifyid!=0) {
+$user_sql = "update users set rightsid=$rightsid where id=$verifyid";
    //$sql = "select * from login";
    if ($conn->query($user_sql)===TRUE) {
    
@@ -35,8 +51,9 @@ $user_sql = "update users set rightsid=$rightsid where username='$username'";
     echo json_encode($conn->error);
 
    }
-
-
+}else{
+  echo json_encode("Username Not Found");
+}
 
 
 }else{

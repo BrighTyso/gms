@@ -13,6 +13,7 @@ $data = json_decode(file_get_contents("php://input"));
 
 $name="";
 $created_at="";
+$found=0;
 
 
 if (isset($data->name) && isset($data->created_at)){
@@ -22,7 +23,22 @@ $created_at=$data->created_at;
 
 
 
-  $user_sql = "INSERT INTO seasons(name,active,created_at) VALUES ('$name',1,'$created_at')";
+$sql = "Select * from seasons where name='$name'";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+    $found=1;
+    
+   }
+ }
+
+
+if ($found==0) {
+   $user_sql = "INSERT INTO seasons(name,active,created_at) VALUES ('$name',1,'$created_at')";
    //$sql = "select * from login";
    if ($conn->query($user_sql)===TRUE) {
    
@@ -44,9 +60,16 @@ $created_at=$data->created_at;
 
    }else{
 
-    echo json_encode("failed");
+    echo json_encode("failed To Update Seasons");
 
    }
+
+}else{
+
+echo json_encode("Season Already In DB");
+
+}
+
 
 
 

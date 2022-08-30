@@ -13,6 +13,7 @@ $data = json_decode(file_get_contents("php://input"));
 
 $description=$data->description;
 $seasonid=$data->seasonid;
+$created_at=$data->created_at;
 
 $data1=array();
 // get grower locations
@@ -20,7 +21,7 @@ $data1=array();
 if ($description!="" && $seasonid!="") {
 	
 
-$sql = "Select growers.grower_num, growers.name as grower_name , lat_long.latitude ,lat_long.longitude , users.username from lat_long join users on users.id=lat_long.userid join growers on growers.id=lat_long.growerid where users.name='$description'  or users.surname='$description' or users.username='$description'  and  growers.seasonid='$seasonid'";
+$sql = "Select growers.grower_num, growers.name as grower_name , lat_long.latitude ,lat_long.longitude , users.username from lat_long join users on users.id=lat_long.userid join growers on growers.id=lat_long.growerid where users.name='$description'  or users.surname='$description' or users.username='$description' or growers.province='$description' or growers.grower_num='$description' and  lat_long.seasonid=$seasonid";
 
 $result = $conn->query($sql);
  
@@ -38,7 +39,7 @@ $result = $conn->query($sql);
 
 }else if ($description=="" && $seasonid!=""){
 	// get alll
-	$sql = "Select growers.grower_num, growers.name as grower_name , lat_long.latitude ,lat_long.longitude , users.username from lat_long join users on users.id=lat_long.userid join growers on growers.id=lat_long.growerid where growers.seasonid='$seasonid'";
+	$sql = "Select growers.grower_num, growers.name as grower_name , lat_long.latitude ,lat_long.longitude , users.username from lat_long join users on users.id=lat_long.userid join growers on growers.id=lat_long.growerid where lat_long.seasonid=$seasonid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

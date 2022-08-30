@@ -347,7 +347,7 @@ tr:nth-child(even) {
 						Created At
 					</td>
 					<td>
-						<a href="#" onclick="console.log(1+1)">loans</a>
+						<a href="#" onclick="click()">loans</a>
 					</td>
 					<td>
 						<a href="#">assessments</a>
@@ -423,7 +423,7 @@ tr:nth-child(even) {
 				<label>Quantity</label>
 				<div><input type="text" name="text"></div>
 				<br>
-				<input type="submit" name="submit">
+				<input type="submit" name="submit" onclick="clickMe()">
 
 				</form>
 
@@ -459,6 +459,7 @@ tr:nth-child(even) {
 
 		</div>
 
+	</div>
 
 
 		<div id="assessmentview" class="grid-item-bottom" style="background: green; display: none;">
@@ -486,6 +487,18 @@ tr:nth-child(even) {
 </body>
 <script type="text/javascript">
 	
+	function  clickMe(){
+
+    var assessmentview=document.getElementById("assessmentview");
+		var loansview=document.getElementById("loansview");
+		
+		loansview.style.display="none";
+		assessmentview.style.display="grid";
+		loansview.style.display="none";
+
+	}
+
+
 
 </script>
 </html>
