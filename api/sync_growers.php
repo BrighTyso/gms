@@ -50,7 +50,7 @@ $growerid=0;
 
 // checks if grower is already in database
 
-$sql = "Select growers.id from growers join lat_long on growers.id=lat_long.growerid where  grower_num='$grower_num' and id_num='$id_num' and lat_long.seasonid=$seasonid";
+$sql = "Select growers.id from growers  where  grower_num='$grower_num'";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -98,7 +98,7 @@ if ($response==0) {
 
      $response=0;
 
-		$sql = "Select id from lat_long where  growerid=$growerid and seasonid=$seasonid";
+		$sql = "Select id from lat_long where growerid=$growerid and seasonid=$seasonid";
 		$result = $conn->query($sql);
 		 
 		 if ($result->num_rows > 0) {
@@ -128,10 +128,6 @@ if ($response==0) {
 	     $temp=array("growerid"=>$sqlitegrowerid,"lat_longid"=>$lat_longid);
         array_push($data,$temp);
 
-	   }else{
-
-	   
-
 	   }
 
    }else{
@@ -142,10 +138,6 @@ if ($response==0) {
    
      $temp=array("growerid"=>$sqlitegrowerid,"lat_longid"=>$lat_longid);
      array_push($data,$temp);
-
-   }else{
-
-   
 
    }
 

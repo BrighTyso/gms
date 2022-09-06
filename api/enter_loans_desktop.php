@@ -130,6 +130,11 @@ $result = $conn->query($sql1);
    }
 
 
+   }else{
+
+    $temp=array("response"=>"success");
+      array_push($data1,$temp); 
+
    }
     
 

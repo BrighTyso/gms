@@ -31,7 +31,7 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-    $found=1;
+    $found=$row["id"];
     
    }
  }
@@ -66,7 +66,25 @@ if ($found==0) {
 
 }else{
 
-echo json_encode("Season Already In DB");
+  $user_sql1 = "update seasons set active=0 where id != $found";
+   //$sql = "select * from login";
+   if ($conn->query($user_sql1)===TRUE) {
+   
+    $user_sql2 = "update seasons set active=1 where id = $found";
+   //$sql = "select * from login";
+   if ($conn->query($user_sql2)===TRUE) {
+   
+     $last_id = $conn->insert_id;
+     echo json_encode("success");
+   }
+
+   }else{
+
+    echo json_encode("failed");
+
+   }
+
+
 
 }
 

@@ -143,6 +143,41 @@ foreign key(seasonid) references seasons(id)
 
 
 
+
+create table assessments(
+id integer primary key autoIncrement,
+userid integer not null,
+name varchar(100) not null unique,
+assessment_typeid integer not null default 1,
+number integer not null default 1,
+foreign key(userid) references users(id),
+foreign key(assessment_typeid) references assessment_type(id)
+);
+
+
+
+create table quantitative_assessments(
+id integer primary key autoIncrement,
+userid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+description varchar(100) not null,
+number varchar(100) not null,
+seasonid integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+
+
+
 create table if not exists assessment_images(
 id integer primary key autoIncrement,
 userid integer not null,

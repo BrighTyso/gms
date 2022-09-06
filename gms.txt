@@ -5,6 +5,13 @@ notes varchar(100) not null
 );
 
 
+create table company_name(
+id integer not null,
+active integer not null,
+company_name varchar(100) not null
+);
+
+
 
 
 create table province(
@@ -44,6 +51,7 @@ id integer primary key auto_increment,
 userid integer not null,
 latitude varchar(100) not null,
 longitude varchar(100) not null,
+sync integer not null default 0,
 created_at varchar(100) not null,
 foreign key(userid) references users(id)
 );
@@ -65,6 +73,7 @@ userid integer not null,
 productid integer not null,
 amount double(100,2) not null default 0,
 seasonid integer not null,
+sync integer not null default 0,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(productid) references products(id)
@@ -82,6 +91,7 @@ province varchar(100),
 phone varchar(100),
 id_num varchar(100) not null,
 seasonid integer not null,
+sync integer not null default 0,
 created_at varchar(100),
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
@@ -89,17 +99,37 @@ foreign key(seasonid) references seasons(id)
 
 
 
+
+
+
 create table grower_profile(
 id integer primary key auto_increment,
 growerid integer not null,
 image blob not null,
+sync integer not null default 0,
 created_at varchar(100) not null
 );
 
-create table assessments(
+
+
+create table assessment_type(
 id integer primary key auto_increment,
 name varchar(100) not null
 );
+
+
+create table assessments(
+id integer primary key auto_increment,
+userid integer not null,
+name varchar(100) not null,
+assessment_typeid integer not null default 1,
+number integer not null default 1,
+foreign key(userid) references users(id),
+foreign key(assessment_typeid) references assessment_type(id)
+);
+
+
+
 
 
 create table lat_long(
@@ -110,6 +140,7 @@ latitude varchar(100) not null,
 longitude varchar(100) not null,
 seasonid integer not null,
 hectares varchar(100),
+sync integer not null default 0,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
@@ -127,6 +158,7 @@ growerid integer not null,
 latitude varchar(100) not null,
 longitude varchar(100) not null,
 seasonid integer not null,
+sync integer not null default 0,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
@@ -168,12 +200,29 @@ description varchar(100) not null,
 conditions varchar(100) not null,
 other varchar(100) not null,
 seasonid integer not null,
+sync integer not null default 0,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
 foreign key(seasonid) references seasons(id)
 );
 
+
+create table quantitative_assessments(
+id integer primary key auto_increment,
+userid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+description varchar(100) not null,
+number varchar(100) not null,
+seasonid integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
 
 
 
@@ -194,6 +243,7 @@ processed_at varchar(100),
 verified_by integer default 0,
 hectares varchar(100) default 0,
 verified_at varchar(100),
+sync integer not null default 0,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
@@ -208,6 +258,7 @@ userid integer not null,
 growerid integer not null,
 seasonid integer not null,
 hectares varchar(100) not null,
+sync integer not null default 0,
 created varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
@@ -219,6 +270,7 @@ foreign key(seasonid) references seasons(id),
 create table con_loan(
 id integer primary key auto_increment,
 loanid integer not null,
+sync integer not null default 0,
 foreign key(loanid) references loans(id)
 );
 
@@ -229,6 +281,7 @@ create table confirm_user(
 id integer primary key auto_increment,
 userid integer not null,
 confirmid integer not null,
+sync integer not null default 0,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(confirmid) references con_loan(id)
@@ -249,6 +302,7 @@ seasonid integer not null,
 time varchar(100) not null,
 eod integer not null default 0,
 created_at varchar(100) not null,
+sync integer not null default 0,
 eod_created_at TEXT not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
@@ -264,6 +318,7 @@ userid integer not null,
 seasonid integer not null,
 exemption_date varchar(100) not null,
 description varchar(100) not null,
+sync integer not null default 0,
 created_at varchar(100) not null,
 foreign key(userid) references users(id)
 );
@@ -278,6 +333,7 @@ userid integer not null,
 bales integer not null,
 latitude varchar(100) not null,
 longitude varchar(100) not null,
+sync integer not null default 0,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
@@ -293,6 +349,7 @@ latitude varchar(100) not null,
 longitude varchar(100) not null,
 seasonid integer not null,
 time varchar(100) not null,
+sync integer not null default 0,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
@@ -306,6 +363,7 @@ latitude varchar(100) not null,
 longitude varchar(100) not null,
 seasonid integer not null,
 time varchar(100) not null,
+sync integer not null default 0,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
@@ -321,6 +379,7 @@ latitude varchar(100) not null,
 longitude varchar(100) not null,
 seasonid integer not null,
 time varchar(100) not null,
+sync integer not null default 0,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
@@ -351,6 +410,7 @@ chargeid integer not null,
 seasonid integer not null,
 parameterid integer not null,
 userid integer not null,
+sync integer not null default 0,
 value double(100,2) not null,
 created_at varchar(100) not null
 );
@@ -364,6 +424,7 @@ seasonid integer not null,
 growerid integer not null,
 amount double(100,2) not null,
 mass double(100,2) not null,
+sync integer not null default 0,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
@@ -392,6 +453,11 @@ END;
 $$
 DELIMITER ;
 
+
+
+
+insert into assessment_type(name) value("Qualitative");
+insert into assessment_type(name) value("Quantitative");
 
 
 insert into rights(description,notes) value("System administrator","System administrator");

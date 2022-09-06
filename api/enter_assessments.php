@@ -12,6 +12,8 @@ $data = json_decode(file_get_contents("php://input"));
 
 $name="";
 $userid="";
+$assessment_typeid="";
+$number="";
 $found=0;
 
 
@@ -19,11 +21,12 @@ if (isset($data->name) && isset($data->userid)){
 
 $name=$data->name;
 $userid=$data->userid;
+$assessment_typeid=$data->assessment_typeid;
+$number=$data->number;
 
 
 
-
-$sql = "Select * from assessments where name='$name' ";
+$sql = "Select * from assessments where name='$name'";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -37,8 +40,10 @@ $result = $conn->query($sql);
  }
 
 
+
+
 if ($found==0) {
- $user_sql = "INSERT INTO assessments(name) VALUES ('$name')";
+ $user_sql = "INSERT INTO assessments(userid,name,assessment_typeid,number) VALUES ($userid,'$name',$assessment_typeid,$number)";
    //$sql = "select * from login";
    if ($conn->query($user_sql)===TRUE) {
    
@@ -47,8 +52,7 @@ if ($found==0) {
 
    }else{
 
-    
-
+  
     echo json_encode("failed");
 
    }
