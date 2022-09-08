@@ -149,6 +149,37 @@ foreign key(seasonid) references seasons(id)
 
 
 
+create table barn_location(
+id integer primary key auto_increment,
+userid integer not null ,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table no_grower_location(
+id integer primary key auto_increment,
+userid integer not null ,
+growerid integer not null,
+description varchar(100) not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
 
 
 create table grower_farm(
