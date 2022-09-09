@@ -144,7 +144,7 @@ foreign key(seasonid) references seasons(id)
 
 
 
-create table assessments(
+create table if not exists assessments(
 id integer primary key autoIncrement,
 userid integer not null,
 name varchar(100) not null unique,
@@ -156,7 +156,7 @@ foreign key(assessment_typeid) references assessment_type(id)
 
 
 
-create table quantitative_assessments(
+create table if not exists quantitative_assessments(
 id integer primary key autoIncrement,
 userid integer not null,
 growerid integer not null,

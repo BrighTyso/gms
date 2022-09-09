@@ -473,6 +473,196 @@ created_at varchar(100) not null
 
 
 
+create table sead_beds(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+no_of_irr_beds integer not null default 0,
+no_of_dry_beds integer not null default 0,
+buying_seedlings_for varchar(100),
+varieties_irr varchar(100),
+varrieties_dry varchar(100),
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+
+);
+
+
+create table seedling_quality(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+excellent integer not null default 0,
+standard integer not null default 0,
+average integer not null default 0,
+poor integer not null default 0,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+create table plant_irrigated(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+ha_planted_to_date varchar(100),
+ha varchar(100),
+date_of_plant varchar(100),
+crop_stand_perc varchar(100),
+crop_unifomity_perc varchar(100),
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+
+);
+
+
+create table planting_dryLand(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+ha_planted_to_date varchar(100),
+ha varchar(100),
+date_of_plant varchar(100),
+crop_stand_perc varchar(100),
+crop_unifomity_perc varchar(100),
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+
+);
+
+
+create table crop_growth(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+quarter_grown_5_7 integer not null default 0,
+half_grown_8_12 integer not null default 0,
+three_quarters_13_17 integer not null default 0,
+full_grown_18_22 integer not null default 0,
+fully_developed integer not null default 0,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+create table crop_development(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+light_yellow integer default 0,
+light_green integer default 0,
+medium integer default 0,
+heavy_and_dark integer default 0,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+
+);
+
+
+create table cultural_practices(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+weed_infestation_level_perc varchar(100),
+weed_control_method varchar(100),
+topping_level varchar(100),
+basal_plant_fertilisation_kg_ha varchar(100),
+suckering integer not null default 0,
+post_topping_unifomity_perc varchar(100),
+pets_and_disease_management varchar(100),
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+
+);
+
+
+
+
+create table barnRepair_and_maintenance(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+barn_not_repaired integer not null default 0,
+barn_under_repair integer not null default 0,
+finished_repaired integer not null default 0,
+barn_working_well integer not null default 0,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+
+);
+
+
+
+
+create table hailStrike(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+percentage_strike varchar(100) not null,
+strike_date varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+
+);
+
+
+
+
 
 DELIMITER $$
 create trigger on_loan_verification
