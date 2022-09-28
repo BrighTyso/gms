@@ -504,6 +504,176 @@ foreign key(growerid) references growers(id)
 
 
 
+create table if not exists ploughing(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+no_of_plants integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+create table if not exists fertilization_ammonium(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+kg_per_ha varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+create table if not exists fertilization_potassium(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+kg_per_ha varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+
+
+
+create table if not exists reaping(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+top_leaf integer not null default 0,
+lugs integer not null default 0,
+cutters integer not null default 0,
+prime integer not null default 0,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+
+
+
+create table if not exists curing(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+reap_decription varchar(100) not null,
+yellowing integer not null default 0,
+leaf_drying integer not null default 0,
+stem_drying integer not null default 0,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+
+create table if not exists barn_location(
+id integer primary key autoIncrement,
+userid integer not null ,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+
+create table farm_mapping(
+
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+first_lat varchar(100) not null,
+first_long varchar(100) not null,
+second_lat varchar(100) not null,
+second_long varchar(100) not null,
+third_lat varchar(100) not null,
+third_long varchar(100) not null,
+forth_lat varchar(100) not null,
+forth_long varchar(100) not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+
+);
+
+
+
+
+
+
+
+create table hail_strike_mapping(
+
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+first_lat varchar(100) not null,
+first_long varchar(100) not null,
+second_lat varchar(100) not null,
+second_long varchar(100) not null,
+third_lat varchar(100) not null,
+third_long varchar(100) not null,
+forth_lat varchar(100) not null,
+forth_long varchar(100) not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+
+);
+
+
 
 create table if not exists hail_strike(
 id integer primary key autoIncrement,

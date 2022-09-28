@@ -20,9 +20,8 @@ $sqliteid=0;
 $data=array();
 
 
-
-
 //http://192.168.1.190/gms/api/enter_seedbeds.php?userid=1&grower_num=777&latitude=13.2222&longitude=3.33376&created_at=23-09-2022&no_of_irr_beds=0&no_of_dry_beds=1&buying_seedlings_for=0&varieties_irr=0&varieties_dry=0&seasonid=1&sqliteid=1
+
 
 if (isset($_GET['no_of_irr_beds']) && isset($_GET['userid'])  && isset($_GET['latitude'])  && isset($_GET['longitude'])  && isset($_GET['no_of_dry_beds']) && isset($_GET['seasonid']) && isset($_GET['buying_seedlings_for']) && isset($_GET['created_at']) && isset($_GET['sqliteid']) && isset($_GET['varieties_irr']) && isset($_GET['varieties_dry']) && isset($_GET['grower_num'])){
 

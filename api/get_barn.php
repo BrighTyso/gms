@@ -19,7 +19,7 @@ $seasonid=$data->seasonid;
 
 if (isset($growerid)) {
  
-$sql = "Select * from grower_farm  where growerid=$growerid and seasonid=$seasonid limit 1";
+$sql = "Select * from barn_location  where growerid=$growerid and seasonid=$seasonid limit 1";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

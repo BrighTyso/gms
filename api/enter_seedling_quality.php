@@ -7,10 +7,10 @@ $growerid=0;
 $grower_num="";
 $lat="";
 $long="";
-$excellent="";
-$standard="";
-$average="";
-$poor="";
+$excellent=0;
+$standard=0;
+$average=0;
+$poor=0;
 $seasonid=0;
 $sqliteid=0;
 
@@ -40,7 +40,8 @@ $sqliteid=validate($_GET['sqliteid']);
 
 
 
-$sql = "Select * from growers where grower_num='$grower_num'";
+
+$sql = "Select * from growers where grower_num='$grower_num';";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

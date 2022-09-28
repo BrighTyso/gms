@@ -19,7 +19,7 @@ $data=array();
 
 
 
-//http://192.168.1.190/gms/api/enter_loans.php?userid=1&grower_num=V123456&latitude=13.2222&longitude=3.33376&created_at=23-09-2022&percentage_strike=12333&strike_date=12333&seasonid=1&sqliteid=1
+//http://192.168.1.190/gms/api/enter_hail_strike.php?userid=1&grower_num=V123456&latitude=13.2222&longitude=3.33376&created_at=23-09-2022&percentage_strike=12333&strike_date=12333&seasonid=1&sqliteid=1
 
 if (isset($_GET['percentage_strike']) && isset($_GET['userid'])  && isset($_GET['latitude'])  && isset($_GET['longitude'])  && isset($_GET['strike_date']) && isset($_GET['seasonid']) && isset($_GET['created_at']) && isset($_GET['sqliteid'])  && isset($_GET['grower_num'])){
 

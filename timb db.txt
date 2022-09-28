@@ -5,19 +5,13 @@ notes varchar(100) not null
 );
 
 
-create table company_name(
-id integer not null,
-active integer not null,
-company_name varchar(100) not null
-);
-
-
 
 
 create table province(
 id integer primary key auto_increment,
 names varchar(100) not null
 );
+
 
 
 create table seasons(
@@ -29,12 +23,13 @@ created_at varchar(100) not null
 
 
 
+
 create table users(
 
 id integer primary key auto_increment,
 name varchar(100) not null,
 surname varchar(100) not null,
-username varchar(100) not null,
+username varchar(100) not null unique,
 hash varchar(100) not null,
 rightsid integer not null,
 active integer not null default 1,
@@ -43,6 +38,8 @@ created_at varchar(100) not null,
 foreign key(rightsid) references rights(id)
 
 );
+
+
 
 
 
@@ -65,134 +62,6 @@ name varchar(100) not null,
 units varchar(100) not null
 );
 
-
-create table  store(
-id integer primary key auto_increment,
-userid integer not null,
-name varchar(100) not null,
-location varchar(100) not null,
-created_at varchar(100) not null,
-foreign key(userid) references users(id)
-);
-
-
-
-
-create table store_items(
-id integer primary key auto_increment,
-userid integer not null,
-storeid integer not null,
-productid integer not null,
-quantity integer not null default 0,
-created_at varchar(100) not null,
-foreign key(userid) references users(id),
-foreign key(storeid) references store(id),
-foreign key(productid) references products(id)
-);
-
-
-
-create table arc_products(
-id integer primary key auto_increment,
-userid integer not null,
-storeitemid integer not null ,
-old_quantity integer not null,
-new_quantity integer not null,
-created_at varchar(100) not null,
-foreign key(userid) references users(id),
-foreign key(storeitemid) references store_items(id)
-);
-
-
-
-
-
-
-
-
-
-
-create table truck_destination(
-id integer primary key auto_increment,
-userid integer not null,
-trucknumber varchar(100) not null,
-driver_name varchar(100) not null,
-driver_surname varchar(100) not null,
-destination varchar(100) not null,
-close_open integer not null default 0,
-created_at varchar(100) not null,
-foreign key(userid) references users(id)
-);
-
-
-
-
-
-create table disbursement(
-id integer primary key auto_increment,
-disbursement_trucksid integer not null,
-userid integer not null,
-productid integer not null,
-storeid integer not null,
-quantity integer not null,
-created_at varchar(100) not null,
-foreign key(userid) references users(id),
-foreign key(productid) references products(id),
-foreign key(storeid) references store(id),
-foreign key(disbursement_trucksid) references truck_destination(id)
-);
-
-
-
-create table total_disbursement(
-id integer primary key auto_increment,
-disbursement_trucksid integer not null,
-disbursementid integer not null,
-userid integer not null,
-productid integer not null,
-storeid integer not null,
-quantity integer not null,
-created_at varchar(100) not null,
-foreign key(userid) references users(id),
-foreign key(productid) references products(id),
-foreign key(storeid) references store(id),
-foreign key(disbursement_trucksid) references truck_destination(id),
-foreign key(disbursementid) references disbursement(id)
-);
-
-
-
-
-
-
-create table truck_to_grower(
-id integer primary key auto_increment,
-userid integer not null,
-growerid integer not null,
-disbursement_trucksid integer not null,
-productid integer not null,
-quantity integer not null,
-created_at varchar(100) not null,
-foreign key(userid) references users(id),
-foreign key(productid) references products(id),
-foreign key(disbursement_trucksid) references truck_destination(id),
-foreign key(growerid) references growers(id)
-);
-
-
-
-
-
-DELIMITER $$
-create trigger on_disbursement
-after insert on disbursement
-for each row
-BEGIN
- insert into total_disbursement(disbursement_trucksid,disbursementid,userid,productid,storeid,quantity,created_at
-) values(NEW.disbursement_trucksid,NEW.id,NEW.userid,NEW.productid,New.storeid,New.quantity,NEW.created_at);
-END;
-$$
-DELIMITER ;
 
 
 create table prices(
@@ -219,7 +88,7 @@ province varchar(100),
 phone varchar(100),
 id_num varchar(100) not null,
 seasonid integer not null,
-sync integer not null default 1,
+sync integer not null default 0,
 created_at varchar(100),
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
@@ -580,10 +449,6 @@ created_at varchar(100) not null
 
 
 
-
-
-
-
 create table loan_payments(
 id integer primary key auto_increment,
 userid integer not null,
@@ -597,14 +462,6 @@ foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
-
-
-
-
-
-
-
-
 
 
 
@@ -632,136 +489,6 @@ varieties_irr varchar(100),
 varieties_dry varchar(100),
 latitude varchar(100) not null,
 longitude varchar(100) not null,
-sync integer not null default 0,
-created_at varchar(100) not null,
-foreign key(userid) references users(id),
-foreign key(seasonid) references seasons(id),
-foreign key(growerid) references growers(id)
-
-);
-
-
-
-
-create table if not exists ploughing(
-id integer primary key auto_increment,
-userid integer not null,
-seasonid integer not null,
-growerid integer not null,
-latitude varchar(100) not null,
-longitude varchar(100) not null,
-no_of_plants integer not null,
-sync integer not null default 0,
-created_at varchar(100) not null,
-foreign key(userid) references users(id),
-foreign key(seasonid) references seasons(id),
-foreign key(growerid) references growers(id)
-);
-
-
-
-
-
-create table if not exists fertilization_ammonium(
-id integer primary key auto_increment,
-userid integer not null,
-seasonid integer not null,
-growerid integer not null,
-latitude varchar(100) not null,
-longitude varchar(100) not null,
-kg_per_ha varchar(100) not null,
-sync integer not null default 0,
-created_at varchar(100) not null,
-foreign key(userid) references users(id),
-foreign key(seasonid) references seasons(id),
-foreign key(growerid) references growers(id)
-);
-
-
-
-
-create table if not exists curing(
-id integer primary key auto_increment,
-userid integer not null,
-seasonid integer not null,
-growerid integer not null,
-latitude varchar(100) not null,
-longitude varchar(100) not null,
-yellowing integer not null default 0,
-leaf_drying integer not null default 0,
-stem_drying integer not null default 0,
-sync integer not null default 0,
-created_at varchar(100) not null,
-foreign key(userid) references users(id),
-foreign key(seasonid) references seasons(id),
-foreign key(growerid) references growers(id)
-);
-
-
-
-
-create table if not exists fertilization_potassium(
-id integer primary key auto_increment,
-userid integer not null,
-seasonid integer not null,
-growerid integer not null,
-latitude varchar(100) not null,
-longitude varchar(100) not null,
-kg_per_ha varchar(100) not null,
-sync integer not null default 0,
-created_at varchar(100) not null,
-foreign key(userid) references users(id),
-foreign key(seasonid) references seasons(id),
-foreign key(growerid) references growers(id)
-);
-
-
-
-
-
-
-create table if not exists farm_mapping(
-
-id integer primary key auto_increment,
-userid integer not null,
-seasonid integer not null,
-growerid integer not null,
-first_lat varchar(100) not null,
-first_long varchar(100) not null,
-second_lat varchar(100) not null,
-second_long varchar(100) not null,
-third_lat varchar(100) not null,
-third_long varchar(100) not null,
-forth_lat varchar(100) not null,
-forth_long varchar(100) not null,
-sync integer not null default 0,
-created_at varchar(100) not null,
-foreign key(userid) references users(id),
-foreign key(seasonid) references seasons(id),
-foreign key(growerid) references growers(id)
-
-);
-
-
-
-
-
-
-
-create table if not exists hail_strike_mapping(
-
-id integer primary key auto_increment,
-userid integer not null,
-seasonid integer not null,
-growerid integer not null,
-first_lat varchar(100) not null,
-first_long varchar(100) not null,
-second_lat varchar(100) not null,
-second_long varchar(100) not null,
-third_lat varchar(100) not null,
-third_long varchar(100) not null,
-forth_lat varchar(100) not null,
-forth_long varchar(100) not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
@@ -819,10 +546,6 @@ foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 
 );
-
-
-
-
 
 
 
@@ -995,22 +718,6 @@ DELIMITER ;
 
 
 
-DELIMITER $$
-create  trigger on_product_update
-before update on store_items
-for each row
-BEGIN
-insert into arc_products(storeitemid,userid,old_quantity,new_quantity,created_at) value(OLD.id,New.userid,OLD.quantity,NEW.quantity,NEW.created_at);
-END;
-$$
-DELIMITER ;
-
-
-
-
-
-
-
 
 insert into assessment_type(name) value("Qualitative");
 insert into assessment_type(name) value("Quantitative");
@@ -1025,8 +732,6 @@ insert into rights(description,notes) value("Hr Assistant","Hr Assistant");
 insert into rights(description,notes) value("Area Manager","Area Manager");
 insert into rights(description,notes) value("Field Officer","Field Officer");
 insert into rights(description,notes) value("Field Officer(Loans Access)","Field Officer");
-insert into rights(description,notes) value("Management","Management");
-insert into rights(description,notes) value("Registration","Registration");
 
 
 
