@@ -29,8 +29,10 @@ $forth_long="";
 if (isset($_GET['userid']) &&  isset($_GET['grower_num']) && isset($_GET['created_at']) && isset($_GET['lat']) && isset($_GET['long']) && isset($_GET['sqliteid'])){
 
 $userid=$_GET['userid'];
+
 $grower_num=$_GET['grower_num'];
 $created_at=$_GET['created_at'];
+
 $seasonid=$_GET['seasonid'];
 $sqliteid=$_GET['sqliteid'];
 

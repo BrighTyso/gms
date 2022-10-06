@@ -1,11 +1,11 @@
-create table rights(
+create table if not exists rights(
 id integer primary key auto_increment,
 description varchar(100) not null,
 notes varchar(100) not null
 );
 
 
-create table company_name(
+create table if not exists company_name(
 id integer not null,
 active integer not null,
 company_name varchar(100) not null
@@ -14,13 +14,13 @@ company_name varchar(100) not null
 
 
 
-create table province(
+create table if not exists province(
 id integer primary key auto_increment,
 names varchar(100) not null
 );
 
 
-create table seasons(
+create table if not exists seasons(
 id integer primary key auto_increment,
 name varchar(100) not null unique,
 active integer not null default 1,
@@ -29,7 +29,7 @@ created_at varchar(100) not null
 
 
 
-create table users(
+create table if not exists users(
 
 id integer primary key auto_increment,
 name varchar(100) not null,
@@ -46,7 +46,27 @@ foreign key(rightsid) references rights(id)
 
 
 
-create table user_home(
+
+create table if not exists supervisors(
+
+id integer primary key auto_increment,
+supervisorid integer not null,
+leaf_techid integer not null,
+seasonid integer not null,
+created_at varchar(100) not null,
+foreign key(supervisorid) references users(id),
+foreign key(leaf_techid) references users(id),
+foreign key(seasonid) references seasons(id)
+
+);
+
+
+
+
+
+
+
+create table if not exists user_home(
 id integer primary key auto_increment,
 userid integer not null,
 latitude varchar(100) not null,
@@ -59,14 +79,14 @@ foreign key(userid) references users(id)
 
 
 
-create table products(
+create table if not exists products(
 id integer primary key auto_increment,
 name varchar(100) not null,
 units varchar(100) not null
 );
 
 
-create table  store(
+create table if not exists store(
 id integer primary key auto_increment,
 userid integer not null,
 name varchar(100) not null,
@@ -78,7 +98,7 @@ foreign key(userid) references users(id)
 
 
 
-create table store_items(
+create table if not exists store_items(
 id integer primary key auto_increment,
 userid integer not null,
 storeid integer not null,
@@ -92,7 +112,7 @@ foreign key(productid) references products(id)
 
 
 
-create table arc_products(
+create table if not exists arc_products(
 id integer primary key auto_increment,
 userid integer not null,
 storeitemid integer not null ,
@@ -112,7 +132,7 @@ foreign key(storeitemid) references store_items(id)
 
 
 
-create table truck_destination(
+create table if not exists truck_destination(
 id integer primary key auto_increment,
 userid integer not null,
 trucknumber varchar(100) not null,
@@ -128,7 +148,7 @@ foreign key(userid) references users(id)
 
 
 
-create table disbursement(
+create table if not exists disbursement(
 id integer primary key auto_increment,
 disbursement_trucksid integer not null,
 userid integer not null,
@@ -144,7 +164,7 @@ foreign key(disbursement_trucksid) references truck_destination(id)
 
 
 
-create table total_disbursement(
+create table if not exists total_disbursement(
 id integer primary key auto_increment,
 disbursement_trucksid integer not null,
 disbursementid integer not null,
@@ -165,7 +185,7 @@ foreign key(disbursementid) references disbursement(id)
 
 
 
-create table truck_to_grower(
+create table  if not exists truck_to_grower(
 id integer primary key auto_increment,
 userid integer not null,
 growerid integer not null,
@@ -190,12 +210,12 @@ for each row
 BEGIN
  insert into total_disbursement(disbursement_trucksid,disbursementid,userid,productid,storeid,quantity,created_at
 ) values(NEW.disbursement_trucksid,NEW.id,NEW.userid,NEW.productid,New.storeid,New.quantity,NEW.created_at);
-END;
+END; 
 $$
 DELIMITER ;
 
 
-create table prices(
+create table if not exists prices(
 id integer primary key auto_increment,
 userid integer not null,
 productid integer not null,
@@ -208,7 +228,7 @@ foreign key(productid) references products(id)
 );
 
 
-create table growers(
+create table if not exists growers(
 id integer primary key auto_increment,
 userid integer not null,
 name varchar(100) not null,
@@ -230,7 +250,7 @@ foreign key(seasonid) references seasons(id)
 
 
 
-create table grower_profile(
+create table if not exists grower_profile(
 id integer primary key auto_increment,
 growerid integer not null,
 image blob not null,
@@ -240,13 +260,13 @@ created_at varchar(100) not null
 
 
 
-create table assessment_type(
+create table if not exists assessment_type(
 id integer primary key auto_increment,
 name varchar(100) not null
 );
 
 
-create table assessments(
+create table if not exists assessments(
 id integer primary key auto_increment,
 userid integer not null,
 name varchar(100) not null,
@@ -260,7 +280,7 @@ foreign key(assessment_typeid) references assessment_type(id)
 
 
 
-create table lat_long(
+create table if not exists lat_long(
 id integer primary key auto_increment,
 userid integer not null ,
 growerid integer not null,
@@ -279,7 +299,7 @@ foreign key(seasonid) references seasons(id)
 
 
 
-create table barn_location(
+create table if not exists barn_location(
 id integer primary key auto_increment,
 userid integer not null ,
 growerid integer not null,
@@ -296,7 +316,7 @@ foreign key(seasonid) references seasons(id)
 
 
 
-create table no_grower_location(
+create table if not exists no_grower_location(
 id integer primary key auto_increment,
 userid integer not null ,
 growerid integer not null,
@@ -314,7 +334,7 @@ foreign key(seasonid) references seasons(id)
 
 
 
-create table grower_farm(
+create table if not exists grower_farm(
 id integer primary key auto_increment,
 userid integer not null ,
 growerid integer not null,
@@ -353,7 +373,7 @@ foreign key(seasonid) references seasons(id)
 
 
 
-create table grower_visits(
+create table if not exists grower_visits(
 id integer primary key auto_increment,
 userid integer not null,
 growerid integer not null,
@@ -371,7 +391,7 @@ foreign key(seasonid) references seasons(id)
 );
 
 
-create table quantitative_assessments(
+create table if not exists quantitative_assessments(
 id integer primary key auto_increment,
 userid integer not null,
 growerid integer not null,
@@ -390,7 +410,7 @@ foreign key(seasonid) references seasons(id)
 
 
 
-create table loans(
+create table if not exists loans(
 id integer primary key auto_increment,
 userid integer not null,
 growerid integer not null,
@@ -415,7 +435,7 @@ foreign key(productid) references products(id)
 );
 
 
-create table contracted_hectares(
+create table if not exists contracted_hectares(
 id integer primary key auto_increment,
 userid integer not null,
 growerid integer not null,
@@ -430,7 +450,7 @@ foreign key(seasonid) references seasons(id),
 
 
 
-create table con_loan(
+create table if not exists con_loan(
 id integer primary key auto_increment,
 loanid integer not null,
 sync integer not null default 0,
@@ -440,7 +460,7 @@ foreign key(loanid) references loans(id)
 
 
 
-create table confirm_user(
+create table if not exists confirm_user(
 id integer primary key auto_increment,
 userid integer not null,
 confirmid integer not null,
@@ -456,7 +476,7 @@ foreign key(confirmid) references con_loan(id)
 
 
 
-create table sod(
+create table if not exists sod(
 id integer primary key auto_increment,
 userid integer not null,
 latitude varchar(100) not null,
@@ -475,7 +495,7 @@ foreign key(seasonid) references seasons(id)
 
 
 
-create table exemptions(
+create table if not exists exemptions(
 id integer primary key auto_increment,
 userid integer not null,
 seasonid integer not null,
@@ -505,7 +525,7 @@ foreign key(seasonid) references seasons(id)
 
 
 
-create table road_blocks(
+create table if not exists road_blocks(
 id integer primary key auto_increment,
 userid integer not null,
 latitude varchar(100) not null,
@@ -519,23 +539,7 @@ foreign key(seasonid) references seasons(id)
 );
 
 
-create table eod(
-id integer primary key auto_increment,
-userid integer not null,
-latitude varchar(100) not null,
-longitude varchar(100) not null,
-seasonid integer not null,
-time varchar(100) not null,
-sync integer not null default 0,
-created_at varchar(100) not null,
-foreign key(userid) references users(id),
-foreign key(seasonid) references seasons(id)
-);
-
-
-
-create table off_route(
-
+create table if not exists eod(
 id integer primary key auto_increment,
 userid integer not null,
 latitude varchar(100) not null,
@@ -550,24 +554,40 @@ foreign key(seasonid) references seasons(id)
 
 
 
+create table if not exists off_route(
+
+id integer primary key auto_increment,
+userid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+time varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
 
 
 
-create table parameters(
+
+
+
+create table if not exists parameters(
 id integer primary key auto_increment,
 name varchar(100) not null unique
 );
 
 
 
-create table charges(
+create table if not exists charges(
 id integer primary key auto_increment,
 name varchar(100) not null unique
 );
 
 
 
-create table charges_amount(
+create table if not exists charges_amount(
 id integer primary key auto_increment,
 chargeid integer not null,
 seasonid integer not null,
@@ -584,7 +604,7 @@ created_at varchar(100) not null
 
 
 
-create table loan_payments(
+create table if not exists loan_payments(
 id integer primary key auto_increment,
 userid integer not null,
 seasonid integer not null,
@@ -606,9 +626,7 @@ foreign key(growerid) references growers(id)
 
 
 
-
-
-create table loan_balances(
+create table if not exists loan_balances(
 id integer primary key auto_increment,
 loanid integer not null,
 amount double(100,2) default 0,
@@ -620,7 +638,7 @@ created_at varchar(100) not null
 
 
 
-create table seed_beds(
+create table if not exists seed_beds(
 id integer primary key auto_increment,
 userid integer not null,
 seasonid integer not null,
@@ -680,6 +698,31 @@ foreign key(growerid) references growers(id)
 
 
 
+
+create table if not exists reaping(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+top_leaf integer not null default 0,
+lugs integer not null default 0,
+cutters integer not null default 0,
+prime integer not null default 0,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+
+
+
 create table if not exists curing(
 id integer primary key auto_increment,
 userid integer not null,
@@ -696,6 +739,8 @@ foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
+
+
 
 
 
@@ -777,7 +822,7 @@ foreign key(growerid) references growers(id)
 
 
 
-create table seedling_quality(
+create table if not exists seedling_quality(
 id integer primary key auto_increment,
 userid integer not null,
 seasonid integer not null,
@@ -800,7 +845,7 @@ foreign key(growerid) references growers(id)
 
 
 
-create table plant_irrigated(
+create table if not exists plant_irrigated(
 id integer primary key auto_increment,
 userid integer not null,
 seasonid integer not null,
@@ -827,7 +872,7 @@ foreign key(growerid) references growers(id)
 
 
 
-create table planting_dryLand(
+create table if not exists planting_dryLand(
 
 id integer primary key auto_increment,
 userid integer not null,
@@ -855,7 +900,7 @@ foreign key(growerid) references growers(id)
 
 
 
-create table crop_growth(
+create table if not exists crop_growth(
 id integer primary key auto_increment,
 userid integer not null,
 seasonid integer not null,
@@ -884,7 +929,7 @@ foreign key(growerid) references growers(id)
 
 
 
-create table crop_development(
+create table if not exists crop_development(
 id integer primary key auto_increment,
 userid integer not null,
 seasonid integer not null,
@@ -911,7 +956,7 @@ foreign key(growerid) references growers(id)
 
 
 
-create table cultural_practices(
+create table if not exists cultural_practices(
 id integer primary key auto_increment,
 userid integer not null,
 seasonid integer not null,
@@ -938,7 +983,7 @@ foreign key(growerid) references growers(id)
 
 
 
-create table barn_repair_and_maintenance(
+create table if not exists barn_repair_and_maintenance(
 id integer primary key auto_increment,
 userid integer not null,
 seasonid integer not null,
@@ -963,7 +1008,7 @@ foreign key(growerid) references growers(id)
 
 
 
-create table hail_strike(
+create table if not exists hail_strike(
 id integer primary key auto_increment,
 userid integer not null,
 seasonid integer not null,
@@ -1011,7 +1056,6 @@ DELIMITER ;
 
 
 
-
 insert into assessment_type(name) value("Qualitative");
 insert into assessment_type(name) value("Quantitative");
 
@@ -1027,6 +1071,7 @@ insert into rights(description,notes) value("Field Officer","Field Officer");
 insert into rights(description,notes) value("Field Officer(Loans Access)","Field Officer");
 insert into rights(description,notes) value("Management","Management");
 insert into rights(description,notes) value("Registration","Registration");
+insert into rights(description,notes) value("WareHouse Supervisor","WareHouse Supervisor");
 
 
 

@@ -19,7 +19,7 @@ $seasonid=$data->seasonid;
 
 
 if ($description=="") {
-  $sql = "Select userid,latitude,longitude,sod.seasonid,time,eod,sod.created_at,eod_created_at,username from sod join users on users.id=sod.userid where sod.seasonid=$seasonid ";
+  $sql = "Select userid,latitude,longitude,sod.seasonid,time,eod,sod.created_at,eod_created_at,username from sod join users on users.id=sod.userid where sod.seasonid=$seasonid order by created_at desc";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -40,7 +40,7 @@ $result = $conn->query($sql);
 
 }else{
 
-$sql = "Select userid,latitude,longitude,sod.seasonid,time,eod,sod.created_at,eod_created_at,username from sod join users on users.id=sod.userid where sod.seasonid=$seasonid and username='$description'";
+$sql = "Select userid,latitude,longitude,sod.seasonid,time,eod,sod.created_at,eod_created_at,username from sod join users on users.id=sod.userid where sod.seasonid=$seasonid and username='$description' order by created_at desc" ;
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
