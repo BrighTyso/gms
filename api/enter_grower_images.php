@@ -7,9 +7,11 @@ $growerid=0;
 $grower_num="";
 $lat="";
 $long="";
-$kg_per_ha="";
+$percentage_strike="";
+$strike_date="";
 $seasonid=0;
 $sqliteid=0;
+$image="";
 
 
 
@@ -20,17 +22,15 @@ $data=array();
 
 //http://192.168.1.190/gms/api/enter_hail_strike.php?userid=1&grower_num=V123456&latitude=13.2222&longitude=3.33376&created_at=23-09-2022&percentage_strike=12333&strike_date=12333&seasonid=1&sqliteid=1
 
-if (isset($_GET['no_of_plants']) && isset($_GET['userid'])  && isset($_GET['latitude'])  && isset($_GET['longitude'])   && isset($_GET['seasonid']) && isset($_GET['created_at']) && isset($_GET['sqliteid'])  && isset($_GET['grower_num'])){
+if (isset($_POST['userid']) && isset($_POST['seasonid']) && isset($_POST['created_at']) && isset($_POST['sqliteid'])  && isset($_POST['grower_num']) && isset($_POST['image'])){
 
 
-$userid=validate($_GET['userid']);
-$seasonid=validate($_GET['seasonid']);
-$lat=validate($_GET['latitude']);
-$long=validate($_GET['longitude']);
-$grower_num=validate($_GET['grower_num']);
-$no_of_plants=validate($_GET['no_of_plants']);
-$created_at=validate($_GET['created_at']);
-$sqliteid=validate($_GET['sqliteid']);
+$userid=validate($_POST['userid']);
+$seasonid=validate($_POST['seasonid']);
+$grower_num=validate($_POST['grower_num']);
+$created_at=validate($_POST['created_at']);
+$sqliteid=validate($_POST['sqliteid']);
+$image=validate($_POST['image']);
 
 
 
@@ -49,13 +49,13 @@ $result = $conn->query($sql);
  }
 
 
-
 // then insert loan
 
 
   if ($growerid>0) {
 
-   $insert_sql = "INSERT INTO ploughing(userid,seasonid,growerid,latitude,longitude,no_of_plants,created_at) VALUES ($userid,$growerid,$seasonid,'$lat','$long','$no_of_plants','$created_at')";
+   $insert_sql = "INSERT INTO grower_image(userid,growerid,seasonid,image,created_at
+) VALUES ($userid,$growerid,$seasonid,'$image','$created_at')";
    //$gr = "select * from login";
    if ($conn->query($insert_sql)===TRUE) {
    
@@ -71,6 +71,8 @@ $result = $conn->query($sql);
 
    
    }
+
+
 
 
 

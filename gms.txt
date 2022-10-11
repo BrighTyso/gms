@@ -371,6 +371,21 @@ foreign key(seasonid) references seasons(id)
 
 
 
+create table if not exists grower_image(
+id integer primary key auto_increment,
+userid integer not null,
+growerid integer not null,
+seasonid integer not null,
+image varchar(100000000) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
 
 
 create table if not exists grower_visits(

@@ -26,7 +26,7 @@ $forth_long="";
 
 //userid=1&name="bright"&surname="kaponda"&grower_num="12333"&area="ggg"&province="tttt"&phone="0784428797"&id_num="12345666"&created_at="44-44-44"&lat="12.2223"&long="15.45555"
 
-if (isset($_GET['userid']) &&  isset($_GET['grower_num']) && isset($_GET['created_at']) && isset($_GET['lat']) && isset($_GET['long']) && isset($_GET['sqliteid'])){
+if (isset($_GET['userid']) &&  isset($_GET['grower_num']) && isset($_GET['created_at']) && isset($_GET['first_lat']) && isset($_GET['first_long']) && isset($_GET['sqliteid'])){
 
 $userid=$_GET['userid'];
 $grower_num=$_GET['grower_num'];

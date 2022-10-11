@@ -60,7 +60,7 @@ $result = $conn->query($sql);
 
   if ($growerid>0) {
 
-   $insert_sql = "INSERT INTO curing(userid,growerid,seasonid,latitude,longitude,yellowing,leaf_drying,stem_drying,created_at) VALUES ($userid,$growerid,$seasonid,'$latitude','$longitude',$yellowing,$leaf_drying,$stem_drying,'$created_at')";
+   $insert_sql = "INSERT INTO curing(userid,growerid,seasonid,latitude,longitude,yellowing,leaf_drying,stem_drying,created_at) VALUES ($userid,$growerid,$seasonid,'$lat','$long',$yellowing,$leaf_drying,$stem_drying,'$created_at')";
    //$gr = "select * from login";
    if ($conn->query($insert_sql)===TRUE) {
    
