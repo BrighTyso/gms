@@ -12,21 +12,21 @@ require "validate.php";
 $data = json_decode(file_get_contents("php://input"));
 
 $name="";
+$created_at="";
 $found=0;
 
 $response=array();
 
-if (isset($data->name) && isset($data->userid) && isset($data->location)){
+if (isset($data->name) && isset($data->userid) && isset($data->created_at)){
 
 
 $name=$data->name;
 $userid=$data->userid;
-$location=$data->location;
 $created_at=$data->created_at;
 
 
 
-$sql = "Select * from store where name='$name'";
+$sql = "Select * from insurance where name='$name'";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -41,7 +41,7 @@ $result = $conn->query($sql);
 
 
 if ($found==0) {
-  $user_sql = "INSERT INTO store(userid,name,location,created_at) VALUES ($userid,'$name','$location','$created_at')";
+  $user_sql = "INSERT INTO insurance(userid,name,created_at) VALUES ($userid,'$name','$created_at')";
    //$sql = "select * from login";
    if ($conn->query($user_sql)===TRUE) {
    

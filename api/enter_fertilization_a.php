@@ -55,7 +55,7 @@ $result = $conn->query($sql);
 
   if ($growerid>0) {
 
-   $insert_sql = "INSERT INTO fertilization_ammonium(userid,seasonid,growerid,latitude,longitude,kg_per_ha,created_at) VALUES ($userid,$growerid,$seasonid,'$lat','$long','$kg_per_ha','$created_at')";
+   $insert_sql = "INSERT INTO fertilization_ammonium(userid,seasonid,growerid,latitude,longitude,kg_per_ha,created_at) VALUES ($userid,$seasonid,$growerid,'$lat','$long','$kg_per_ha','$created_at')";
    //$gr = "select * from login";
    if ($conn->query($insert_sql)===TRUE) {
    

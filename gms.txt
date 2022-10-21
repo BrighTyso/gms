@@ -1,6 +1,6 @@
 create table if not exists rights(
 id integer primary key auto_increment,
-description varchar(100) not null,
+description varchar(100) not null unique,
 notes varchar(100) not null
 );
 
@@ -24,7 +24,8 @@ create table if not exists seasons(
 id integer primary key auto_increment,
 name varchar(100) not null unique,
 active integer not null default 1,
-created_at varchar(100) not null
+created_at varchar(100) not null,
+datetime TIMESTAMP not null
 );
 
 
@@ -40,6 +41,7 @@ rightsid integer not null,
 active integer not null default 1,
 access_code integer not null,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(rightsid) references rights(id)
 
 );
@@ -54,6 +56,7 @@ supervisorid integer not null,
 leaf_techid integer not null,
 seasonid integer not null,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(supervisorid) references users(id),
 foreign key(leaf_techid) references users(id),
 foreign key(seasonid) references seasons(id)
@@ -73,6 +76,7 @@ latitude varchar(100) not null,
 longitude varchar(100) not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id)
 );
 
@@ -82,7 +86,8 @@ foreign key(userid) references users(id)
 create table if not exists products(
 id integer primary key auto_increment,
 name varchar(100) not null,
-units varchar(100) not null
+units varchar(100) not null,
+datetime TIMESTAMP not null
 );
 
 
@@ -92,6 +97,7 @@ userid integer not null,
 name varchar(100) not null,
 location varchar(100) not null,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id)
 );
 
@@ -105,6 +111,7 @@ storeid integer not null,
 productid integer not null,
 quantity integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(storeid) references store(id),
 foreign key(productid) references products(id)
@@ -119,13 +126,10 @@ storeitemid integer not null ,
 old_quantity integer not null,
 new_quantity integer not null,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(storeitemid) references store_items(id)
 );
-
-
-
-
 
 
 
@@ -141,6 +145,7 @@ driver_surname varchar(100) not null,
 destination varchar(100) not null,
 close_open integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id)
 );
 
@@ -156,6 +161,7 @@ productid integer not null,
 storeid integer not null,
 quantity integer not null,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(productid) references products(id),
 foreign key(storeid) references store(id),
@@ -173,6 +179,7 @@ productid integer not null,
 storeid integer not null,
 quantity integer not null,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(productid) references products(id),
 foreign key(storeid) references store(id),
@@ -193,6 +200,7 @@ disbursement_trucksid integer not null,
 productid integer not null,
 quantity integer not null,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(productid) references products(id),
 foreign key(disbursement_trucksid) references truck_destination(id),
@@ -203,16 +211,7 @@ foreign key(growerid) references growers(id)
 
 
 
-DELIMITER $$
-create trigger on_disbursement
-after insert on disbursement
-for each row
-BEGIN
- insert into total_disbursement(disbursement_trucksid,disbursementid,userid,productid,storeid,quantity,created_at
-) values(NEW.disbursement_trucksid,NEW.id,NEW.userid,NEW.productid,New.storeid,New.quantity,NEW.created_at);
-END; 
-$$
-DELIMITER ;
+
 
 
 create table if not exists prices(
@@ -223,6 +222,7 @@ amount double(100,2) not null default 0,
 seasonid integer not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(productid) references products(id)
 );
@@ -240,7 +240,8 @@ phone varchar(100),
 id_num varchar(100) not null,
 seasonid integer not null,
 sync integer not null default 1,
-created_at varchar(100),
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
 );
@@ -255,7 +256,8 @@ id integer primary key auto_increment,
 growerid integer not null,
 image blob not null,
 sync integer not null default 0,
-created_at varchar(100) not null
+created_at varchar(100) not null,
+datetime TIMESTAMP not null
 );
 
 
@@ -290,10 +292,13 @@ seasonid integer not null,
 hectares varchar(100),
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
 foreign key(seasonid) references seasons(id)
 );
+
+
 
 
 
@@ -308,10 +313,14 @@ longitude varchar(100) not null,
 seasonid integer not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
 foreign key(seasonid) references seasons(id)
 );
+
+
+
 
 
 
@@ -326,6 +335,7 @@ longitude varchar(100) not null,
 seasonid integer not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
 foreign key(seasonid) references seasons(id)
@@ -343,10 +353,13 @@ longitude varchar(100) not null,
 seasonid integer not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
 foreign key(seasonid) references seasons(id)
 );
+
+
 
 
 
@@ -364,6 +377,7 @@ latitude varchar(100) not null,
 longitude varchar(100) not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
 foreign key(seasonid) references seasons(id)
@@ -379,6 +393,7 @@ seasonid integer not null,
 image varchar(100000000) not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
 foreign key(seasonid) references seasons(id)
@@ -400,6 +415,7 @@ other varchar(100) not null,
 seasonid integer not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
 foreign key(seasonid) references seasons(id)
@@ -417,6 +433,7 @@ number varchar(100) not null,
 seasonid integer not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
 foreign key(seasonid) references seasons(id)
@@ -443,11 +460,15 @@ hectares varchar(100) default 0,
 verified_at varchar(100),
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
 foreign key(seasonid) references seasons(id),
 foreign key(productid) references products(id)
 );
+
+
+
 
 
 create table if not exists contracted_hectares(
@@ -458,6 +479,7 @@ seasonid integer not null,
 hectares varchar(100) not null,
 sync integer not null default 0,
 created varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
 foreign key(seasonid) references seasons(id),
@@ -481,6 +503,7 @@ userid integer not null,
 confirmid integer not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(confirmid) references con_loan(id)
 );
@@ -502,6 +525,7 @@ eod integer not null default 0,
 created_at varchar(100) not null,
 sync integer not null default 0,
 eod_created_at TEXT not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
 );
@@ -518,7 +542,9 @@ exemption_date varchar(100) not null,
 description varchar(100) not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
-foreign key(userid) references users(id)
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
 );
 
 
@@ -533,6 +559,7 @@ latitude varchar(100) not null,
 longitude varchar(100) not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
 );
@@ -549,6 +576,7 @@ seasonid integer not null,
 time varchar(100) not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
 );
@@ -563,6 +591,7 @@ seasonid integer not null,
 time varchar(100) not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
 );
@@ -579,6 +608,7 @@ seasonid integer not null,
 time varchar(100) not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
 );
@@ -610,7 +640,12 @@ parameterid integer not null,
 userid integer not null,
 sync integer not null default 0,
 value double(100,2) not null,
-created_at varchar(100) not null
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(chargeid) references charges(id),
+foreign key(parameterid) references parameters(id)
 );
 
 
@@ -628,6 +663,7 @@ amount double(100,2) not null,
 mass double(100,2) not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
@@ -645,7 +681,8 @@ create table if not exists loan_balances(
 id integer primary key auto_increment,
 loanid integer not null,
 amount double(100,2) default 0,
-created_at varchar(100) not null
+created_at varchar(100) not null,
+datetime TIMESTAMP not null
 );
 
 
@@ -667,11 +704,15 @@ latitude varchar(100) not null,
 longitude varchar(100) not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 
 );
+
+
+
 
 
 
@@ -686,10 +727,12 @@ longitude varchar(100) not null,
 no_of_plants integer not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
+
 
 
 
@@ -705,10 +748,14 @@ longitude varchar(100) not null,
 kg_per_ha varchar(100) not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
+
+
+
 
 
 
@@ -727,10 +774,14 @@ cutters integer not null default 0,
 prime integer not null default 0,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
+
+
+
 
 
 
@@ -750,10 +801,14 @@ leaf_drying integer not null default 0,
 stem_drying integer not null default 0,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
+
+
+
 
 
 
@@ -770,10 +825,14 @@ longitude varchar(100) not null,
 kg_per_ha varchar(100) not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
+
+
+
 
 
 
@@ -796,11 +855,14 @@ forth_lat varchar(100) not null,
 forth_long varchar(100) not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 
 );
+
+
 
 
 
@@ -824,11 +886,17 @@ forth_lat varchar(100) not null,
 forth_long varchar(100) not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 
 );
+
+
+
+
+
 
 
 
@@ -850,10 +918,15 @@ average integer not null default 0,
 poor integer not null default 0,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
+
+
+
+
 
 
 
@@ -874,12 +947,12 @@ crop_stand_perc varchar(100),
 crop_unifomity_perc varchar(100),
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 
 );
-
 
 
 
@@ -902,11 +975,14 @@ crop_stand_perc varchar(100),
 crop_unifomity_perc varchar(100),
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 
 );
+
+
 
 
 
@@ -929,10 +1005,12 @@ full_grown_18_22 integer not null default 0,
 fully_developed integer not null default 0,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
+
 
 
 
@@ -958,10 +1036,12 @@ heavy integer default 0,
 heavy_and_dark integer default 0,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
+
 
 
 
@@ -987,11 +1067,13 @@ post_topping_unifomity_perc varchar(100),
 pets_and_disease_management varchar(100),
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 
 );
+
 
 
 
@@ -1011,13 +1093,12 @@ finished_repaired integer not null default 0,
 barn_working_well integer not null default 0,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 
 );
-
-
 
 
 
@@ -1034,10 +1115,335 @@ percentage_strike varchar(100) not null,
 strike_date varchar(100) not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
+
+
+
+
+
+
+
+create table if not exists insurance(
+id integer primary key auto_increment,
+userid integer not null,
+name varchar(100) not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id)
+); 
+
+
+
+
+
+create table if not exists insurance_users(
+id integer primary key auto_increment,
+userid integer not null,
+insuranceid integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(insuranceid) references insurance(id)
+);
+
+
+
+
+
+
+create table if not exists insurance_growers(
+id integer primary key auto_increment,
+userid integer not null,
+insuranceid integer not null,
+growerid integer not null,
+seasonid integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(insuranceid) references insurance(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+create table if not exists insurance_grower_visits(
+id integer primary key auto_increment,
+userid integer not null,
+insuranceid integer not null,
+growerid integer not null,
+seasonid integer not null
+
+
+);
+
+
+
+create table if not exists visits(
+id integer primary key auto_increment,
+userid integer not null,
+growerid integer not null,
+seasonid integer not null,
+description varchar(100) not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+DELIMITER $$
+create trigger on_grower_lat_long
+after insert on lat_long
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"Home Location");
+END;
+$$
+DELIMITER ;
+
+
+
+
+
+
+DELIMITER $$
+create trigger on_grower_visit_barn_repair_and_maintenance
+after insert on barn_repair_and_maintenance
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"barn repair and maintenance");
+END;
+$$
+DELIMITER ;
+
+
+
+
+
+DELIMITER $$
+create trigger on_grower_barn_location
+after insert on barn_location
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"barn location");
+END;
+$$
+DELIMITER ;
+
+
+
+DELIMITER $$
+create trigger on_grower_grower_farm
+after insert on grower_farm
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"grower farm");
+END;
+$$
+DELIMITER ;
+
+
+DELIMITER $$
+create trigger on_grower_seed_beds
+after insert on seed_beds
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"seed beds");
+END;
+$$
+DELIMITER ;
+
+
+
+DELIMITER $$
+create trigger on_grower_ploughing
+after insert on ploughing
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"ploughing");
+END;
+$$
+DELIMITER ;
+
+
+
+DELIMITER $$
+create trigger on_grower_fertilization_ammonium
+after insert on fertilization_ammonium
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"fertilization ammonium");
+END;
+$$
+DELIMITER ;
+
+
+
+
+DELIMITER $$
+create trigger on_grower_visit_reaping
+after insert on reaping
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"reaping");
+END;
+$$
+DELIMITER ;
+
+
+
+
+DELIMITER $$
+create trigger on_grower_visit_curing
+after insert on curing
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"curing");
+END;
+$$
+DELIMITER ;
+
+
+
+DELIMITER $$
+create trigger on_grower_visit_fertilization_potassium
+after insert on fertilization_potassium
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"fertilization potassium");
+END;
+$$
+DELIMITER ;
+
+
+
+
+DELIMITER $$
+create trigger on_grower_visit_farm_mapping
+after insert on farm_mapping
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.first_lat,NEW.first_long,NEW.created_at,"farm mapping");
+END;
+$$
+DELIMITER ;
+
+
+
+
+DELIMITER $$
+create trigger on_grower_visit_hail_strike_mapping
+after insert on hail_strike_mapping
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.first_lat,NEW.first_long,NEW.created_at,"hail strike mapping");
+END;
+$$
+DELIMITER ;
+
+
+
+
+DELIMITER $$
+create trigger on_grower_visit_seedling_quality
+after insert on seedling_quality
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"seedling quality");
+END;
+$$
+DELIMITER ;
+
+
+
+DELIMITER $$
+create trigger on_grower_visit_plant_irrigated
+after insert on plant_irrigated
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"plant irrigated");
+END;
+$$
+DELIMITER ;
+
+
+
+
+DELIMITER $$
+create trigger on_grower_visit_planting_dryLand
+after insert on planting_dryLand
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"planting dryLand");
+END;
+$$
+DELIMITER ;
+
+
+
+
+DELIMITER $$
+create trigger on_grower_visit_crop_growth
+after insert on crop_growth
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"crop growth");
+END;
+$$
+DELIMITER ;
+
+
+
+
+
+DELIMITER $$
+create trigger on_grower_visit_crop_development
+after insert on crop_development
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"crop development");
+END;
+$$
+DELIMITER ;
+
+
+
+
+
+
+DELIMITER $$
+create trigger on_grower_visit_cultural_practices
+after insert on cultural_practices
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"cultural practices");
+END;
+$$
+DELIMITER ;
+
+
+
+
+
+DELIMITER $$
+create trigger on_grower_visit_hail_strike
+after insert on hail_strike
+for each row
+BEGIN
+ insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"hail Strike");
+END;
+$$
+DELIMITER ;
+
 
 
 
@@ -1067,6 +1473,17 @@ DELIMITER ;
 
 
 
+DELIMITER $$
+create trigger on_disbursement
+after insert on disbursement
+for each row
+BEGIN
+ insert into total_disbursement(disbursement_trucksid,disbursementid,userid,productid,storeid,quantity,created_at
+) values(NEW.disbursement_trucksid,NEW.id,NEW.userid,NEW.productid,New.storeid,New.quantity,NEW.created_at);
+END; 
+$$
+DELIMITER ;
+
 
 
 
@@ -1075,18 +1492,19 @@ insert into assessment_type(name) value("Qualitative");
 insert into assessment_type(name) value("Quantitative");
 
 
-insert into rights(description,notes) value("System administrator","System administrator");
-insert into rights(description,notes) value("I.T Assistant","I.T Assistant");
-insert into rights(description,notes) value("Accountant","Accountant");
-insert into rights(description,notes) value("Account Clerk","Account Clerk");
-insert into rights(description,notes) value("Hr Admin","Account Clerk");
-insert into rights(description,notes) value("Hr Assistant","Hr Assistant");
-insert into rights(description,notes) value("Area Manager","Area Manager");
-insert into rights(description,notes) value("Field Officer","Field Officer");
-insert into rights(description,notes) value("Field Officer(Loans Access)","Field Officer");
-insert into rights(description,notes) value("Management","Management");
-insert into rights(description,notes) value("Registration","Registration");
-insert into rights(description,notes) value("WareHouse Supervisor","WareHouse Supervisor");
+insert into rights(description,notes) value("System administrator","System administrator1");
+insert into rights(description,notes) value("I.T Assistant","I.T Assistant2");
+insert into rights(description,notes) value("Accountant","Accountant3");
+insert into rights(description,notes) value("Account Clerk","Account Clerk4");
+insert into rights(description,notes) value("Hr Admin","Account Clerk5");
+insert into rights(description,notes) value("Hr Assistant","Hr Assistant6");
+insert into rights(description,notes) value("Area Manager","Area Manager7");
+insert into rights(description,notes) value("Field Officer","Field Officer8");
+insert into rights(description,notes) value("Field Officer(Loans Access)","Field Officer9");
+insert into rights(description,notes) value("Management","Management10");
+insert into rights(description,notes) value("Registration","Registration11");
+insert into rights(description,notes) value("WareHouse Supervisor","WareHouse Supervisor12");
+insert into rights(description,notes) value("Insurance","Insurance13");
 
 
 

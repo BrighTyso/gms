@@ -11,22 +11,23 @@ require "validate.php";
 
 $data = json_decode(file_get_contents("php://input"));
 
-$name="";
+$insuranceid=0;
+$created_at="";
 $found=0;
+$userid=0;
 
 $response=array();
 
-if (isset($data->name) && isset($data->userid) && isset($data->location)){
+if (isset($data->insuranceid) && isset($data->userid) && isset($data->created_at)){
 
 
-$name=$data->name;
 $userid=$data->userid;
-$location=$data->location;
+$insuranceid=$data->insuranceid;
 $created_at=$data->created_at;
 
 
 
-$sql = "Select * from store where name='$name'";
+$sql = "Select * from insurance_users where userid=$userid and insuranceid=$insuranceid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -34,14 +35,18 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-    $found=$row["id"];
+    $found=$row["insuranceid"];
     
    }
  }
 
 
+
+
+
+
 if ($found==0) {
-  $user_sql = "INSERT INTO store(userid,name,location,created_at) VALUES ($userid,'$name','$location','$created_at')";
+  $user_sql = "INSERT INTO insurance_users(userid,insuranceid,created_at ) VALUES ($userid,$insuranceid,'$created_at')";
    //$sql = "select * from login";
    if ($conn->query($user_sql)===TRUE) {
    

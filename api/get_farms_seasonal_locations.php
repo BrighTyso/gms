@@ -13,16 +13,15 @@ $data = json_decode(file_get_contents("php://input"));
 
 $description=$data->description;
 $seasonid=$data->seasonid;
-$startDate=$data->startDate;
-$endDate=$data->endDate;
+$created_at=$data->created_at;
 
 $data1=array();
 // get grower locations
 
 if ($description!="" && $seasonid!="") {
-	
+  
 
-$sql = "Select road_blocks.created_at,latitude,longitude,time,username from road_blocks join users on users.id=road_blocks.userid where  users.username='$description' and road_blocks.created_at between '$startDate' and '$endDate' ORDER BY road_blocks.created_at,road_blocks.time,road_blocks.id";
+$sql = "Select growers.grower_num, growers.name as grower_name , grower_farm.latitude ,grower_farm.longitude , users.username from grower_farm join users on users.id=grower_farm.userid join growers on growers.id=grower_farm.growerid where users.name='$description'  or users.surname='$description' or users.username='$description' or growers.province='$description' or growers.grower_num='$description' and  grower_farm.seasonid=$seasonid";
 
 $result = $conn->query($sql);
  
@@ -31,16 +30,16 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-     $temp=array("created_at"=>$row["created_at"],"latitude"=>$row["latitude"] ,"longitude"=>$row["longitude"],"time"=>$row["time"],"username"=>$row["username"]);
+     $temp=array("grower_name"=>$row["grower_name"],"lat"=>$row["latitude"] ,"long"=>$row["longitude"],"grower_num"=>$row["grower_num"],"username"=>$row["username"]);
     array_push($data1,$temp);
     
    }
  }
 
 
-}else if ($description=="" ){
-	// get alll
-	$sql = "Select road_blocks.created_at,latitude,longitude,time,username from road_blocks join users on users.id=road_blocks.userid where road_blocks.created_at between '$startDate' and '$endDate' ORDER BY road_blocks.created_at,road_blocks.time,road_blocks.id";
+}else if ($description=="" && $seasonid!=""){
+  // get alll
+  $sql = "Select growers.grower_num, growers.name as grower_name , grower_farm.latitude ,grower_farm.longitude , users.username from grower_farm join users on users.id=grower_farm.userid join growers on growers.id=grower_farm.growerid where grower_farm.seasonid=$seasonid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -48,7 +47,7 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-     $temp=array("created_at"=>$row["created_at"],"latitude"=>$row["latitude"] ,"longitude"=>$row["longitude"],"time"=>$row["time"],"username"=>$row["username"]);
+    $temp=array("grower_name"=>$row["grower_name"],"lat"=>$row["latitude"] ,"long"=>$row["longitude"],"grower_num"=>$row["grower_num"],"username"=>$row["username"]);
     array_push($data1,$temp);
     
    }
