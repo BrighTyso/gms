@@ -641,7 +641,7 @@ foreign key(seasonid) references seasons(id)
 
 
 
-create table farm_mapping(
+create table if not exists  farm_mapping(
 
 id integer primary key autoIncrement,
 userid integer not null,
@@ -663,12 +663,22 @@ foreign key(growerid) references growers(id)
 );
 
 
+create table if not exists  mapped_hectares(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+ha varchar(100) not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
 
 
 
 
-
-create table hail_strike_mapping(
+create table if not exists  hail_strike_mapping(
 
 id integer primary key autoIncrement,
 userid integer not null,

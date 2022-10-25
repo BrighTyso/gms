@@ -14,7 +14,7 @@ if (isset($_GET["description"])) {
  
 if ($description=="") {
 
-$sql = "select name,surname,id from users where active=1 and (rightsid=8 or rightsid=9)";
+$sql = "select name,surname,id from users where active=1 and (rightsid=8 or rightsid=9 or rightsid=14)";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

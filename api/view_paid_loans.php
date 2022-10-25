@@ -19,7 +19,7 @@ $seasonid=$data->seasonid;
 
 if ($description=="") {
  
-$sql = "Select distinct amount,mass,loan_payments.created_at from loan_payments join growers on growers.id=loan_payments.growerid where loan_payments.seasonid=$seasonid";
+$sql = "Select distinct loan_payments.id,amount,mass,loan_payments.created_at,growers.grower_num,growers.name,growers.surname from loan_payments join growers on growers.id=loan_payments.growerid where loan_payments.seasonid=$seasonid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -29,7 +29,7 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-     $temp=array("amount"=>$row["amount"],"mass"=>$row["mass"]);
+     $temp=array("id"=>$row["id"],"amount"=>$row["amount"],"mass"=>$row["mass"],"grower_num"=>$row["grower_num"],"name"=>$row["name"],"surname"=>$row["surname"],"created_at"=>$row["created_at"]);
     array_push($data1,$temp);
    
     
@@ -40,7 +40,7 @@ $result = $conn->query($sql);
 
 }else{
 
-$sql = "Select distinct amount,mass,loan_payments.created_at from loan_payments join growers on growers.id=loan_payments.growerid join lat_long on lat_long.growerid=growers.id join users on users.id=lat_long.userid where  grower_num='$description' or province='$description' or username='$description' and loan_payments.seasonid=$seasonid";
+$sql = "Select distinct loan_payments.id,amount,mass,loan_payments.created_at,growers.grower_num,growers.name,growers.surname from loan_payments join growers on growers.id=loan_payments.growerid join lat_long on lat_long.growerid=growers.id join users on users.id=lat_long.userid where  grower_num='$description' or province='$description' or username='$description' and loan_payments.seasonid=$seasonid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -50,9 +50,8 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-     $temp=array("amount"=>$row["amount"],"mass"=>$row["mass"]);
+      $temp=array("id"=>$row["id"],"amount"=>$row["amount"],"mass"=>$row["mass"],"grower_num"=>$row["grower_num"],"name"=>$row["name"],"surname"=>$row["surname"],"created_at"=>$row["created_at"]);
     array_push($data1,$temp);
-   
     
    }
 

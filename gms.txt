@@ -13,11 +13,25 @@ company_name varchar(100) not null
 
 
 
+create table if not exists regulator_ip(
+id integer primary key auto_increment,
+url varchar(100) not null,
+created_at varchar(100) not null
+);
+
+
+
+
+
+
+
+
 
 create table if not exists province(
 id integer primary key auto_increment,
 names varchar(100) not null
 );
+
 
 
 create table if not exists seasons(
@@ -48,9 +62,17 @@ foreign key(rightsid) references rights(id)
 
 
 
+create table if not exists regulator_sync_status(
+id integer primary key auto_increment,
+userid integer not null,
+status integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id)
+);
+
+
 
 create table if not exists supervisors(
-
 id integer primary key auto_increment,
 supervisorid integer not null,
 leaf_techid integer not null,
@@ -62,8 +84,6 @@ foreign key(leaf_techid) references users(id),
 foreign key(seasonid) references seasons(id)
 
 );
-
-
 
 
 
@@ -1198,6 +1218,22 @@ foreign key(growerid) references growers(id)
 );
 
 
+    
+
+
+create table if not exists grower_payment_import_dates(
+id integer primary key auto_increment,
+userid integer not null,
+growerid integer not null,
+seasonid integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
 
 
 DELIMITER $$
@@ -1486,10 +1522,9 @@ DELIMITER ;
 
 
 
-
-
 insert into assessment_type(name) value("Qualitative");
 insert into assessment_type(name) value("Quantitative");
+
 
 
 insert into rights(description,notes) value("System administrator","System administrator1");
@@ -1505,6 +1540,7 @@ insert into rights(description,notes) value("Management","Management10");
 insert into rights(description,notes) value("Registration","Registration11");
 insert into rights(description,notes) value("WareHouse Supervisor","WareHouse Supervisor12");
 insert into rights(description,notes) value("Insurance","Insurance13");
+insert into rights(description,notes) value("Company","Company14");
 
 
 
