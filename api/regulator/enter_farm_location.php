@@ -17,6 +17,7 @@ $created_at="";
 $sqliteid=0;
 $growerid=0;
 $seasonid=0;
+$statusid=0;
 
 $data1=array();
 

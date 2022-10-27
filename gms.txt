@@ -155,7 +155,6 @@ foreign key(storeitemid) references store_items(id)
 
 
 
-
 create table if not exists truck_destination(
 id integer primary key auto_increment,
 userid integer not null,
@@ -207,6 +206,24 @@ foreign key(disbursement_trucksid) references truck_destination(id),
 foreign key(disbursementid) references disbursement(id)
 );
 
+
+
+
+
+create table if not exists returned_stock(
+id integer primary key auto_increment,
+disbursement_trucksid integer not null,
+userid integer not null,
+productid integer not null,
+storeid integer not null,
+quantity integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(productid) references products(id),
+foreign key(storeid) references store(id),
+foreign key(disbursement_trucksid) references truck_destination(id)
+);
 
 
 
@@ -390,7 +407,7 @@ id integer primary key auto_increment,
 userid integer not null,
 growerid integer not null,
 seasonid integer not null,
-image varchar(1000000) not null,
+image TEXT not null,
 description varchar(100) not null,
 conditions varchar(100) not null,
 latitude varchar(100) not null,
@@ -410,7 +427,7 @@ id integer primary key auto_increment,
 userid integer not null,
 growerid integer not null,
 seasonid integer not null,
-image varchar(100000000) not null,
+image TEXT not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
@@ -462,6 +479,11 @@ foreign key(seasonid) references seasons(id)
 
 
 
+
+
+
+
+
 create table if not exists loans(
 id integer primary key auto_increment,
 userid integer not null,
@@ -502,7 +524,7 @@ created varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
-foreign key(seasonid) references seasons(id),
+foreign key(seasonid) references seasons(id)
 );
 
 
@@ -883,6 +905,35 @@ foreign key(growerid) references growers(id)
 );
 
 
+
+create table if not exists  mapped_hectares(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+ha varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+create table if not exists estimates(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+varieties varchar(100) not null,
+estimate varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
 
 
 

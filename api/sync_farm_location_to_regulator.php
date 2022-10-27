@@ -14,7 +14,7 @@ $data = json_decode(file_get_contents("php://input"));
 $data1=array();
 
  
-$sql = "select grower_farm.id,grower_num,grower_farm.latitude,grower_farm.longitude,grower_farm.seasonid,grower_farm.userid,grower_farm.created_at,seasons.name from grower_farm join growers on growers.id=grower_farm.growerid join seasons on seasons.id=grower_farm.seasonid  ";
+$sql = "select grower_farm.id,grower_num,grower_farm.latitude,grower_farm.longitude,grower_farm.seasonid,grower_farm.userid,grower_farm.created_at,seasons.name from grower_farm join growers on growers.id=grower_farm.growerid join seasons on seasons.id=grower_farm.seasonid  where grower_farm.sync=0";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

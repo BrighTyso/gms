@@ -27,6 +27,10 @@ $result = $conn->query($sql1);
 
 
 
+
+
+
+
 if ($seasonid>0) {
  
 $sql = "Select name,surname,grower_num,lat_long.userid,area,province,phone,id_num,growers.created_at,lat_long.seasonid,latitude,longitude from growers left join lat_long on growers.id=lat_long.growerid where lat_long.seasonid=$seasonid";

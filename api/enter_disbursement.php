@@ -75,7 +75,7 @@ $result = $conn->query($sql);
 
 
 
- $sql1 = "Select * from disbursement where disbursement_trucksid=$disbursement_trucksid and  productid=$productid and  storeid=$storeid";
+ $sql1 = "Select * from disbursement where disbursement_trucksid=$disbursement_trucksid and  productid=$productid ";
 $result = $conn->query($sql1);
  
  if ($result->num_rows > 0) {
