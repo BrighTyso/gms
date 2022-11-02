@@ -55,7 +55,7 @@ $productid=$data->productid;
 
 
 
-$sql = "Select truck_destination.id,storeid  from truck_destination join disbursement on disbursement.disbursement_trucksid=truck_destination.id where trucknumber='$trucknumber' and productid=$productid and quantity>=$quantity and  close_open=1";
+$sql = "Select truck_destination.id,storeid  from truck_destination join disbursement on disbursement.disbursement_trucksid=truck_destination.id where trucknumber='$trucknumber' and productid=$productid and quantity>=$quantity and disbursement.quantity>0 and close_open=1";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -107,7 +107,9 @@ if ($disbursement_trucksid>0) {
            //$sql = "select * from login";
                if ($conn->query($user_sql)===TRUE) {
 
-            
+                    $temp=array("response"=>"success");
+                    array_push($response,$temp);
+                
                }
 
              }else{
@@ -128,7 +130,7 @@ if ($disbursement_trucksid>0) {
 
     }else{
 
-    $temp=array("response"=>"Product Already Disbursed");
+    $temp=array("response"=>"Failed To Return Product");
     array_push($response,$temp);
 
     }

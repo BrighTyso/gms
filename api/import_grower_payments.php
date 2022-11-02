@@ -18,6 +18,9 @@ $grower_num=$data->grower_num;
 $amount=$data->amount;
 $created_at=$data->created_at;
 $mass=$data->mass;
+$loan_payment_found=0;
+
+$response=array();
 
 if (isset($data->seasonid) && isset($data->userid) && isset($data->grower_num) && isset($data->amount) && isset($data->created_at)){
 
@@ -54,20 +57,63 @@ if (isset($data->seasonid) && isset($data->userid) && isset($data->grower_num) &
 
 
 
+     $sql = "Select * from loan_payment_total where growerid=$growerid and seasonid=$seasonid limit 1";
+    $result = $conn->query($sql);
+     
+     if ($result->num_rows > 0) {
+       // output data of each row
+       while($row = $result->fetch_assoc()) {
+        // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+        $loan_payment_found=1;
+        
+       }
+
+     }
+
+
+
+
 if ($growerid>0 && $loan_found==0) {
 
       $user_sql = "INSERT INTO loan_payments(userid,seasonid,growerid,amount,mass,created_at) VALUES ($userid,$seasonid,$growerid,'$amount','$mass','$created_at')";
          //$sql = "select * from login";
          if ($conn->query($user_sql)===TRUE) {
          
-           $last_id = $conn->insert_id;
-           echo json_encode("success");
+            if ($loan_payment_found==0) {
+            
+                 $user_sql = "INSERT INTO loan_payment_total(userid,seasonid,growerid,amount,mass,created_at) VALUES ($userid,$seasonid,$growerid,'$amount','$mass','$created_at')";
+                   //$sql = "select * from login";
+                       if ($conn->query($user_sql)===TRUE) {
+
+                            $temp=array("response"=>"success");
+                            array_push($response,$temp);
+                        
+                       }
+
+                  }else{
+
+                      $user_sql2 = "update loan_payment_total set amount=amount+$amount , mass=mass+$mass  where growerid = $growerid and seasonid=$seasonid";
+                     //$sql = "select * from login";
+                     if ($conn->query($user_sql2)===TRUE) {
+                     
+                        $temp=array("response"=>"success");
+                       array_push($response,$temp);
+
+                     }else{
+
+                      //$last_id = $conn->insert_id;
+                       $temp=array("response"=>"Failed To Update");
+                       array_push($response,$temp);
+
+                     }
+
+                  }
 
          }else{
 
-          echo $conn->error;
-
-          echo json_encode("failed");
+          $temp=array("response"=>"Failed ");
+               array_push($response,$temp);
 
          }
 
@@ -76,11 +122,20 @@ if ($growerid>0 && $loan_found==0) {
 
       }else{
 
-        echo json_encode("field cant be empty");
+        $temp=array("response"=>"field cant be empty");
+               array_push($response,$temp);
+
+       
       }
 
 
 }
+
+
+
+
+
+ echo json_encode($response);
 
 
 

@@ -679,6 +679,7 @@ foreign key(growerid) references growers(id)
 
 
 
+
 create table if not exists estimates(
 id integer primary key autoIncrement,
 userid integer not null,
@@ -686,6 +687,43 @@ seasonid integer not null,
 growerid integer not null,
 varieties varchar(100) not null,
 estimate varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+
+
+
+create table if not exists data_collection(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+grower_age integer not null,
+grower_sex integer not null ,
+number_of_works integer not null,
+income_per_month double(100,2) not null,
+number_of_kids integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+create table if not exists kids_age(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+kid_age integer not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),

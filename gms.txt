@@ -23,10 +23,6 @@ created_at varchar(100) not null
 
 
 
-
-
-
-
 create table if not exists province(
 id integer primary key auto_increment,
 names varchar(100) not null
@@ -714,6 +710,24 @@ foreign key(growerid) references growers(id)
 
 
 
+create table if not exists loan_payment_total(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+amount double(100,2) not null,
+mass double(100,2) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
 
 
 
@@ -858,6 +872,7 @@ foreign key(growerid) references growers(id)
 
 
 create table if not exists fertilization_potassium(
+
 id integer primary key auto_increment,
 userid integer not null,
 seasonid integer not null,
@@ -906,6 +921,9 @@ foreign key(growerid) references growers(id)
 
 
 
+
+
+
 create table if not exists  mapped_hectares(
 id integer primary key auto_increment,
 userid integer not null,
@@ -913,6 +931,7 @@ seasonid integer not null,
 growerid integer not null,
 ha varchar(100) not null,
 sync integer not null default 0,
+datetime TIMESTAMP not null,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
@@ -929,6 +948,7 @@ growerid integer not null,
 varieties varchar(100) not null,
 estimate varchar(100) not null,
 sync integer not null default 0,
+datetime TIMESTAMP not null,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
@@ -938,6 +958,38 @@ foreign key(growerid) references growers(id)
 
 
 
+create table if not exists data_collection(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+grower_age integer not null,
+grower_sex integer not null ,
+number_of_works integer not null,
+income_per_month double(100,2) not null,
+number_of_kids integer not null,
+sync integer not null default 0,
+datetime TIMESTAMP not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+create table if not exists kids_age(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+kid_age integer not null,
+sync integer not null default 0,
+datetime TIMESTAMP not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
 
 
 
@@ -1059,9 +1111,6 @@ foreign key(growerid) references growers(id)
 
 
 
-
-
-
 create table if not exists crop_growth(
 id integer primary key auto_increment,
 userid integer not null,
@@ -1081,10 +1130,6 @@ foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
-
-
-
-
 
 
 
@@ -1615,6 +1660,7 @@ insert into parameters(name) value("Percentage");
 
 insert into charges(name) value("Interest");
 insert into charges(name) value("Adminstration");
+insert into charges(name) value("Transport");
 
 
 

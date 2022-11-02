@@ -130,16 +130,19 @@ if ($response==0) {
 
 	   }
 
-   }else{
+   }
 
- $user_sql = "update lat_long set latitude='$lat' and longitude='$long' where growerid=$growerid and seasonid=$seasonid";
-   //$sql = "select * from login";
-   if ($conn->query($user_sql)===TRUE) {
+
+ //   else{
+
+ // $user_sql = "update lat_long set latitude='$lat' and longitude='$long' where growerid=$growerid and seasonid=$seasonid";
+ //   //$sql = "select * from login";
+ //   if ($conn->query($user_sql)===TRUE) {
    
-     $temp=array("growerid"=>$sqlitegrowerid,"lat_longid"=>$lat_longid);
-     array_push($data,$temp);
+ //     $temp=array("growerid"=>$sqlitegrowerid,"lat_longid"=>$lat_longid);
+ //     array_push($data,$temp);
 
-   }
+ //   }
 
 
    }
@@ -150,10 +153,7 @@ if ($response==0) {
 }
 
 
-}else{
 
-	
-}
 
 
 echo json_encode($data);
