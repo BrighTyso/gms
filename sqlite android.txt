@@ -679,6 +679,21 @@ foreign key(growerid) references growers(id)
 
 
 
+create table if not exists  mapped_hail_hectares(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+ha varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
 
 create table if not exists estimates(
 id integer primary key autoIncrement,
@@ -730,6 +745,54 @@ foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
+
+
+
+
+create table if not exists education_level(
+id integer not null,
+description varchar(100) not null
+);
+
+
+create table if not exists grower_level_of_education(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+education_level_id integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(education_level_id) references education_level(id),
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+
+);
+
+
+
+create table if not exists health_conditions(
+id integer not null,
+description varchar(100) not null
+);
+
+
+
+create table if not exists grower_health(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+health_conditionid integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(health_conditionid) references health_conditions(id),
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
 
 
 

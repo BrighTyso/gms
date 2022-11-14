@@ -42,6 +42,8 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
    
    $growerid=$row["id"];
+
+
   
     
    }
@@ -55,7 +57,7 @@ $result = $conn->query($sql);
 
   if ($growerid>0) {
 
-   $insert_sql = "INSERT INTO ploughing(userid,seasonid,growerid,latitude,longitude,no_of_plants,created_at) VALUES ($userid,$growerid,$seasonid,'$lat','$long','$no_of_plants','$created_at')";
+   $insert_sql = "INSERT INTO ploughing(userid,seasonid,growerid,latitude,longitude,no_of_plants,created_at) VALUES ($userid,$seasonid,$growerid,'$lat','$long','$no_of_plants','$created_at')";
    //$gr = "select * from login";
    if ($conn->query($insert_sql)===TRUE) {
    
@@ -64,12 +66,11 @@ $result = $conn->query($sql);
      $temp=array("id"=>$sqliteid);
       array_push($data,$temp);
 
+   }else{
+    
    }
 
 
-   }else{
-
-   
    }
 
 

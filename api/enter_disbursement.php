@@ -21,6 +21,7 @@ $userid=0;
 $found=0;
 $quantity_Enough=0;
 $product_disbursed=0;
+$old_quantity=0;
 
 $response=array();
 
@@ -48,6 +49,7 @@ $result = $conn->query($sql1);
 
     //$found=$row["id"];
     $quantity_Enough=$row["id"];
+    $old_quantity=$row["quantity"];
     
    }
  }
@@ -102,17 +104,26 @@ if ($product_disbursed==0) {
                if ($conn->query($user_sql)===TRUE) {
 
 
-                       $user_sql1 = "update store_items set quantity=quantity-$quantity , userid=$userid ,  created_at='$created_at' where storeid = $storeid and productid=$productid";
+                       $user_sql1 = "update store_items set quantity=quantity-$quantity  where storeid = $storeid and productid=$productid";
                          //$sql = "select * from login";
                          if ($conn->query($user_sql1)===TRUE) {
                          
-                        $last_id = $conn->insert_id;
-                           $temp=array("response"=>"success");
-                           array_push($response,$temp);
+                          $last_id = $conn->insert_id;
+                         
+                           $new_quantity=$old_quantity-$quantity;
+
+                            $user_sql = "INSERT INTO arc_products(userid,storeitemid,old_quantity,new_quantity,created_at) VALUES ($userid,$quantity_Enough,$old_quantity,$new_quantity,'$created_at')";
+                           //$sql = "select * from login";
+                               if ($conn->query($user_sql)===TRUE) {
+
+                               $temp=array("response"=>"success");
+                               array_push($response,$temp);
+
+                             }
+                          
 
                          }else{
-                          echo $conn->error;
-
+                         
                           //$last_id = $conn->insert_id;
                            $temp=array("response"=>"Failed To Update");
                            array_push($response,$temp);
@@ -120,7 +131,6 @@ if ($product_disbursed==0) {
                          }
 
 
-               
                  
                  
                }else{

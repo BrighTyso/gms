@@ -17,6 +17,7 @@ $surname="";
 $hash="";
 $rightsid=0;
 $active=0;
+$found_store=0;
 
 $response=array();
 
@@ -30,6 +31,7 @@ $hash=$data->hash;
 $rightsid=$data->rightsid;
 $active=$data->active;
 $created_at=$data->created_at;
+$userid=$data->userid;
 
 
 $user_sql = "INSERT INTO users(name,surname,username,hash,rightsid,active,access_code,created_at) VALUES ('$name','$surname','$username','$hash',$rightsid,$active,1234,'$created_at')";
@@ -37,8 +39,57 @@ $user_sql = "INSERT INTO users(name,surname,username,hash,rightsid,active,access
    if ($conn->query($user_sql)===TRUE) {
    
      $last_id = $conn->insert_id;
+
+     if ($rightsid==14) {
+
+     // creating store for company
+
+                $sql = "Select * from store where name='$name'";
+                $result = $conn->query($sql);
+                 
+                 if ($result->num_rows > 0) {
+                   // output data of each row
+                   while($row = $result->fetch_assoc()) {
+                    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+                    $found_store=$row["id"];
+                    
+                   }
+                 }
+
+
+                if ($found_store==0) {
+                  $user_sql = "INSERT INTO store(userid,name,location,created_at) VALUES ($userid,'$name','$name','$created_at')";
+                   //$sql = "select * from login";
+                   if ($conn->query($user_sql)===TRUE) {
+                   
+                     $last_id = $conn->insert_id;
+                     $temp=array("response"=>"success");
+                     array_push($response,$temp);
+                     
+                   }else{
+
+                   $temp=array("response"=>$conn->error);
+                   array_push($response,$temp);
+
+                   }
+                }else{
+
+                  $temp=array("response"=>"already Inserted");
+                  array_push($response,$temp);
+
+                }
+
+
+      //end here
+
+       
+     }else{
+
      $temp=array("response"=>"success");
      array_push($response,$temp);
+
+     }
      
    }else{
 

@@ -135,6 +135,9 @@ foreign key(productid) references products(id)
 
 
 
+
+
+
 create table if not exists arc_products(
 id integer primary key auto_increment,
 userid integer not null,
@@ -273,6 +276,7 @@ phone varchar(100),
 id_num varchar(100) not null,
 seasonid integer not null,
 sync integer not null default 1,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -324,6 +328,7 @@ longitude varchar(100) not null,
 seasonid integer not null,
 hectares varchar(100),
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -345,6 +350,7 @@ latitude varchar(100) not null,
 longitude varchar(100) not null,
 seasonid integer not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -367,6 +373,7 @@ latitude varchar(100) not null,
 longitude varchar(100) not null,
 seasonid integer not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -385,6 +392,7 @@ latitude varchar(100) not null,
 longitude varchar(100) not null,
 seasonid integer not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -409,6 +417,7 @@ conditions varchar(100) not null,
 latitude varchar(100) not null,
 longitude varchar(100) not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -425,6 +434,7 @@ growerid integer not null,
 seasonid integer not null,
 image TEXT not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -447,6 +457,7 @@ conditions varchar(100) not null,
 other varchar(100) not null,
 seasonid integer not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -465,6 +476,7 @@ description varchar(100) not null,
 number varchar(100) not null,
 seasonid integer not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -497,6 +509,7 @@ verified_by integer default 0,
 hectares varchar(100) default 0,
 verified_at varchar(100),
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -516,6 +529,7 @@ growerid integer not null,
 seasonid integer not null,
 hectares varchar(100) not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -529,6 +543,7 @@ create table if not exists con_loan(
 id integer primary key auto_increment,
 loanid integer not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 foreign key(loanid) references loans(id)
 );
 
@@ -540,6 +555,7 @@ id integer primary key auto_increment,
 userid integer not null,
 confirmid integer not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -562,6 +578,7 @@ time varchar(100) not null,
 eod integer not null default 0,
 created_at varchar(100) not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 eod_created_at TEXT not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -579,6 +596,7 @@ seasonid integer not null,
 exemption_date varchar(100) not null,
 description varchar(100) not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -596,6 +614,7 @@ bales integer not null,
 latitude varchar(100) not null,
 longitude varchar(100) not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -613,6 +632,7 @@ longitude varchar(100) not null,
 seasonid integer not null,
 time varchar(100) not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -628,6 +648,7 @@ longitude varchar(100) not null,
 seasonid integer not null,
 time varchar(100) not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -645,6 +666,7 @@ longitude varchar(100) not null,
 seasonid integer not null,
 time varchar(100) not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -677,6 +699,7 @@ seasonid integer not null,
 parameterid integer not null,
 userid integer not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 value double(100,2) not null,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
@@ -700,6 +723,7 @@ growerid integer not null,
 amount double(100,2) not null,
 mass double(100,2) not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -718,6 +742,7 @@ growerid integer not null,
 amount double(100,2) not null,
 mass double(100,2) not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -759,6 +784,7 @@ varieties_dry varchar(100),
 latitude varchar(100) not null,
 longitude varchar(100) not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -782,6 +808,7 @@ latitude varchar(100) not null,
 longitude varchar(100) not null,
 no_of_plants integer not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -803,6 +830,7 @@ latitude varchar(100) not null,
 longitude varchar(100) not null,
 kg_per_ha varchar(100) not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -829,6 +857,7 @@ lugs integer not null default 0,
 cutters integer not null default 0,
 prime integer not null default 0,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -856,6 +885,7 @@ yellowing integer not null default 0,
 leaf_drying integer not null default 0,
 stem_drying integer not null default 0,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -881,6 +911,7 @@ latitude varchar(100) not null,
 longitude varchar(100) not null,
 kg_per_ha varchar(100) not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -911,6 +942,7 @@ third_long varchar(100) not null,
 forth_lat varchar(100) not null,
 forth_long varchar(100) not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -931,12 +963,32 @@ seasonid integer not null,
 growerid integer not null,
 ha varchar(100) not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 datetime TIMESTAMP not null,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
+
+
+
+
+create table if not exists  mapped_hail_hectares(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+ha varchar(100) not null,
+sync integer not null default 0,
+surrogate integer not null default 0,
+datetime TIMESTAMP not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
 
 
 
@@ -948,12 +1000,16 @@ growerid integer not null,
 varieties varchar(100) not null,
 estimate varchar(100) not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 datetime TIMESTAMP not null,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
+
+
+
 
 
 
@@ -969,6 +1025,7 @@ number_of_works integer not null,
 income_per_month double(100,2) not null,
 number_of_kids integer not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 datetime TIMESTAMP not null,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
@@ -984,12 +1041,65 @@ seasonid integer not null,
 growerid integer not null,
 kid_age integer not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 datetime TIMESTAMP not null,
 created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
+
+
+create table if not exists education_level(
+id integer primary key auto_increment,
+description varchar(100) not null
+);
+
+
+create table if not exists grower_level_of_education(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+education_level_id integer not null,
+sync integer not null default 0,
+surrogate integer not null default 0,
+datetime TIMESTAMP not null,
+created_at varchar(100) not null,
+foreign key(education_level_id) references education_level(id),
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+
+);
+
+
+
+create table if not exists health_conditions(
+id integer primary key auto_increment,
+description varchar(100) not null
+);
+
+
+
+create table if not exists grower_health(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+health_conditionid integer not null,
+sync integer not null default 0,
+surrogate integer not null default 0,
+datetime TIMESTAMP not null,
+created_at varchar(100) not null,
+foreign key(health_conditionid) references health_conditions(id),
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
 
 
 
@@ -1008,6 +1118,7 @@ third_long varchar(100) not null,
 forth_lat varchar(100) not null,
 forth_long varchar(100) not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -1040,6 +1151,7 @@ standard integer not null default 0,
 average integer not null default 0,
 poor integer not null default 0,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -1069,6 +1181,7 @@ date_of_plant varchar(100),
 crop_stand_perc varchar(100),
 crop_unifomity_perc varchar(100),
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -1097,6 +1210,7 @@ date_of_plant varchar(100),
 crop_stand_perc varchar(100),
 crop_unifomity_perc varchar(100),
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -1124,6 +1238,7 @@ three_quarters_13_17 integer not null default 0,
 full_grown_18_22 integer not null default 0,
 fully_developed integer not null default 0,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -1151,6 +1266,7 @@ medium integer default 0,
 heavy integer default 0,
 heavy_and_dark integer default 0,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -1182,6 +1298,7 @@ suckering integer not null default 0,
 post_topping_unifomity_perc varchar(100),
 pets_and_disease_management varchar(100),
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -1208,6 +1325,7 @@ barn_under_repair integer not null default 0,
 finished_repaired integer not null default 0,
 barn_working_well integer not null default 0,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -1230,6 +1348,7 @@ longitude varchar(100) not null,
 percentage_strike varchar(100) not null,
 strike_date varchar(100) not null,
 sync integer not null default 0,
+surrogate integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
@@ -1239,6 +1358,99 @@ foreign key(growerid) references growers(id)
 
 
 
+create table if not exists system_estimate_prediction(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+estimate varchar(100) not null,
+sync integer not null default 0,
+surrogate integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+
+create table if not exists grower_number_of_bales(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+bales integer not null,
+sync integer not null default 0,
+surrogate integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+
+
+create table ready_for_booking(
+id integer primary key auto_increment,
+userid integer not null,
+grower_number_of_balesid integer not null,
+bales integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(grower_number_of_balesid) references grower_number_of_bales(id)
+);
+
+
+
+
+create table if not exists grower_number_of_bales_total(
+id integer primary key auto_increment,
+grower_number_of_balesid integer not null,
+bales integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(grower_number_of_balesid) references grower_number_of_bales(id)
+);
+
+
+create table if not exists contracted_to(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+create table if not exists grower_number_sale_point(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+floor_code varchar(100) not null,
+sync integer not null default 0,
+surrogate integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
 
 
 
@@ -1580,7 +1792,6 @@ DELIMITER ;
 
 
 
-
 DELIMITER $$
 create trigger on_loan_verification
 after insert on con_loan
@@ -1594,8 +1805,8 @@ DELIMITER ;
 
 
 DELIMITER $$
-create  trigger on_product_update
-before update on store_items
+create   trigger on_product_update
+after update on store_items
 for each row
 BEGIN
 insert into arc_products(storeitemid,userid,old_quantity,new_quantity,created_at) value(OLD.id,New.userid,OLD.quantity,NEW.quantity,NEW.created_at);
@@ -1637,6 +1848,7 @@ insert into rights(description,notes) value("Registration","Registration11");
 insert into rights(description,notes) value("WareHouse Supervisor","WareHouse Supervisor12");
 insert into rights(description,notes) value("Insurance","Insurance13");
 insert into rights(description,notes) value("Company","Company14");
+insert into rights(description,notes) value("Surrogate","Surrogate15");
 
 
 
