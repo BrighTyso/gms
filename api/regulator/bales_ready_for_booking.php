@@ -1,8 +1,8 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Content-Type:application/json");
-header("Access-Control-Allow-Origin-Methods:POST");
-header("Access-Control-Allow-Headers:Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Origin-Methods,Authorization,X-Requested-With");
+// header("Access-Control-Allow-Origin: *");
+// header("Content-Type:application/json");
+// header("Access-Control-Allow-Origin-Methods:POST");
+// header("Access-Control-Allow-Headers:Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Origin-Methods,Authorization,X-Requested-With");
 
 require_once("conn.php");
 require "validate.php";
@@ -11,7 +11,7 @@ require "datasource.php";
 $datasource=new DataSource();
 
 
-$data = json_decode(file_get_contents("php://input"));
+//$data = json_decode(file_get_contents("php://input"));
 
 
 $userid=0;
@@ -23,16 +23,18 @@ $data1=array();
 
 //userid=1&name="bright"&surname="kaponda"&grower_num="12333"&area="ggg"&province="tttt"&phone="0784428797"&id_num="12345666"&created_at="44-44-44"&lat="12.2223"&long="15.45555"
 
-if (isset($data->qrcode) &&  isset($data->userid)  &&  isset($data->growerid) &&  isset($data->bales) &&  isset($data->season) &&  isset($data->created_at)){
+if (isset($_GET['qrcode']) &&  isset($_GET['userid'])  &&  isset($_GET['growerid']) &&  isset($_GET['bales']) &&  isset($_GET['season']) &&  isset($_GET['created_at']) &&  isset($_GET['latitude']) &&  isset($_GET['longitude'])){
 
  
 
-$qrcode=$data->qrcode;
-$bales=$data->bales;
-$growerid=$data->growerid;
-$season=$data->season;
-$created_at=$data->created_at;
-$userid=$data->userid;
+$qrcode=$_GET['qrcode'];
+$bales=$_GET['bales'];
+$growerid=$_GET['growerid'];
+$season=$_GET['season'];
+$created_at=$_GET['created_at'];
+$userid=$_GET['userid'];
+$latitude=$_GET['latitude'];
+$longitude=$_GET['longitude'];
 $value=$datasource->encryptor("decrypt",$qrcode);
 
 
@@ -85,7 +87,7 @@ $result = $conn->query($sql1);
 
 
 
-   $grower_bales = "INSERT INTO ready_for_booking(userid,grower_number_of_balesid,bales,created_at) VALUES ($userid,$value,$bales,'$created_at')";
+   $grower_bales = "INSERT INTO ready_for_booking(userid,grower_number_of_balesid,bales,latitude,longitude,created_at) VALUES ($userid,$value,$bales,'$latitude','$longitude','$created_at')";
      
      if ($conn->query($grower_bales)===TRUE) {
      
@@ -94,21 +96,15 @@ $result = $conn->query($sql1);
            if ($conn->query($user_sql1)===TRUE) {
 
             $temp=array("response"=>"success");
-                array_push($data1,$temp);
+            array_push($data1,$temp);
+
             }
-               
 
-     }else{
+       }
 
-      
-     
-     }
+   }
 
-	
-
-  }
-
-}
+ }
 
 }
 

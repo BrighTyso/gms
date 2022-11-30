@@ -57,7 +57,7 @@ $result = $conn->query($sql);
 
 
 // then insert loan
-
+// insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"fertilization potassium");
 
   if ($growerid>0) {
 
@@ -67,8 +67,20 @@ $result = $conn->query($sql);
    
     // $last_id = $conn->insert_id;
 
-     $temp=array("id"=>$sqliteid);
-      array_push($data,$temp);
+
+
+     $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$lat','$long','$created_at','Seedling Quality');";
+       //$gr = "select * from login";
+       if ($conn->query($insert_sql)===TRUE) {
+       
+        // $last_id = $conn->insert_id;
+
+         $temp=array("id"=>$sqliteid);
+          array_push($data,$temp);
+
+       }
+
+
 
    }
 

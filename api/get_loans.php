@@ -41,7 +41,7 @@ $result = $conn->query($sql);
 }else{
 
 
-$sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username, amount from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join lat_long on lat_long.growerid=growers.id join users on users.id=lat_long.userid join prices on prices.productid=loans.productid  where loans.seasonid=$seasonid and prices.seasonid=$seasonid and lat_long.seasonid=$seasonid  and (grower_num='$description' or  users.username='$description' or province='$description')  ";
+$sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username, amount from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join contracted_hectares on contracted_hectares.growerid=growers.id join users on users.id=contracted_hectares.userid join prices on prices.productid=loans.productid  where loans.seasonid=$seasonid and prices.seasonid=$seasonid and contracted_hectares.seasonid=$seasonid  and (grower_num='$description' or  users.username='$description' or province='$description')  ";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

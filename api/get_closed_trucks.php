@@ -19,7 +19,7 @@ $data1=array();
 
 
   
-$sql = "Select id,trucknumber from truck_destination where close_open=0 order by id desc";
+$sql = "Select id,trucknumber from truck_destination where close_open=1 order by id desc";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

@@ -18,6 +18,7 @@ $seasonid=0;
 $growerid=0;
 $storeid=0;
 $contracted_to=0;
+$old_quantity=0;
 
 $userid=$data->userid;
 $lat=$data->latitude;
@@ -104,6 +105,7 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) { 
    
    $growerid=$row["id"];
+
     
     
    }
@@ -138,6 +140,7 @@ $result = $conn->query($product_sql);
     // product id
   
    $productid=$row["id"];
+
    
     
    }
@@ -179,13 +182,15 @@ $result = $conn->query($sql1);
  }
 
 
-$sql2 = "Select store.id from store join store_items on store.id=store_items.storeid where name='$username' and productid=$productid and quantity>0 and quantity>=$quantity";
+$sql2 = "Select store.id,quantity from store join store_items on store.id=store_items.storeid where name='$username' and productid=$productid and quantity>0 and quantity>=$quantity";
 $result = $conn->query($sql2);
  if ($result->num_rows > 0) {
    // output data of each row
    while($row = $result->fetch_assoc()) { 
    
    $storeid=$row["id"];
+   $quantity_Enough=$row["id"];
+    $old_quantity=$row["quantity"];
 
 
    }
@@ -215,11 +220,50 @@ $result = $conn->query($sql2);
                          if ($conn->query($user_sql1)===TRUE) {
 
                             $last_id = $conn->insert_id;
-                           $temp=array("response"=>"success");
-                           array_push($data1,$temp);
+                          
+                            $new_quantity=$old_quantity-$quantity;
+
+
+                            $user_sql2 = "INSERT INTO arc_products(userid,storeitemid,old_quantity,new_quantity,created_at) VALUES ($userid,$quantity_Enough,$old_quantity,$new_quantity,'$created_at')";
+                           //$sql = "select * from login";
+                               if ($conn->query($user_sql2)===TRUE) {
+
+                                $temp=array("response"=>"success");
+                               array_push($data1,$temp);
+
+                             }
+
+
 
                          }
                 }
+
+          }else{
+
+
+
+                    $user_sql1 = "update store_items set quantity=quantity-$quantity  where storeid=$storeid and productid=$productid";
+                         //$sql = "select * from login";
+                         if ($conn->query($user_sql1)===TRUE) {
+
+                            $last_id = $conn->insert_id;
+                          
+                            $new_quantity=$old_quantity-$quantity;
+
+
+                            $user_sql2 = "INSERT INTO arc_products(userid,storeitemid,old_quantity,new_quantity,created_at) VALUES ($userid,$quantity_Enough,$old_quantity,$new_quantity,'$created_at')";
+                           //$sql = "select * from login";
+                               if ($conn->query($user_sql2)===TRUE) {
+
+                                $temp=array("response"=>"success");
+                               array_push($data1,$temp);
+
+                             }
+
+
+
+                         }
+
 
           }
 

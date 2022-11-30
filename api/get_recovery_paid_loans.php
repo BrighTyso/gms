@@ -17,9 +17,9 @@ $description=$data->description;
 $seasonid=$data->seasonid;
 
 
-if ($description=="") {
+if ($description!="") {
  
-$sql = "Select distinct amount,mass,loan_payments.created_at from loan_payments join growers on growers.id=loan_payments.growerid where loan_payments.seasonid=$seasonid";
+$sql = "Select distinct amount,mass,loan_payment_total.created_at from loan_payment_total join growers on growers.id=loan_payment_total.growerid where loan_payment_total.seasonid=$seasonid and growers.grower_num='$description'";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -37,28 +37,6 @@ $result = $conn->query($sql);
 
 
 }
-
-}else{
-
-$sql = "Select distinct amount,mass,loan_payments.created_at from loan_payments join growers on growers.id=loan_payments.growerid join contracted_hectares on contracted_hectares.growerid=growers.id join users on users.id=contracted_hectares.userid where loan_payments.seasonid=$seasonid and (grower_num='$description' or province='$description' or username='$description') ";
-$result = $conn->query($sql);
- 
- if ($result->num_rows > 0) {
-
-
-   // output data of each row
-   while($row = $result->fetch_assoc()) {
-    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
-
-     $temp=array("amount"=>$row["amount"],"mass"=>$row["mass"]);
-    array_push($data1,$temp);
-   
-    
-   }
-
-
-}
-
 
 }
 

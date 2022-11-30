@@ -8,10 +8,6 @@ require "datasource.php";
 $datasource=new DataSource();
 
 
-
-
-
-
 $userid=0;
 $seasonid=0;
 $description="";

@@ -39,7 +39,7 @@ if (isset($data->seasonid) && isset($data->userid) && isset($data->growerid) && 
 
 
 
-$sql = "Select * from loan_payment_total where growerid=$growerid and seasonid=$seasonid limit 1";
+    $sql = "Select * from loan_payment_total where growerid=$growerid and seasonid=$seasonid limit 1";
     $result = $conn->query($sql);
      
      if ($result->num_rows > 0) {

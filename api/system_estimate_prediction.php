@@ -107,22 +107,23 @@ $result = $conn->query($sql1);
 	     $grower_bales = "INSERT INTO grower_number_of_bales(userid,seasonid,growerid,bales,created_at) VALUES ($userid,$seasonid,$growerid,$bales,'$created_at')";
      
      if ($conn->query($grower_bales)===TRUE) {
+
+        $last_id = $conn->insert_id;
+     
+
+        $grower_bales1 = "INSERT INTO grower_number_of_bales_total(grower_number_of_balesid,bales,created_at) VALUES ($last_id,$bales,'$created_at')";
+     
+     if ($conn->query($grower_bales1)===TRUE) {
      
 
        $temp=array("response"=>"success");
         array_push($data1,$temp);
 
-     }else{
-
-      //echo $conn->error;
-     
      }
 
-	   }else{
-
-      //echo $conn->error;
-     
      }
+
+	   }
 
 }
 

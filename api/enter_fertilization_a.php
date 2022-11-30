@@ -61,8 +61,16 @@ $result = $conn->query($sql);
    
     // $last_id = $conn->insert_id;
 
-     $temp=array("id"=>$sqliteid);
-      array_push($data,$temp);
+    $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$lat','$long','$created_at','Fertilization Ammonium');";
+       //$gr = "select * from login";
+       if ($conn->query($insert_sql)===TRUE) {
+       
+        // $last_id = $conn->insert_id;
+
+         $temp=array("id"=>$sqliteid);
+          array_push($data,$temp);
+
+       }
 
    }
 

@@ -58,6 +58,25 @@ foreign key(rightsid) references rights(id)
 
 
 
+create table if not exists bale_tracking_rights(
+id integer primary key auto_increment,
+description varchar(100) not null unique
+);
+
+
+create table if not exists bale_tracking_login(
+id integer primary key auto_increment,
+created_by integer not null,
+userid integer not null,
+bale_tracking_rightsid integer not null,
+seasonid integer not null,
+active integer not null default 1,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+);
+
+
+
 create table if not exists regulator_sync_status(
 id integer primary key auto_increment,
 userid integer not null,
@@ -483,7 +502,6 @@ foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
 foreign key(seasonid) references seasons(id)
 );
-
 
 
 
@@ -1397,11 +1415,13 @@ foreign key(growerid) references growers(id)
 
 
 
-create table ready_for_booking(
+create table if not exists ready_for_booking(
 id integer primary key auto_increment,
 userid integer not null,
 grower_number_of_balesid integer not null,
 bales integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
@@ -1540,6 +1560,185 @@ foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
+
+
+
+
+
+create table if not exists system_estimate_prediction(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+estimate varchar(100) not null,
+sync integer not null default 0,
+surrogate integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+
+create table if not exists grower_number_of_bales(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+bales integer not null,
+sync integer not null default 0,
+surrogate integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+
+
+
+create table if not exists ready_for_booking(
+id integer primary key auto_increment,
+userid integer not null,
+grower_number_of_balesid integer not null,
+bales integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(grower_number_of_balesid) references grower_number_of_bales(id)
+);
+
+
+
+
+create table if not exists grower_number_of_bales_total(
+id integer primary key auto_increment,
+grower_number_of_balesid integer not null,
+bales integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(grower_number_of_balesid) references grower_number_of_bales(id)
+);
+
+
+
+
+
+
+create table if not exists sold_bales(
+
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+barcode varchar(100) not null,
+mass varchar(100) not null,
+price varchar(100) not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+
+);
+
+
+
+create table if not exists total_sold_bales(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+quantity integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+
+create table if not exists dispatch(
+id integer primary key auto_increment,
+userid integer not null,
+sold_balesid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(sold_balesid) references sold_bales(id)
+);
+
+
+
+
+
+
+create table if not exists total_dispatch(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+quantity integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+
+
+
+create table if not exists received_bales_principal(
+id integer primary key auto_increment,
+dispatchid integer not null,
+userid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(dispatchid) references dispatch(id)
+);
+
+
+
+create table if not exists total_received_bales_principal(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+quantity integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
 
 
 

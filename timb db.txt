@@ -758,6 +758,3 @@ insert into charges(name) value("Adminstration");
 
 
 
-
-
-

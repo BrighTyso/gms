@@ -103,6 +103,8 @@ if ($product_disbursed==0) {
            //$sql = "select * from login";
                if ($conn->query($user_sql)===TRUE) {
 
+                $disbursemnt_last_id=$conn->insert_id;
+
 
                        $user_sql1 = "update store_items set quantity=quantity-$quantity  where storeid = $storeid and productid=$productid";
                          //$sql = "select * from login";
@@ -116,8 +118,15 @@ if ($product_disbursed==0) {
                            //$sql = "select * from login";
                                if ($conn->query($user_sql)===TRUE) {
 
-                               $temp=array("response"=>"success");
+                               
+                               $user_sql = "INSERT INTO total_disbursement(disbursement_trucksid,disbursementid,userid,productid,storeid,quantity,created_at) VALUES ($disbursement_trucksid,$disbursemnt_last_id,$userid,$productid,$storeid,$quantity,'$created_at')";
+                                   //$sql = "select * from login";
+                                       if ($conn->query($user_sql)===TRUE) {
+
+                              $temp=array("response"=>"success");
                                array_push($response,$temp);
+
+                                       }
 
                              }
                           

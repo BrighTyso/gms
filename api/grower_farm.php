@@ -82,8 +82,18 @@ $result = $conn->query($sql1);
 
 	     //$sqlitegrowerid=0;
 
-	     $temp=array("sqliteid"=>$sqliteid);
-        array_push($data,$temp);
+
+       $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$lat','$long','$created_at','Home Location');";
+       //$gr = "select * from login";
+       if ($conn->query($insert_sql)===TRUE) {
+       
+        // $last_id = $conn->insert_id;
+
+            $temp=array("sqliteid"=>$sqliteid);
+            array_push($data,$temp);
+
+       }
+
 
 	   }else{
 

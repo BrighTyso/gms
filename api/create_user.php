@@ -18,6 +18,7 @@ $hash="";
 $rightsid=0;
 $active=0;
 $found_store=0;
+$user_found=0;
 
 $response=array();
 
@@ -33,6 +34,35 @@ $active=$data->active;
 $created_at=$data->created_at;
 $userid=$data->userid;
 
+
+
+
+$sql = "Select * from users where username='$username' and name='$name' and surname='$surname' limit 1";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+  
+   $user_found=$row["id"];
+
+  
+   }
+
+ }
+
+
+
+if ($user_found>0) {
+  
+
+$temp=array("response"=>"User already Created");
+ array_push($response,$temp);
+
+
+}else{
 
 $user_sql = "INSERT INTO users(name,surname,username,hash,rightsid,active,access_code,created_at) VALUES ('$name','$surname','$username','$hash',$rightsid,$active,1234,'$created_at')";
    //$sql = "select * from login";
@@ -97,6 +127,8 @@ $user_sql = "INSERT INTO users(name,surname,username,hash,rightsid,active,access
    array_push($response,$temp);
 
    }
+
+ }
 
 
 }else{

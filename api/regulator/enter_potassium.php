@@ -113,13 +113,9 @@ $result = $conn->query($sql);
      $temp=array("sqliteid"=>$sqliteid);
       array_push($data1,$temp);
 
-   }
+      }
 
 
-   }else{
-
-echo $conn->error;
-   
    }
 
  }

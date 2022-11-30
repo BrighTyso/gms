@@ -65,6 +65,22 @@ $result = $conn->query($sql);
  }
 
 
+$sql1 = "Select id from grower_number_of_bales_total  where  growerid=$growerid and seasonid=$seasonid";
+$result = $conn->query($sql1);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+   $grower_total=1;
+ 
+
+   }
+
+ }
+
+
 
 
 //check farm

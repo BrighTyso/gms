@@ -19,7 +19,10 @@ $seasonid=$data->seasonid;
 
 
 if ($description=="") {
-  $sql = "Select lat_long.userid,contracted_hectares.hectares,username,contracted_hectares.seasonid from contracted_hectares join lat_long on contracted_hectares.growerid=lat_long.growerid join growers on growers.id=lat_long.growerid join users on users.id=lat_long.userid where contracted_hectares.seasonid=$seasonid";
+
+  // $sql = "Select lat_long.userid,contracted_hectares.hectares,username,contracted_hectares.seasonid from contracted_hectares join lat_long on contracted_hectares.growerid=lat_long.growerid join growers on growers.id=lat_long.growerid join users on users.id=lat_long.userid where contracted_hectares.seasonid=$seasonid";
+
+  $sql = "Select contracted_hectares.userid,contracted_hectares.hectares,username,contracted_hectares.seasonid from contracted_hectares  join growers on growers.id=contracted_hectares.growerid join users on users.id=contracted_hectares.userid where contracted_hectares.seasonid=$seasonid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -40,7 +43,10 @@ $result = $conn->query($sql);
 
 }else{
 
-$sql = "Select lat_long.userid,contracted_hectares.hectares,username,contracted_hectares.seasonid from contracted_hectares join lat_long on contracted_hectares.growerid=lat_long.growerid join growers on growers.id=lat_long.growerid join users on users.id=lat_long.userid where grower_num='$description' or province='$description' or username='$description' and  contracted_hectares.seasonid=$seasonid";
+
+// $sql = "Select lat_long.userid,contracted_hectares.hectares,username,contracted_hectares.seasonid from contracted_hectares join lat_long on contracted_hectares.growerid=lat_long.growerid join growers on growers.id=lat_long.growerid join users on users.id=lat_long.userid where grower_num='$description' or province='$description' or username='$description' and  contracted_hectares.seasonid=$seasonid";
+
+$sql = "Select contracted_hectares.userid,contracted_hectares.hectares,username,contracted_hectares.seasonid from contracted_hectares  join growers on growers.id=contracted_hectares.growerid join users on users.id=contracted_hectares.userid where  contracted_hectares.seasonid=$seasonid  and (grower_num='$description' or province='$description' or username='$description')  ";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
