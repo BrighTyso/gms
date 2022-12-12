@@ -13,6 +13,7 @@ $latitude=$_GET['latitude'];
 $longitude=$_GET['longitude'];
 
 
+
 $barcode_found=0;
 $total_found=0;
 $grower_found=0;

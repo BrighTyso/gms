@@ -8,6 +8,7 @@ $userid=$_GET['userid'];
 $created_at=$_GET['created_at'];
 $latitude=$_GET['latitude'];
 $longitude=$_GET['longitude'];
+$dispatch_noteid=$_GET['dispatch_noteid'];
 
 
 $barcode_found=0;
@@ -21,8 +22,7 @@ $data1=array();
 if ($barcode!="") {
 
 
-
-  $sql11 = "Select * from seasons where active=1 limit 1";
+$sql11 = "Select * from seasons where active=1 limit 1";
 
 $result = $conn->query($sql11);
  
@@ -82,7 +82,7 @@ $result = $conn->query($sql);
 
 
 
-$sql1 = "Select * from total_dispatch where userid='$userid' and  seasonid=$seasonid";
+$sql1 = "Select * from dispatch_note_total_dispatched where dispatch_noteid=$dispatch_noteid ";
 
 $result = $conn->query($sql1);
  
@@ -104,7 +104,7 @@ $result = $conn->query($sql1);
 
  if ($barcode_found==0 && $sold_baleid>0) {
 
-   $insert_sql = "INSERT INTO dispatch(userid,sold_balesid,latitude,longitude,created_at) VALUES ($userid,$sold_baleid,'$latitude','$longitude','$created_at')";
+   $insert_sql = "INSERT INTO dispatch(userid,sold_balesid,dispatch_noteid,latitude,longitude,created_at) VALUES ($userid,$sold_baleid,$dispatch_noteid,'$latitude','$longitude','$created_at')";
    //$gr = "select * from login";
    if ($conn->query($insert_sql)===TRUE) {
    
@@ -112,13 +112,13 @@ $result = $conn->query($sql1);
 
      if($total_found==0){
 
-     $insert_sql = "INSERT INTO total_dispatch(userid,seasonid,quantity,created_at) VALUES ($userid,$seasonid,1,'$created_at')";
+     $insert_sql = "INSERT INTO dispatch_note_total_dispatched(dispatch_noteid,quantity,created_at) VALUES ($dispatch_noteid,1,'$created_at')";
        //$gr = "select * from login";
        if ($conn->query($insert_sql)===TRUE) {
        
         // $last_id = $conn->insert_id;
 
-         $temp=array("response"=>"success");
+          $temp=array("response"=>"success");
           array_push($data1,$temp);
 
           }
@@ -126,7 +126,7 @@ $result = $conn->query($sql1);
 
       }else{
 
-       $user_sql1 = "update total_dispatch set quantity=quantity+1 where id=$total_found";
+       $user_sql1 = "update dispatch_note_total_dispatched set quantity=quantity+1 where dispatch_noteid=$total_found";
          //$sql = "select * from login";
          if ($conn->query($user_sql1)===TRUE) {
 
@@ -142,7 +142,22 @@ $result = $conn->query($sql1);
    }
 
 
+}else{
+
+    if ($sold_baleid==0) {
+          $temp=array("response"=>"Bale Not Sold");
+          array_push($data1,$temp);
+      }else if ($barcode_found>0) {
+         $temp=array("response"=>"Bale Already Dispatched");
+          array_push($data1,$temp);
+      }
+
 }
+}else{
+
+$temp=array("response"=>"Barcode Empty");
+array_push($data1,$temp);
+
 }
 
  echo json_encode($data1);

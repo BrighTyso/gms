@@ -7,13 +7,18 @@ header("Access-Control-Allow-Headers:Access-Control-Allow-Headers,Content-Type,A
 require_once("conn.php");
 require "validate.php";
 
+$data = json_decode(file_get_contents("php://input"));
+
+
+$userid=$data->userid;
+$seasonid=$data->seasonid;
 
 
 $data1=array();
 
 //http://192.168.1.190/gms/api/get_season.php
 
-$sql = "Select sold_bales.userid,seasonid,growerid,barcode,mass,price from sold_bales";
+$sql = "Select total_sold_bales.quantity,id from total_sold_bales where total_sold_bales.userid=$userid and total_sold_bales.seasonid=$seasonid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -21,7 +26,7 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-    $temp=array("barcode"=>$row["barcode"],"mass"=>$row["mass"],"price"=>$row["price"]);
+    $temp=array("quantity"=>$row["quantity"],"id"=>$row["id"]);
     array_push($data1,$temp);
     
    }

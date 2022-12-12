@@ -12,36 +12,42 @@ $data = json_decode(file_get_contents("php://input"));
 
 
 $userid=$data->userid;
-$seasonid=$data->seasonid;
-
-
 
 $data1=array();
+// get grower locations
 
-//http://192.168.1.190/gms/api/get_season.php
+if ($userid!="") {
+  
 
-$sql = "Select * from  total_received_bales_principal where seasonid=$seasonid and userid=$userid";
-$result = $conn->query($sql);
+
+$sql11 = "Select * from users where rightsid=14";
+
+$result = $conn->query($sql11);
  
  if ($result->num_rows > 0) {
    // output data of each row
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-    $temp=array("quantity"=>$row["quantity"],"id"=>$row["id"]);
+    //  $temp=array("name"=>$row["name"],"surname"=>$row["surname"] ,"username"=>$row["username"] ,"id"=>$row["id"],"rights"=>$row["rightsid"]);
+    // array_push($data1,$temp);
+
+   $temp=array("name"=>$row["username"],"id"=>$row["id"]);
     array_push($data1,$temp);
-    
+
+   
    }
  }
 
 
 
+
+
+}
+
  echo json_encode($data1);
 
 
 ?>
-
-
-
 
 

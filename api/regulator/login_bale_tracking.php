@@ -12,7 +12,7 @@ $data1=array();
 if ($username!="" && $hash!="") {
   
 
-$sql = "Select * from users where hash='$hash' and  username='$username' and  active=1";
+$sql = "Select * from users where hash='$hash' and  username='$username' and  active=1 ";
 
 $result = $conn->query($sql);
  
