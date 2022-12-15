@@ -15,6 +15,7 @@ $barcode_found=0;
 $total_found=0;
 $seasonid=0;
 $sold_baleid=0;
+$dispatch_note_open=0;
 
 $data1=array();
 // get grower locations
@@ -39,6 +40,34 @@ $result = $conn->query($sql11);
    }
  }
   
+
+
+
+
+
+$sql111 = "Select * from dispatch_note where id=$dispatch_noteid and open_close=0";
+
+$result = $conn->query($sql111);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+    //  $temp=array("name"=>$row["name"],"surname"=>$row["surname"] ,"username"=>$row["username"] ,"id"=>$row["id"],"rights"=>$row["rightsid"]);
+    // array_push($data1,$temp);
+
+    $dispatch_note_open=$row["id"];
+    
+   }
+ }
+
+
+
+
+if ($dispatch_note_open>0) {
+
+
 
 
 
@@ -142,17 +171,25 @@ $result = $conn->query($sql1);
    }
 
 
+  }else{
+
+      if ($sold_baleid==0) {
+            $temp=array("response"=>"Bale Not Sold");
+            array_push($data1,$temp);
+        }else if ($barcode_found>0) {
+           $temp=array("response"=>"Bale Already Dispatched");
+            array_push($data1,$temp);
+        }
+
+  }
+  
 }else{
 
-    if ($sold_baleid==0) {
-          $temp=array("response"=>"Bale Not Sold");
-          array_push($data1,$temp);
-      }else if ($barcode_found>0) {
-         $temp=array("response"=>"Bale Already Dispatched");
-          array_push($data1,$temp);
-      }
+$temp=array("response"=>"Sorry You Can Not dispatch bales on a closed Dispatch Note .");
+array_push($data1,$temp);
 
 }
+
 }else{
 
 $temp=array("response"=>"Barcode Empty");
