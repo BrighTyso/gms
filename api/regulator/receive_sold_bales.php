@@ -3,7 +3,7 @@ require_once("conn.php");
 require "validate.php";
 require "datasource.php";
 
-$barcode=$_GET['barcode'];
+$barcode=validate($_GET['barcode']);
 $mass=$_GET['mass'];
 $price=$_GET['price'];
 $userid=$_GET['userid'];
@@ -127,7 +127,7 @@ $result = $conn->query($sql1);
 
      if($total_found==0){
 
-     $insert_sql = "INSERT INTO total_sold_bales(userid,seasonid,quantity,created_at) VALUES ($userid,$seasonid,1,'$created_at')";
+     $insert_sql = "INSERT INTO total_sold_bales(userid,seasonid,quantity,mass,created_at) VALUES ($userid,$seasonid,1,$mass,'$created_at')";
        //$gr = "select * from login";
        if ($conn->query($insert_sql)===TRUE) {
        
@@ -141,7 +141,7 @@ $result = $conn->query($sql1);
 
       }else{
 
-       $user_sql1 = "update total_sold_bales set quantity=quantity+1 where id=$total_found";
+       $user_sql1 = "update total_sold_bales set quantity=quantity+1,mass=mass+$mass where id=$total_found";
          //$sql = "select * from login";
          if ($conn->query($user_sql1)===TRUE) {
 

@@ -114,10 +114,17 @@ $result = $conn->query($sql1);
         $grower_bales1 = "INSERT INTO grower_number_of_bales_total(grower_number_of_balesid,bales,created_at) VALUES ($last_id,$bales,'$created_at')";
      
      if ($conn->query($grower_bales1)===TRUE) {
+
+
+      $insert_sql = "INSERT INTO tags_total(userid,grower_number_of_balesid,tags_total) VALUES ($userid,$last_id,$bales)";
+    //$gr = "select * from login";
+       if ($conn->query($insert_sql)===TRUE) {
      
 
        $temp=array("response"=>"success");
-        array_push($data1,$temp);
+       array_push($data1,$temp);
+
+      }
 
      }
 

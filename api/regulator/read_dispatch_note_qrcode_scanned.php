@@ -31,7 +31,7 @@ $userid=$_GET['userid'];
 
 if ($qrcode!="") {
 
-$sql = "Select distinct dispatch_note.id,receiverid,dispatch_note_total_dispatched.quantity as dispatch_quantity,dispatch_note_total_received.quantity as received_quantity,users.name from dispatch_note join dispatch_note_total_dispatched on dispatch_note_total_dispatched.dispatch_noteid=dispatch_note.id join dispatch_note_total_received on dispatch_note_total_received.dispatch_noteid=dispatch_note.id join users on dispatch_note.userid=users.id where dispatch_note.id=$value and open_close=1 and receiverid=$userid";
+$sql = "Select distinct dispatch_note.id,receiverid,dispatch_note_total_dispatched.mass as dispatch_mass,dispatch_note_total_dispatched.quantity as dispatch_quantity,dispatch_note_total_received.mass as received_mass,dispatch_note_total_received.quantity as received_quantity,users.name from dispatch_note join dispatch_note_total_dispatched on dispatch_note_total_dispatched.dispatch_noteid=dispatch_note.id join dispatch_note_total_received on dispatch_note_total_received.dispatch_noteid=dispatch_note.id join users on dispatch_note.userid=users.id where dispatch_note.id=$value and open_close=1 and receiverid=$userid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -39,7 +39,7 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
 
      
-      $temp=array("id"=>$row["id"],"receiverid"=>$row["receiverid"],"dispatch_quantity"=>$row["dispatch_quantity"],"received_quantity"=>$row["received_quantity"],"company_name"=>$row["name"]);
+      $temp=array("id"=>$row["id"],"receiverid"=>$row["receiverid"],"dispatch_quantity"=>$row["dispatch_quantity"],"received_quantity"=>$row["received_quantity"],"company_name"=>$row["name"],"dispatch_mass"=>$row["dispatch_mass"],"received_mass"=>$row["received_mass"]);
       array_push($data1,$temp);
  
  

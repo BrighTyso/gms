@@ -3,7 +3,7 @@ require_once("conn.php");
 require "validate.php";
 require "datasource.php";
 
-$barcode=$_GET['barcode'];
+$barcode=validate($_GET['barcode']);
 $userid=$_GET['userid'];
 $created_at=$_GET['created_at'];
 $latitude=$_GET['latitude'];
@@ -16,6 +16,7 @@ $total_found=0;
 $seasonid=0;
 $sold_baleid=0;
 $dispatch_note_open=0;
+$mass=0;
 
 $data1=array();
 // get grower locations
@@ -36,6 +37,7 @@ $result = $conn->query($sql11);
     // array_push($data1,$temp);
 
     $seasonid=$row["id"];
+
     
    }
  }
@@ -84,6 +86,7 @@ $result = $conn->query($sql);
     // array_push($data1,$temp);
 
     $sold_baleid=$row["id"];
+    $mass=$row["mass"];
     
    }
  }
@@ -141,7 +144,7 @@ $result = $conn->query($sql1);
 
      if($total_found==0){
 
-     $insert_sql = "INSERT INTO dispatch_note_total_dispatched(dispatch_noteid,quantity,created_at) VALUES ($dispatch_noteid,1,'$created_at')";
+     $insert_sql = "INSERT INTO dispatch_note_total_dispatched(dispatch_noteid,quantity,mass,created_at) VALUES ($dispatch_noteid,1,$mass,'$created_at')";
        //$gr = "select * from login";
        if ($conn->query($insert_sql)===TRUE) {
        
@@ -155,7 +158,7 @@ $result = $conn->query($sql1);
 
       }else{
 
-       $user_sql1 = "update dispatch_note_total_dispatched set quantity=quantity+1 where dispatch_noteid=$total_found";
+       $user_sql1 = "update dispatch_note_total_dispatched set quantity=quantity+1,mass=mass+$mass where dispatch_noteid=$total_found";
          //$sql = "select * from login";
          if ($conn->query($user_sql1)===TRUE) {
 

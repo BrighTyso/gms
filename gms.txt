@@ -78,6 +78,20 @@ foreign key(userid) references users(id)
 
 
 
+create table if not exists rejected_bales_rights(
+id integer primary key auto_increment,
+userid integer not null,
+companyid integer not null,
+useridrights integer not null,
+seasonid integer not null,
+created_at integer not null,
+datetime TIMESTAMP not null,
+foreign key(companyid) references users(id),
+foreign key(useridrights) references users(id),
+foreign key(userid) references users(id)
+);
+
+
 
 create table if not exists regulator_sync_status(
 id integer primary key auto_increment,
@@ -1438,7 +1452,7 @@ create table if not exists rejected_bales(
 id integer primary key auto_increment,
 userid integer not null,
 ready_for_bookingid integer not null,
-bales integer not null,
+bales integer not null default 0,
 latitude varchar(100) not null,
 longitude varchar(100) not null,
 sync integer not null default 0,
@@ -1609,7 +1623,7 @@ id integer primary key auto_increment,
 userid integer not null,
 seasonid integer not null,
 growerid integer not null,
-bales integer not null,
+bales integer not null default 0,
 sync integer not null default 0,
 surrogate integer not null default 0,
 created_at varchar(100) not null,
@@ -1618,7 +1632,6 @@ foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
-
 
 
 
@@ -1679,11 +1692,15 @@ foreign key(growerid) references growers(id)
 
 
 
+
+
+
 create table if not exists total_sold_bales(
 id integer primary key auto_increment,
 userid integer not null,
 seasonid integer not null,
 quantity integer not null,
+mass integer not null default 0,
 sync integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
@@ -1723,7 +1740,8 @@ foreign key(seasonid) references seasons(id)
 create table if not exists dispatch_note_total_dispatched(
 id integer primary key auto_increment,
 dispatch_noteid integer not null,
-quantity integer not null,
+quantity integer not null default 0,
+mass integer not null default 0,
 sync integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
@@ -1736,6 +1754,7 @@ create table if not exists dispatch_note_total_received(
 id integer primary key auto_increment,
 dispatch_noteid integer not null,
 quantity integer not null,
+mass integer not null default 0,
 sync integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
@@ -1774,9 +1793,6 @@ foreign key(seasonid) references seasons(id)
 
 
 
-
-
-
 create table if not exists received_bales_principal(
 id integer primary key auto_increment,
 dispatchid integer not null,
@@ -1806,6 +1822,56 @@ created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+
+create table if not exists bale_tags(
+id integer primary key auto_increment,
+userid integer not null,
+grower_number_of_balesid integer not null,
+code varchar(100) not null,
+sync integer not null default 0,
+used integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(grower_number_of_balesid) references grower_number_of_bales(id)
+);
+
+
+
+
+
+create table if not exists bale_tag_to_sold_bale(
+id integer primary key auto_increment,
+userid integer not null,
+bale_tagid integer not null,
+sold_balesid integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(bale_tagid) references bale_tags(id),
+foreign key(sold_balesid) references sold_bales(id),
+foreign key(userid) references users(id)
+);
+
+
+
+
+
+create table if not exists tags_total(
+id integer primary key auto_increment,
+userid integer not null,
+grower_number_of_balesid integer not null,
+tags_total integer not null default 0,
+tags_generated integer not null default 0,
+sync integer not null default 0,
+datetime TIMESTAMP not null,
+foreign key(grower_number_of_balesid) references grower_number_of_bales(id),
+foreign key(userid) references users(id)
 );
 
 
