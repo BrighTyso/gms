@@ -5,8 +5,10 @@ header("Access-Control-Allow-Origin-Methods:POST");
 header("Access-Control-Allow-Headers:Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Origin-Methods,Authorization,X-Requested-With");
 
 require_once("conn.php");
+require_once("vendor/autoload.php");
 require "validate.php";
 require "datasource.php";
+
 
 $datasource=new DataSource();
 
@@ -85,6 +87,15 @@ $result = $conn->query($sql);
             $user_sql1 = "update tags_total set tags_generated=tags_generated + 1 where id=$tags_total_found";
                            //$sql = "select * from login";
              if ($conn->query($user_sql1)===TRUE) {
+
+
+              $barcodes='images/'.$code.'.png';
+
+
+              $color=[0,0,0];
+              $generator=new Picqer\Barcode\BarcodeGeneratorPNG();
+              file_put_contents("$barcodes",$generator->getBarcode($code,$generator::TYPE_CODE_128,3,50,$color));
+
 
               $temp=array("response"=>"success");
               array_push($data1,$temp);

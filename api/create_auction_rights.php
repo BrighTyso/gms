@@ -12,8 +12,7 @@ require "validate.php";
 $data = json_decode(file_get_contents("php://input"));
 
 $userid=0;
-$receiverid=0;
-$deliverid=0;
+$companyid=0;
 $created_at="";
 $seasonid=0;
 $user_found=0;
@@ -23,12 +22,11 @@ $user_found=0;
 
 $response=array();
 
-if (isset($data->userid) && isset($data->receiverid)  && isset($data->deliverid)  && isset($data->created_at)  && isset($data->seasonid)){
+if (isset($data->userid) && isset($data->companyid) && isset($data->created_at)  && isset($data->seasonid)){
 
 
 $userid=$data->userid;
-$receiverid=$data->receiverid;
-$deliverid=$data->deliverid;
+$companyid=$data->companyid;
 $seasonid=$data->seasonid;
 $created_at=$data->created_at;
 
@@ -36,7 +34,7 @@ $created_at=$data->created_at;
 
 
 
-$sql = "Select * from bale_tracking_rights where receiving_userid=$receiverid and delivering_userid=$deliverid and seasonid=$seasonid limit 1";
+$sql = "Select * from auction_rights where companyid=$companyid and seasonid=$seasonid limit 1";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -63,7 +61,7 @@ $temp=array("response"=>"Rights Already Created");
 
 }else{
 
-$user_sql = "INSERT INTO bale_tracking_rights(userid,receiving_userid,delivering_userid,seasonid,created_at) VALUES ($userid,$receiverid,$deliverid,$seasonid,'$created_at')";
+$user_sql = "INSERT INTO auction_rights(userid,companyid,seasonid,created_at) VALUES ($userid,$companyid,$seasonid,'$created_at')";
    //$sql = "select * from login";
    if ($conn->query($user_sql)===TRUE) {
    
@@ -95,5 +93,8 @@ echo json_encode($response);
 
 
 ?>
+
+
+
 
 
