@@ -99,12 +99,12 @@ $result = $conn->query($sql1);
 
  if ($response==1 && $farm_response==0 && $grower_bales==0){
 
-	$grower_farm_sql = "INSERT INTO system_estimate_prediction(userid,seasonid,growerid,estimate,created_at) VALUES ($userid,$seasonid,$growerid,'$estimate','$created_at')";
-	   //$sql = "select * from login";
-	   if ($conn->query($grower_farm_sql)===TRUE) {
-	   
+  $grower_farm_sql = "INSERT INTO system_estimate_prediction(userid,seasonid,growerid,estimate,created_at) VALUES ($userid,$seasonid,$growerid,'$estimate','$created_at')";
+     //$sql = "select * from login";
+     if ($conn->query($grower_farm_sql)===TRUE) {
+     
 
-	     $grower_bales = "INSERT INTO grower_number_of_bales(userid,seasonid,growerid,bales,created_at) VALUES ($userid,$seasonid,$growerid,$bales,'$created_at')";
+       $grower_bales = "INSERT INTO grower_number_of_bales(userid,seasonid,growerid,bales,created_at) VALUES ($userid,$seasonid,$growerid,$bales,'$created_at')";
      
      if ($conn->query($grower_bales)===TRUE) {
 
@@ -121,6 +121,7 @@ $result = $conn->query($sql1);
        if ($conn->query($insert_sql)===TRUE) {
      
 
+
        $temp=array("response"=>"success");
        array_push($data1,$temp);
 
@@ -130,7 +131,7 @@ $result = $conn->query($sql1);
 
      }
 
-	   }
+     }
 
 }
 
@@ -143,7 +144,7 @@ $result = $conn->query($sql1);
 
 }else{
 
-	  
+    
 
 }
 

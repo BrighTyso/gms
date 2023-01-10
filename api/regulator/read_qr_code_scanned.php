@@ -31,7 +31,7 @@ $qrcode=$_POST['qrcode'];
 
 if ($qrcode!="") {
 
-$sql = "Select distinct grower_number_of_bales.userid as companyid ,grower_number_of_bales.id,growers.id as growerid,grower_num,bales,growers.name as grower_name,growers.surname,id_num, users.name,seasons.name as season_name from grower_number_of_bales join mapped_hectares on mapped_hectares.growerid=grower_number_of_bales.growerid join users on mapped_hectares.userid=users.id join growers on growers.id=grower_number_of_bales.growerid join seasons on seasons.id=grower_number_of_bales.seasonid where seasons.active=1 and grower_number_of_bales.id=$value limit 1";
+$sql = "Select distinct grower_number_of_bales.userid as companyid ,grower_number_of_bales.id,growers.id as growerid,grower_num,bales,growers.name as grower_name,growers.surname,id_num, users.name,seasons.name as season_name from grower_number_of_bales join contracted_hectares on contracted_hectares.growerid=grower_number_of_bales.growerid join users on contracted_hectares.userid=users.id join growers on growers.id=grower_number_of_bales.growerid join seasons on seasons.id=grower_number_of_bales.seasonid where seasons.active=1 and grower_number_of_bales.id=$value limit 1";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
