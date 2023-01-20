@@ -16,16 +16,18 @@ $qrcode=$_POST["qrcode"];
 $userid=$_POST["userid"];
 $barcode=$_POST["barcode"];
 $companyid=$_POST["companyid"];
+// description , company name 
 $grower_number_of_balesid=0;
 $user_found=0;
+$booked=0;
 $status=0;
 $bale_tagid=0;
 $bale_tag_to_sold_bales=0;
 $seasonid=0;
 $rejected_bales_found=0;
+$booking_company=0;
 
-
- $grower_number_of_balesid=$datasource->encryptor("decrypt",$qrcode);
+$grower_number_of_balesid=$datasource->encryptor("decrypt",$qrcode);
 
 
 
@@ -67,6 +69,7 @@ $result = $conn->query($sql);
 
 
 
+
 if ($user_found>0) {
 
 	
@@ -86,6 +89,28 @@ $result = $conn->query($sql);
    }
 
  }
+
+
+
+
+
+
+ $sql = "Select * from bale_booked where bale_tagid=$bale_tagid  limit 1";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+  
+   $booked=$row["id"]; 
+   $booking_company=$row["userid"];
+  
+   }
+
+ }
+
 
 
 
@@ -112,7 +137,12 @@ $result = $conn->query($sql);
 
 
 
-if ($user_found>0 && $bale_tag_to_sold_bales==0 && $bale_tagid>0 ) {
+if ($user_found>0 && $bale_tag_to_sold_bales==0 && $bale_tagid>0 && $booked>0) {
+
+
+  $user_sql1 = "DELETE FROM bale_booked where id = $booked";
+         //$sql = "select * from login";
+         if ($conn->query($user_sql1)===TRUE) {
 
  			$user_sql1 = "update grower_number_of_bales set bales=bales + 1 where id=$grower_number_of_balesid";
            //$sql = "select * from login";
@@ -127,26 +157,56 @@ if ($user_found>0 && $bale_tag_to_sold_bales==0 && $bale_tagid>0 ) {
 
            
                 }
-             
-           }
+
+            }
+
+
+         }
 
 }else{
 
+  if ($bale_tag_to_sold_bales>0) {
 
-$temp=array("response"=>"You Have No Rights To Reject Bales");
-array_push($response,$temp);
+        $temp=array("response"=>"This Action is not allowed on this bale tag .Bale Already Sold.");
+        array_push($response,$temp);
+
+  }else if ($bale_tagid==0){
+
+        $temp=array("response"=>"Bale Tag Not Found.");
+        array_push($response,$temp);
+
+  }else if ($booked==0) {
+
+       $temp=array("response"=>"This Bale Tag Was Never Booked.Barcode Cant Be Rejected.");
+        array_push($response,$temp);
+
+  }else if ($user_found==0) {
+
+      $temp=array("response"=>"User Have No Right To Reject This Bale.");
+        array_push($response,$temp);
+
+  }
+
+
+
+
 
 }
 
 
 }else{
 
-$temp=array("response"=>"You Have No Rights For This Action");
+$temp=array("response"=>"User Have No Right To Reject This Bale.");
 array_push($response,$temp);
 
 }
 
 	
+}else{
+
+  $temp=array("response"=>"Field Empty.");
+  array_push($response,$temp);
+  
 }
 
 

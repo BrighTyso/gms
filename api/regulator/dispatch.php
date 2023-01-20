@@ -17,6 +17,7 @@ $seasonid=0;
 $sold_baleid=0;
 $dispatch_note_open=0;
 $mass=0;
+$auction_rights=0;
 
 $data1=array();
 // get grower locations
@@ -72,8 +73,28 @@ if ($dispatch_note_open>0) {
 
 
 
+ $sql1 = "Select companyid,id from auction_rights  where  companyid=$userid and seasonid=$seasonid";
+  $result = $conn->query($sql1);
+   
+   if ($result->num_rows > 0) {
+     // output data of each row
+     while($row = $result->fetch_assoc()) {
+      // product id
+      $auction_rights=$row["companyid"];
 
-$sql = "Select * from sold_bales  where barcode='$barcode' and  userid=$userid and  seasonid=$seasonid";
+     }
+
+   }
+
+
+
+
+if ($auction_rights==0) {
+
+
+
+
+$sql = "Select sold_bales.id,mass from sold_bales join bale_tag_to_sold_bale on bale_tag_to_sold_bale.sold_balesid=sold_bales.id join bale_tags on bale_tags.id=bale_tag_to_sold_bale.bale_tagid where (barcode='$barcode' or temp_barcode='$barcode') and  bale_tag_to_sold_bale.userid=$userid and  sold_bales.seasonid=$seasonid";
 
 $result = $conn->query($sql);
  
@@ -87,11 +108,39 @@ $result = $conn->query($sql);
 
     $sold_baleid=$row["id"];
     $mass=$row["mass"];
+
+
     
    }
  }
 
 
+}else{
+
+
+$sql = "Select sold_bales.id,mass from sold_bales join bale_tag_to_sold_bale on bale_tag_to_sold_bale.sold_balesid=sold_bales.id join bale_tags on bale_tags.id=bale_tag_to_sold_bale.bale_tagid join grower_number_of_bales on bale_tags.grower_number_of_balesid=grower_number_of_bales.id join auction_growers on auction_growers.growerid=grower_number_of_bales.growerid where (barcode='$barcode' or temp_barcode='$barcode' or code='$barcode') and  sold_bales.seasonid=$seasonid and bale_tag_to_sold_bale.userid=$userid";
+
+
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+    //  $temp=array("name"=>$row["name"],"surname"=>$row["surname"] ,"username"=>$row["username"] ,"id"=>$row["id"],"rights"=>$row["rightsid"]);
+    // array_push($data1,$temp);
+
+
+    $sold_baleid=$row["id"];
+    $mass=$row["mass"];
+
+
+    
+   }
+ }
+
+}
 
 
 
@@ -106,7 +155,6 @@ $result = $conn->query($sql);
 
     //  $temp=array("name"=>$row["name"],"surname"=>$row["surname"] ,"username"=>$row["username"] ,"id"=>$row["id"],"rights"=>$row["rightsid"]);
     // array_push($data1,$temp);
-
     $barcode_found=$row["id"];
     
    }

@@ -11,7 +11,7 @@ $grower_num=$_GET['grower_num'];
 $created_at=$_GET['created_at'];
 $latitude=$_GET['latitude'];
 $longitude=$_GET['longitude'];
-
+$temp_barcode=validate($_GET['temp_barcode']);
 
 
 $barcode_found=0;

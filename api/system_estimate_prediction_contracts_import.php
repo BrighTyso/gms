@@ -17,6 +17,7 @@ $seasonid=0;
 $description="";
 $growerid=0;
 $grower_bales=0;
+$auction_rights=0;
 $data1=array();
 
 //userid=1&name="bright"&surname="kaponda"&grower_num="12333"&area="ggg"&province="tttt"&phone="0784428797"&id_num="12345666"&created_at="44-44-44"&lat="12.2223"&long="15.45555"
@@ -41,6 +42,14 @@ $contractorid=0;
   if ($seasonid>0) {
 
   // checks if grower is already in database
+
+
+
+
+
+
+
+
 
   $sql = "Select growers.id from growers  where  grower_num='$description'";
   $result = $conn->query($sql);
@@ -77,6 +86,26 @@ $contractorid=0;
 
    }
 
+
+
+
+  $sql1 = "Select id from auction_rights  where  companyid=$contractorid and seasonid=$seasonid";
+  $result = $conn->query($sql1);
+   
+   if ($result->num_rows > 0) {
+     // output data of each row
+     while($row = $result->fetch_assoc()) {
+      // product id
+      $auction_rights=$row["id"];
+
+     }
+
+   }
+
+
+
+
+ if ($auction_rights==0) {
 
 
   //check farm
@@ -182,6 +211,13 @@ if ($grower_bales==1) {
    array_push($data1,$temp);
 
 }
+
+}
+
+}else{
+
+ $temp=array("response"=>"An Auction Company Cannot Contract");
+   array_push($data1,$temp);
 
 }
 

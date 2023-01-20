@@ -20,11 +20,12 @@ if (isset($data->seasonid) && isset($data->description)){
 
 $description=$data->description;
 $seasonid=$data->seasonid;
+$created_at=$data->created_at;
 
 
 if ($description=="") {
   
-  $sql = "Select ready_for_booking.id,grower_num,ready_for_booking.bales,users.name,ready_for_booking.created_at,sell_date from ready_for_booking join grower_number_of_bales on grower_number_of_bales.id=ready_for_booking.grower_number_of_balesid join growers on growers.id=grower_number_of_bales.growerid join users on ready_for_booking.userid=users.id where grower_number_of_bales.seasonid=$seasonid ";
+  $sql = "Select bale_booked.id,grower_num,bale_tags.code,users.name,bale_booked.created_at from bale_booked join bale_tags on bale_tags.id=bale_booked.bale_tagid join grower_number_of_bales on grower_number_of_bales.id=bale_tags.grower_number_of_balesid join growers on growers.id=grower_number_of_bales.growerid join users on bale_booked.userid=users.id where grower_number_of_bales.seasonid=$seasonid and bale_booked.created_at='$created_at'";
   $result = $conn->query($sql);
    
    if ($result->num_rows > 0) {
@@ -32,7 +33,7 @@ if ($description=="") {
      while($row = $result->fetch_assoc()) {
       // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-          $temp=array("grower_num"=>$row["grower_num"],"bales"=>$row["bales"],"name"=>$row["name"],"sell_date"=>$row["sell_date"],"created_at"=>$row["created_at"],"id"=>$row["id"]);
+          $temp=array("grower_num"=>$row["grower_num"],"code"=>$row["code"],"name"=>$row["name"],"created_at"=>$row["created_at"],"id"=>$row["id"]);
           array_push($data1,$temp);
            
       
@@ -46,7 +47,7 @@ if ($description=="") {
 
 
 
-  $sql = "Select ready_for_booking.id,grower_num,ready_for_booking.bales,users.name,ready_for_booking.created_at,sell_date from ready_for_booking join grower_number_of_bales on grower_number_of_bales.id=ready_for_booking.grower_number_of_balesid join growers on growers.id=grower_number_of_bales.growerid join users on ready_for_booking.userid=users.id where grower_number_of_bales.seasonid=$seasonid and (users.name='$description' or users.surname='$description' or users.username='$description' or growers.name='$description' or growers.grower_num='$description')";
+  $sql = "Select bale_booked.id,grower_num,bale_tags.code,users.name,bale_booked.created_at from bale_booked join bale_tags on bale_tags.id=bale_booked.bale_tagid join grower_number_of_bales on grower_number_of_bales.id=bale_tags.grower_number_of_balesid join growers on growers.id=grower_number_of_bales.growerid join users on bale_booked.userid=users.id where grower_number_of_bales.seasonid=$seasonid and bale_booked.created_at='$created_at' and (users.name='$description' or users.surname='$description' or users.username='$description' or growers.name='$description' or growers.grower_num='$description' or code='$description' )";
   $result = $conn->query($sql);
    
    if ($result->num_rows > 0) {
@@ -54,7 +55,7 @@ if ($description=="") {
      while($row = $result->fetch_assoc()) {
       // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-          $temp=array("grower_num"=>$row["grower_num"],"bales"=>$row["bales"],"name"=>$row["name"],"sell_date"=>$row["sell_date"],"created_at"=>$row["created_at"],"id"=>$row["id"]);
+          $temp=array("grower_num"=>$row["grower_num"],"code"=>$row["code"],"name"=>$row["name"],"created_at"=>$row["created_at"],"id"=>$row["id"]);
           array_push($data1,$temp);
            
       

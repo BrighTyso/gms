@@ -4,7 +4,7 @@ require "validate.php";
 require "datasource.php";
 
 $username=$_POST['username'];
-$hash=$_POST['password'];
+$hash=md5($_POST['password']);
 
 $data1=array();
 // get grower locations

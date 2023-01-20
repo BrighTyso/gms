@@ -28,7 +28,7 @@ if (isset($data->username) && isset($data->hash)  && isset($data->name)  && isse
 $username=$data->username;
 $name=$data->name;
 $surname=$data->surname;
-$hash=$data->hash;
+$hash=md5($data->hash);
 $rightsid=$data->rightsid;
 $active=$data->active;
 $created_at=$data->created_at;

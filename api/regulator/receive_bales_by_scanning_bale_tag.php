@@ -18,16 +18,19 @@ $data1=array();
 
 //userid=1&name="bright"&surname="kaponda"&grower_num="12333"&area="ggg"&province="tttt"&phone="0784428797"&id_num="12345666"&created_at="44-44-44"&lat="12.2223"&long="15.45555"
 
-if (isset($_POST['barcode']) && isset($_POST['qrcode']) ){
+if (isset($_POST['barcode']) && isset($_POST['qrcode']) && isset($_POST['userid'])){
 
 $barcode=$_POST['barcode'];
 $qrcode=$_POST['qrcode'];
+$userid=$_POST['userid'];
+$latitude=$_POST['latitude'];
+$longitude=$_POST['longitude'];
 
 $value=$datasource->encryptor("decrypt",$qrcode);
 
 if ($barcode!="" && $value!="") {
 
-$sql = "Select distinct * from bale_tags where code='$barcode' and grower_number_of_balesid=$value and used=0 limit 1";
+$sql = "Select distinct * from bale_tags  where code='$barcode' and grower_number_of_balesid=$value and used=0  limit 1";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -48,6 +51,10 @@ $result = $conn->query($sql);
 
 if ($barcode_found>0) {
 
+  $insert_sql = "INSERT INTO bale_receiver(userid,bale_tagid,latitude,longitude) VALUES ($userid,$barcode_found,'$latitude','$longitude')";
+       //$gr = "select * from login";
+       if ($conn->query($insert_sql)===TRUE) {
+
 
       $user_sql1 = "update grower_number_of_bales set bales=bales - 1 where id=$value";
            //$sql = "select * from login";
@@ -65,6 +72,7 @@ if ($barcode_found>0) {
                 }
              
             }
+          }
 
 }else{
 

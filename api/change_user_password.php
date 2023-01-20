@@ -20,7 +20,7 @@ $response=array();
 if (isset($data->password) && isset($data->id)){
 
 
-$password=$data->password;
+$password=md5($data->password);
 $userid=$data->id;
 
 //$user_sql = "update users set hash='".md5($password)."' where id = $userid ";

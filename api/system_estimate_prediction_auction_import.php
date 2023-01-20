@@ -42,6 +42,13 @@ $auctionid=0;
 
   // checks if grower is already in database
 
+
+ 
+
+  
+
+
+
   $sql = "Select growers.id from growers  where  grower_num='$description'";
   $result = $conn->query($sql);
    
@@ -168,13 +175,13 @@ $auctionid=0;
 
 if ($grower_bales==1) {
 
-  $temp=array("response"=>"grower found number of bales");
+  $temp=array("response"=>"grower  number of bales found");
   array_push($data1,$temp);
   
   
 }else if ($farm_response==1) {
 
-  $temp=array("response"=>"grower found estimates");
+  $temp=array("response"=>"grower  estimates found");
    array_push($data1,$temp);
 
 }
@@ -195,6 +202,10 @@ if ($grower_bales==1) {
     array_push($data1,$temp);
 
 }
+
+
+
+
 
 
 echo json_encode($data1);

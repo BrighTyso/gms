@@ -15,7 +15,7 @@ if (isset($_GET['username']) && isset($_GET['hash'])){
 
 
 $username=validate($_GET['username']);
-$hash=validate($_GET['hash']);
+$hash=md5($_GET['hash']);
 $access_code=validate($_GET['access_code']);
 
 

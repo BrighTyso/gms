@@ -5,7 +5,48 @@ $data=array();
 
 //http://192.168.1.190/gms/api/get_products.php
 
-$sql = "Select * from growers ";
+$username=$_GET["username"];
+$hash=md5($_GET["hash"]);
+$userid=0;
+ $seasonid=0;
+
+
+
+if ($username!="" && $hash!="") {
+  
+
+$sql = "Select * from users where hash='$hash' and  username='$username' and  active=1";
+
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+      $userid=$row["id"];
+
+   }
+ }
+
+
+
+
+$sql = "Select * from seasons where active=1 limit 1";
+
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+      $seasonid=$row["id"];
+
+   }
+ }
+
+
+
+$sql = "Select name,surname,grower_num,growers.userid,area,province,phone,id_num,growers.created_at,grower_field_officer.seasonid from growers join grower_field_officer on grower_field_officer.growerid=growers.id  where  grower_field_officer.field_officerid=$userid and grower_field_officer.seasonid=$seasonid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -20,7 +61,7 @@ $result = $conn->query($sql);
  }
 
 
-
+}
 
  echo json_encode($data); 
 

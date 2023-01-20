@@ -12,7 +12,9 @@ require_once("conn.php");
 $data = json_decode(file_get_contents("php://input"));
 
 $username=$data->username;
-$hash=$data->hash;
+$hash=md5($data->hash);
+
+
 
 $data1=array();
 // get grower locations

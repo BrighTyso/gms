@@ -39,7 +39,7 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
 
      
-      $temp=array("companyid"=>$row["companyid"],"id"=>$row["id"],"growerid"=>$row["growerid"],"grower_num"=>$row["grower_num"],"bales"=>$row["bales"],"company_name"=>"","season_name"=>$row["season_name"] ,"grower_name"=>$row["grower_name"] ,"surname"=>$row["surname"] ,"id_num"=>$row["id_num"]);
+      $temp=array("companyid"=>$row["companyid"],"id"=>$row["id"],"growerid"=>$row["growerid"],"grower_num"=>$row["grower_num"],"bales"=>$row["bales"],"company_name"=>"Auction","season_name"=>$row["season_name"] ,"grower_name"=>$row["grower_name"] ,"surname"=>$row["surname"] ,"id_num"=>$row["id_num"]);
       array_push($data1,$temp);
  
  
