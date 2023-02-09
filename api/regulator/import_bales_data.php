@@ -31,6 +31,8 @@ $seasonid=0;
 $bale_tagid=0;
 $bale_tag_booked=0;
 $auction_rights=0;
+$mapped=0;
+
 
 $data1=array();
 
@@ -146,7 +148,7 @@ $result = $conn->query($sql);
 
      if ($auction_rights==0) {
 
-     $sql = "Select bale_tags.id from bale_tags join grower_number_of_bales on bale_tags.grower_number_of_balesid=grower_number_of_bales.id join contracted_hectares on contracted_hectares.growerid=grower_number_of_bales.growerid where (code='$temp_barcode') and  grower_number_of_bales.seasonid=$seasonid and grower_number_of_bales.userid=$userid and contracted_hectares.growerid=$grower_found";
+     $sql = "Select bale_tags.id from bale_tags join grower_number_of_bales on bale_tags.grower_number_of_balesid=grower_number_of_bales.id join contracted_hectares on contracted_hectares.growerid=grower_number_of_bales.growerid where (code='$temp_barcode') and  grower_number_of_bales.seasonid=$seasonid and grower_number_of_bales.userid=$userid and contracted_hectares.growerid=$grower_found and bale_tags.seasonid=$seasonid";
 
     $result = $conn->query($sql);
      
@@ -168,7 +170,7 @@ $result = $conn->query($sql);
 
           // $sql11 = "Select distinct bale_tags.id,bale_tags.code,bale_tags.created_at,grower_number_of_bales.userid,used,grower_number_of_balesid from bale_tags join grower_number_of_bales on  bale_tags.grower_number_of_balesid=grower_number_of_bales.id join seasons on seasons.id=grower_number_of_bales.seasonid join auction_growers on auction_growers.userid=grower_number_of_bales.userid  where code='$barcode' and active=1";
 
-           $sql = "Select bale_tags.id from bale_tags join grower_number_of_bales on bale_tags.grower_number_of_balesid=grower_number_of_bales.id join auction_growers on auction_growers.growerid=grower_number_of_bales.growerid  where (code='$temp_barcode') and  grower_number_of_bales.seasonid=$seasonid and auction_growers.growerid=$grower_found";
+           $sql = "Select bale_tags.id from bale_tags join grower_number_of_bales on bale_tags.grower_number_of_balesid=grower_number_of_bales.id join auction_growers on auction_growers.growerid=grower_number_of_bales.growerid  where (code='$temp_barcode') and  grower_number_of_bales.seasonid=$seasonid and auction_growers.growerid=$grower_found and bale_tags.seasonid=$seasonid";
 
           $result = $conn->query($sql);
            
@@ -212,9 +214,27 @@ $result = $conn->query($sql);
 
 
 
+$sql = "Select * from bale_tag_to_sold_bale where  bale_tagid=$bale_tagid and sold_balesid=$barcode_found";
+
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+    //  $temp=array("name"=>$row["name"],"surname"=>$row["surname"] ,"username"=>$row["username"] ,"id"=>$row["id"],"rights"=>$row["rightsid"]);
+    // array_push($data1,$temp);
+    $mapped=$row["id"];
+   
+    
+   }
+ }
 
 
-$sql1 = "Select * from total_sold_bales where userid='$userid' and  seasonid=$seasonid";
+
+
+$sql1 = "Select * from total_sold_bales where userid=$userid and  seasonid=$seasonid";
 
 $result = $conn->query($sql1);
  
@@ -234,7 +254,7 @@ $result = $conn->query($sql1);
 
 
 
- if ($barcode_found==0 && $grower_found>0 && $seasonid>0 && $bale_tag_booked>0 && $bale_tagid>0) {
+ if ($barcode_found==0 && $grower_found>0 && $seasonid>0 && $bale_tag_booked>0 && $bale_tagid>0 && $mapped==0) {
 
 
    $insert_sql = "INSERT INTO sold_bales(userid,seasonid,growerid,barcode,mass,price,latitude,longitude,created_at,temp_barcode) VALUES ($userid,$seasonid,$grower_found,'$barcode',$mass,$price,'$latitude','$longitude','$created_at','$temp_barcode')";
@@ -291,6 +311,43 @@ $result = $conn->query($sql1);
 
 
    }
+
+
+}else{
+
+if ($barcode_found>0) {
+ 
+ $temp=array("response"=>"barcode already used","grower_num"=>$grower_num,"barcode"=>$barcode,"temp_barcode"=>$temp_barcode,"created_at"=>$created_at);
+ array_push($data1,$temp);
+
+}
+ if ($grower_found==0) {
+  
+  $temp=array("response"=>"Grower Not Found","grower_num"=>$grower_num,"barcode"=>$barcode,"temp_barcode"=>$temp_barcode,"created_at"=>$created_at);
+   array_push($data1,$temp);
+
+}
+ if ($bale_tag_booked==0) {
+
+$temp=array("response"=>"bale tag not booked","grower_num"=>$grower_num,"barcode"=>$barcode,"temp_barcode"=>$temp_barcode,"created_at"=>$created_at);
+   array_push($data1,$temp);
+
+
+}
+ if ($bale_tagid==0) {
+
+$temp=array("response"=>"bale tag not found","grower_num"=>$grower_num,"barcode"=>$barcode,"temp_barcode"=>$temp_barcode,"created_at"=>$created_at);
+   array_push($data1,$temp);
+
+
+}
+ if ($mapped>0) {
+
+$temp=array("response"=>"Already sold or mapped ","grower_num"=>$grower_num,"barcode"=>$barcode,"temp_barcode"=>$temp_barcode,"created_at"=>$created_at);
+   array_push($data1,$temp);
+
+
+}
 
 
 }

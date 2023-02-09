@@ -30,7 +30,7 @@ $result = $conn->query($sql);
 
 }else{
 
-$sql = "select name,surname,id from users where (active=1 and name='$description' or surname='$description') and  (rightsid=8 or rightsid=9 or rightsid=1)";
+$sql = "select name,surname,id from users where active=1 and (name='$description' or surname='$description' or username='$description') and  (rightsid=8 or rightsid=9 or rightsid=14)";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

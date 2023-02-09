@@ -7,7 +7,7 @@ $data=array();
 
 $userid=0;
 $seasonid=0;
-$description=$_GET["description"];
+$description="";
 
 
 
@@ -18,7 +18,27 @@ if (isset($_GET['userid']) && isset($_GET["description"]) && isset($_GET["season
 
 
 $userid=$_GET['userid'];
-$seasonid=$_GET['seasonid'];
+//$seasonid=$_GET['seasonid'];
+$description=$_GET["description"];
+
+
+
+$sql = "Select * from seasons where active=1";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+   $seasonid=$row["id"];
+   
+    
+   }
+
+ }
+
+
 
 if ($description=="") {
  $sql = "select grower_num,name,surname,latitude,longitude,growers.id from growers left join lat_long on growers.id=lat_long.growerid where lat_long.userid=$userid and lat_long.seasonid=$seasonid";
@@ -36,7 +56,7 @@ $result = $conn->query($sql);
 
 }else{
 
-$sql = "select grower_num,name,surname,latitude,longitude,growers.id from growers left join lat_long on growers.id=lat_long.growerid where lat_long.userid=$userid and lat_long.seasonid=$seasonid and grower_num='$description'";
+$sql = "select grower_num,name,surname,latitude,longitude,growers.id from growers left join lat_long on growers.id=lat_long.growerid where lat_long.userid=$userid and lat_long.seasonid=$seasonid and grower_num like '%$description%'";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

@@ -1890,6 +1890,7 @@ foreign key(seasonid) references seasons(id)
 create table if not exists bale_tags(
 id integer primary key auto_increment,
 userid integer not null,
+seasonid integer not null,
 grower_number_of_balesid integer not null,
 code varchar(100) not null,
 sync integer not null default 0,
@@ -1898,10 +1899,11 @@ booked integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
 foreign key(grower_number_of_balesid) references grower_number_of_bales(id)
 );
 
-userid,bale_tagid,latitude,longitude,created_at
+
 
 create table if not exists bale_receiver(
 id integer primary key auto_increment,
@@ -1927,6 +1929,16 @@ foreign key(userid) references users(id)
 
 
 
+
+create table if not exists bale_rejected(
+id integer primary key auto_increment,
+userid integer not null,
+bale_tagid integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(bale_tagid) references bale_tags(id),
+foreign key(userid) references users(id)
+);
 
 
 

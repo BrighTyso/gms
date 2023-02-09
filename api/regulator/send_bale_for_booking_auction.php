@@ -23,6 +23,7 @@ $bale_tagid=0;
 $bale_tag_to_sold_bales=0;
 $seasonid=0;
 $rejected_bales_found=0;
+$received_by_user=0;
 
 
  $grower_number_of_balesid=$datasource->encryptor("decrypt",$qrcode);
@@ -66,6 +67,24 @@ $result = $conn->query($sql);
 
 
 
+ $sql22 = "Select * from bale_receiver where bale_tagid=$bale_tagid and userid=$userid";
+$result = $conn->query($sql22);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+  
+    // $seasonid=$row["id"]; 
+   $received_by_user=$row["id"];
+  
+   }
+
+ }
+
+
+
 
  $sql = "Select * from bale_booked where bale_tagid=$bale_tagid ";
 $result = $conn->query($sql);
@@ -85,7 +104,7 @@ $result = $conn->query($sql);
 
 
 
-if ($booked==0 && $bale_tagid>0) {
+if ($booked==0 && $bale_tagid>0 && $received_by_user>0) {
 
   $grower_farm_sql = "INSERT INTO bale_booked(userid,bale_tagid,created_at) VALUES ($userid,$bale_tagid,'$created_at')";
      //$sql = "select * from login";
@@ -112,6 +131,11 @@ if ($booked==0 && $bale_tagid>0) {
 
       $temp=array("response"=>"Bale Tag Not Found or Not Yet Received ");
       array_push($response,$temp);
+
+  }else if ($received_by_user==0) {
+
+    $temp=array("response"=>"Bale Tag Was Not Received By This User ");
+    array_push($response,$temp);
 
   }
 

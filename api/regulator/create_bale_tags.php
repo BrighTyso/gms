@@ -22,6 +22,7 @@ $grower_number_of_balesid=0;
 $created_at="";
 $tags_total_found=0;
 $code_found=0;
+$seasonid=0;
 
 
 $data1=array();
@@ -39,10 +40,29 @@ $code=validate($data->code);
 $grower_number_of_balesid=$datasource->encryptor("decrypt",$data->grower_number_of_balesid);
 $created_at=$data->created_at;
 
+
+
+
+$sql = "Select * from seasons where active=1";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+  
+   $seasonid=$row["id"]; 
+
+  
+   }
+
+ }
+
   
 
 
-$sql = "Select * from bale_tags where code='$code'";
+$sql = "Select * from bale_tags where code='$code' and seasonid=$seasonid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -78,7 +98,7 @@ $result = $conn->query($sql);
 
  if ($code_found==0 && $tags_total_found>0) {
    
-    $insert_sql = "INSERT INTO bale_tags(userid,grower_number_of_balesid,code,created_at) VALUES ($userid,$grower_number_of_balesid,'$code','$created_at')";
+    $insert_sql = "INSERT INTO bale_tags(userid,grower_number_of_balesid,code,seasonid,created_at) VALUES ($userid,$grower_number_of_balesid,'$code',$seasonid,'$created_at')";
     //$gr = "select * from login";
        if ($conn->query($insert_sql)===TRUE) {
        

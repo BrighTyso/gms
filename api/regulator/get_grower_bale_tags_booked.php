@@ -34,13 +34,12 @@ if (isset($data->userid)  && isset($data->grower_number_of_balesid)){
 
 $userid=$data->userid;
 $grower_number_of_balesid=$datasource->encryptor("decrypt",$data->grower_number_of_balesid);
-
+$created_at=$data->created_at;
 
 
   
 
-
-$sql = "Select code,used,bale_tags.id,bale_tag_to_sold_bale.bale_tagid,bale_tags.created_at from bale_tags join bale_booked on bale_booked.bale_tagid=bale_tags.id left join bale_tag_to_sold_bale on bale_tag_to_sold_bale.bale_tagid=bale_tags.id  where grower_number_of_balesid=$grower_number_of_balesid and bale_booked.userid=$userid";
+$sql = "Select code,used,bale_tags.id,bale_tag_to_sold_bale.bale_tagid,bale_booked.created_at from bale_tags join bale_booked on bale_booked.bale_tagid=bale_tags.id left join bale_tag_to_sold_bale on bale_tag_to_sold_bale.bale_tagid=bale_tags.id  where grower_number_of_balesid=$grower_number_of_balesid and bale_booked.userid=$userid and bale_booked.created_at='$created_at'";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
