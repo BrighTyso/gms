@@ -99,6 +99,7 @@ if (isset($data->seasonid) && isset($data->userid) && isset($data->companyid) &&
           array_push($response,$temp);
        }
        
+       
    }else{
 
 

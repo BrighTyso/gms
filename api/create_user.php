@@ -93,9 +93,21 @@ $user_sql = "INSERT INTO users(name,surname,username,hash,rightsid,active,access
                    //$sql = "select * from login";
                    if ($conn->query($user_sql)===TRUE) {
                    
-                     $last_id = $conn->insert_id;
-                     $temp=array("response"=>"success");
-                     array_push($response,$temp);
+                     $store_id = $conn->insert_id;
+
+                     $company_store = "INSERT INTO company_store(userid,storeid) VALUES ($last_id,$store_id)";
+                       //$sql = "select * from login";
+                         if ($conn->query($company_store)===TRUE) {
+                         
+                           $temp=array("response"=>"success");
+                           array_push($response,$temp);
+                           
+                         }else{
+
+                          $temp=array("response"=>$conn->error);
+                          array_push($response,$temp);
+                          
+                         }
                      
                    }else{
 

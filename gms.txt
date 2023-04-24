@@ -60,6 +60,24 @@ foreign key(rightsid) references rights(id)
 
 
 
+create table if not exists bales_rights(
+id integer primary key auto_increment,
+userid integer not null,
+receiverid integer not null,
+companyid integer not null,
+seasonid integer not null,
+active integer not null default 1,
+created_at integer not null,
+datetime TIMESTAMP not null,
+foreign key(receiverid) references users(id),
+foreign key(companyid) references users(id),
+foreign key(userid) references users(id)
+);
+
+
+
+
+
 
 
 create table if not exists bale_tracking_rights(
@@ -1711,6 +1729,8 @@ foreign key(grower_number_of_balesid) references grower_number_of_bales(id)
 
 
 
+
+
 create table if not exists sold_bales(
 
 id integer primary key auto_increment,
@@ -1721,6 +1741,11 @@ temp_barcode varchar(100) not null,
 barcode varchar(100) not null,
 mass varchar(100) not null,
 price varchar(100) not null,
+lot varchar(100) not null,
+grp varchar(100) not null,
+buyer varchar(100) not null,
+buyer_mark varchar(100) not null,
+grade varchar(100) not null,
 latitude varchar(100) not null,
 longitude varchar(100) not null,
 sync integer not null default 0,
@@ -1826,6 +1851,7 @@ foreign key(dispatch_noteid) references dispatch_note(id)
 create table if not exists dispatch(
 id integer primary key auto_increment,
 userid integer not null,
+actionby integer not null default 0,  
 dispatch_noteid integer not null,
 sold_balesid integer not null,
 latitude varchar(100) not null,
@@ -1858,6 +1884,7 @@ create table if not exists received_bales_principal(
 id integer primary key auto_increment,
 dispatchid integer not null,
 userid integer not null,
+actionby integer not null default 0,  
 latitude varchar(100) not null,
 longitude varchar(100) not null,
 sync integer not null default 0,
@@ -1910,6 +1937,7 @@ foreign key(grower_number_of_balesid) references grower_number_of_bales(id)
 create table if not exists bale_receiver(
 id integer primary key auto_increment,
 userid integer not null,
+actionby integer not null default 0,
 bale_tagid integer not null,
 latitude varchar(100) not null,
 longitude varchar(100) not null,
@@ -1923,6 +1951,7 @@ foreign key(userid) references users(id)
 create table if not exists bale_booked(
 id integer primary key auto_increment,
 userid integer not null,
+actionby integer not null default 0,
 bale_tagid integer not null,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
@@ -2051,8 +2080,53 @@ foreign key(growerid) references growers(id)
 
 
 
+create table if not exists machine_learning_product_variables(
+id integer primary key auto_increment,
+description varchar(100) not null unique
+);
+
+
+create table if not exists machine_learning_products(
+id integer primary key auto_increment,
+productid integer not null,
+machine_learning_product_variablesid integer not null,
+foreign key(productid) references products(id),
+foreign key(machine_learning_product_variablesid) references machine_learning_product_variables(id)
+);
+
+
+
+
+
+
+create table if not exists grower_loan_verified(
+id integer primary key auto_increment,
+userid integer not null,
+growerid integer not null,
+seasonid integer not null,
+sync integer not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists buyer(
+id integer primary key auto_increment,
+userid integer not null,
+companyid integer not null,
+description varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(companyid) references users(id)
+);
+
+
 create table if not exists buyer_mark(
 id integer primary key auto_increment,
+userid integer not null,
 description varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id)
@@ -2060,14 +2134,14 @@ foreign key(userid) references users(id)
 
 
 
-
-create table if not exists user_buyer_mark(
+create table if not exists company_store(
 id integer primary key auto_increment,
-buyer_markid integer not null,
 userid integer not null,
+storeid integer not null,
+active integer not null default 1,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
-foreign key(buyer_markid) references buyer_mark(id)
+foreign key(storeid) references store(id)
 );
 
 
@@ -2357,6 +2431,12 @@ DELIMITER ;
 
 
 
+
+insert into machine_learning_product_variables(description) value("Basal");
+insert into machine_learning_product_variables(description) value("AN");
+insert into machine_learning_product_variables(description) value("Potassium");
+
+
 insert into assessment_type(name) value("Qualitative");
 insert into assessment_type(name) value("Quantitative");
 
@@ -2378,9 +2458,9 @@ insert into rights(description,notes) value("Insurance","Insurance13");
 insert into rights(description,notes) value("Company","Company14");
 insert into rights(description,notes) value("Surrogate","Surrogate15");
 insert into rights(description,notes) value("Check Point","Check Point16");
+insert into rights(description,notes) value("Agronomist","Agronomy17");
 
-
-insert into users(name,surname,username,hash,rightsid,active,access_code,created_at) value("sysadmin","sysadmin","sysadmin","sysadmin",1,1,0000,"2022-09-12");
+insert into users(name,surname,username,hash,rightsid,active,access_code,created_at) value("sysadmin","sysadmin","sysadmin","173309254d744ee11186193a1b1b0394",1,1,0000,"2022-09-12");
 
 
 insert into province(names) value("Harare");
@@ -2401,7 +2481,7 @@ insert into parameters(name) value("Percentage");
 insert into charges(name) value("Interest");
 insert into charges(name) value("Adminstration");
 insert into charges(name) value("Transport");
-
+insert into charges(name) value("Agronomy");
 
 
 

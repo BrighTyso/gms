@@ -35,7 +35,7 @@ $verifyHectares=0;
 $disbursement_trucksid=0;
 $disbursementid=0;
 $hectares=$data->hectares;
-
+$ready=0;
 
 
 
@@ -190,7 +190,7 @@ $result = $conn->query($sql2);
    
    $storeid=$row["id"];
    $quantity_Enough=$row["id"];
-    $old_quantity=$row["quantity"];
+   $old_quantity=$row["quantity"];
 
 
    }
@@ -201,6 +201,7 @@ $result = $conn->query($sql2);
 // then insert loan
 
   if ($productid>0  && $growerid>0 && $verifyLoan==0 && $productid>0 && $storeid>0) {
+
 
     
      $insert_sql = "INSERT INTO loans(userid,growerid,productid,seasonid,quantity,latitude,longitude,hectares,verified,created_at) VALUES ($userid,$growerid,$productid,$seasonid,$quantity,'$lat','$long','$hectares',1,'$created_at')";

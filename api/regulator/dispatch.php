@@ -19,6 +19,9 @@ $dispatch_note_open=0;
 $mass=0;
 $auction_rights=0;
 
+$buyer="";
+$buyer_company_id=0;
+
 $data1=array();
 // get grower locations
 
@@ -61,8 +64,10 @@ $result = $conn->query($sql111);
     // array_push($data1,$temp);
 
     $dispatch_note_open=$row["id"];
+    $receiverid=$row["receiverid"];
     
    }
+
  }
 
 
@@ -94,7 +99,9 @@ if ($auction_rights==0) {
 
 
 
-$sql = "Select sold_bales.id,mass from sold_bales join bale_tag_to_sold_bale on bale_tag_to_sold_bale.sold_balesid=sold_bales.id join bale_tags on bale_tags.id=bale_tag_to_sold_bale.bale_tagid where (barcode='$barcode' or temp_barcode='$barcode') and  bale_tag_to_sold_bale.userid=$userid and  sold_bales.seasonid=$seasonid";
+
+
+$sql = "Select sold_bales.id,mass,buyer from sold_bales join bale_tag_to_sold_bale on bale_tag_to_sold_bale.sold_balesid=sold_bales.id join bale_tags on bale_tags.id=bale_tag_to_sold_bale.bale_tagid where (barcode='$barcode' or temp_barcode='$barcode') and  bale_tag_to_sold_bale.userid=$userid and  sold_bales.seasonid=$seasonid";
 
 $result = $conn->query($sql);
  
@@ -108,17 +115,21 @@ $result = $conn->query($sql);
 
     $sold_baleid=$row["id"];
     $mass=$row["mass"];
-
-
+    $buyer=$row["buyer"];
     
    }
  }
 
 
+
+
+
+
+
 }else{
 
 
-$sql = "Select sold_bales.id,mass from sold_bales join bale_tag_to_sold_bale on bale_tag_to_sold_bale.sold_balesid=sold_bales.id join bale_tags on bale_tags.id=bale_tag_to_sold_bale.bale_tagid join grower_number_of_bales on bale_tags.grower_number_of_balesid=grower_number_of_bales.id join auction_growers on auction_growers.growerid=grower_number_of_bales.growerid where (barcode='$barcode' or temp_barcode='$barcode' or code='$barcode') and  sold_bales.seasonid=$seasonid and bale_tag_to_sold_bale.userid=$userid";
+$sql = "Select sold_bales.id,mass,buyer from sold_bales join bale_tag_to_sold_bale on bale_tag_to_sold_bale.sold_balesid=sold_bales.id join bale_tags on bale_tags.id=bale_tag_to_sold_bale.bale_tagid join grower_number_of_bales on bale_tags.grower_number_of_balesid=grower_number_of_bales.id join auction_growers on auction_growers.growerid=grower_number_of_bales.growerid where (barcode='$barcode' or temp_barcode='$barcode' or code='$barcode') and  sold_bales.seasonid=$seasonid and bale_tag_to_sold_bale.userid=$userid";
 
 
 $result = $conn->query($sql);
@@ -134,6 +145,7 @@ $result = $conn->query($sql);
 
     $sold_baleid=$row["id"];
     $mass=$row["mass"];
+    $buyer=$row["buyer"];
 
 
     
@@ -141,6 +153,28 @@ $result = $conn->query($sql);
  }
 
 }
+
+// check auction buyer code
+
+$sql123 = "Select * from buyer where description='$buyer'";
+
+$result = $conn->query($sql123);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+    //  $temp=array("name"=>$row["name"],"surname"=>$row["surname"] ,"username"=>$row["username"] ,"id"=>$row["id"],"rights"=>$row["rightsid"]);
+    // array_push($data1,$temp);
+
+    $buyer_company_id=$row["companyid"];
+
+    
+   }
+ }
+
+
 
 
 
@@ -184,6 +218,15 @@ $result = $conn->query($sql1);
 
  if ($barcode_found==0 && $sold_baleid>0) {
 
+
+  if ($auction_rights>0) {
+    // auction 
+    if ($buyer_company_id==$receiverid) {
+      // auction past here
+
+      
+//=========================================================cut here =========================================
+
    $insert_sql = "INSERT INTO dispatch(userid,sold_balesid,dispatch_noteid,latitude,longitude,created_at) VALUES ($userid,$sold_baleid,$dispatch_noteid,'$latitude','$longitude','$created_at')";
    //$gr = "select * from login";
    if ($conn->query($insert_sql)===TRUE) {
@@ -220,6 +263,67 @@ $result = $conn->query($sql1);
 
 
    }
+
+// =======================================cut here =============================================
+
+
+
+    }else{
+
+       $temp=array("response"=>"Wrong Dispatch Destination");
+       array_push($data1,$temp);
+
+    }
+
+
+
+  }else{
+// contract paste here
+
+
+//=========================================================cut here =========================================
+
+   $insert_sql = "INSERT INTO dispatch(userid,sold_balesid,dispatch_noteid,latitude,longitude,created_at) VALUES ($userid,$sold_baleid,$dispatch_noteid,'$latitude','$longitude','$created_at')";
+   //$gr = "select * from login";
+   if ($conn->query($insert_sql)===TRUE) {
+   
+    // $last_id = $conn->insert_id;
+
+     if($total_found==0){
+
+     $insert_sql = "INSERT INTO dispatch_note_total_dispatched(dispatch_noteid,quantity,mass,created_at) VALUES ($dispatch_noteid,1,$mass,'$created_at')";
+       //$gr = "select * from login";
+       if ($conn->query($insert_sql)===TRUE) {
+       
+        // $last_id = $conn->insert_id;
+
+          $temp=array("response"=>"success");
+          array_push($data1,$temp);
+
+          }
+
+
+      }else{
+
+       $user_sql1 = "update dispatch_note_total_dispatched set quantity=quantity+1,mass=mass+$mass where dispatch_noteid=$total_found";
+         //$sql = "select * from login";
+         if ($conn->query($user_sql1)===TRUE) {
+
+          $temp=array("response"=>"success");
+          array_push($data1,$temp);
+
+     
+          }
+
+      }
+
+
+   }
+
+// =======================================cut here =============================================
+
+
+  }
 
 
   }else{

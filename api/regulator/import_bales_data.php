@@ -24,6 +24,12 @@ $temp_barcode="";
 $growerid=0;
 
 
+$lot="";
+$group="";
+$buyer="";
+$buyer_mark="";
+$grade="";
+
 $barcode_found=0;
 $total_found=0;
 $grower_found=0;
@@ -38,7 +44,7 @@ $data1=array();
 
 //userid=1&name="bright"&surname="kaponda"&grower_num="12333"&area="ggg"&province="tttt"&phone="0784428797"&id_num="12345666"&created_at="44-44-44"&lat="12.2223"&long="15.45555"
 
-if (isset($data->userid) &&  isset($data->temp_barcode) &&  isset($data->mass) && isset($data->created_at) && isset($data->price) && isset($data->grower_num) && isset($data->barcode) && $data->barcode!=""){
+if (isset($data->userid) &&  isset($data->temp_barcode) &&  isset($data->mass) && isset($data->created_at) && isset($data->price) && isset($data->grower_num) && isset($data->barcode)&& isset($data->lot) && isset($data->group) && isset($data->buyer) && isset($data->buyer_mark) && isset($data->grade) && $data->barcode!=""){
 
 
 
@@ -52,7 +58,11 @@ $created_at=$data->created_at;
 $latitude=$data->latitude;
 $longitude=$data->longitude;
 $temp_barcode=$data->temp_barcode;
-
+$lot=$data->lot;
+$group=$data->group;
+$buyer=$data->buyer;
+$buyer_mark=$data->buyer_mark;
+$grade=$data->grade;
 
 $response=0;
 $farm_response=0;
@@ -257,7 +267,7 @@ $result = $conn->query($sql1);
  if ($barcode_found==0 && $grower_found>0 && $seasonid>0 && $bale_tag_booked>0 && $bale_tagid>0 && $mapped==0) {
 
 
-   $insert_sql = "INSERT INTO sold_bales(userid,seasonid,growerid,barcode,mass,price,latitude,longitude,created_at,temp_barcode) VALUES ($userid,$seasonid,$grower_found,'$barcode',$mass,$price,'$latitude','$longitude','$created_at','$temp_barcode')";
+   $insert_sql = "INSERT INTO sold_bales(userid,seasonid,growerid,barcode,mass,price,lot,grp,buyer,buyer_mark,grade,latitude,longitude,created_at,temp_barcode) VALUES ($userid,$seasonid,$grower_found,'$barcode',$mass,$price,'$lot','$group','$buyer','$buyer_mark','$grade','$latitude','$longitude','$created_at','$temp_barcode')";
    //$gr = "select * from login";
    if ($conn->query($insert_sql)===TRUE) {
    

@@ -14,7 +14,7 @@ $data = json_decode(file_get_contents("php://input"));
 $data1=array();
 
  
-$sql = "select loans.id,growers.grower_num,products.name as product_name,loans.quantity,units,loans.created_at,latitude,longitude,verified,seasons.name,contracted_hectares.hectares from loans join growers on growers.id=loans.growerid join seasons on seasons.id=loans.seasonid join products on loans.productid=products.id join contracted_hectares on contracted_hectares.growerid=loans.growerid where verified=1";
+$sql = "select distinct loans.id,growers.grower_num,products.name as product_name,loans.quantity,units,loans.created_at,latitude,longitude,verified,seasons.name,contracted_hectares.hectares from loans join growers on growers.id=loans.growerid join seasons on seasons.id=loans.seasonid join products on loans.productid=products.id join contracted_hectares on contracted_hectares.growerid=loans.growerid where verified=1 and loans.sync=0 order by growers.grower_num";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

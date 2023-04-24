@@ -56,7 +56,7 @@ if ($auction_rights==0) {
 
 if ($description=="") {
 
-$sql = "Select distinct growers.id,grower_number_of_bales.id as balesid,grower_num,bales,users.name,estimate,seasons.name as season_name from grower_number_of_bales join growers on grower_number_of_bales.growerid=growers.id join users on grower_number_of_bales.userid=users.id  join seasons on grower_number_of_bales.seasonid=seasons.id join system_estimate_prediction on growers.id=system_estimate_prediction.growerid where grower_number_of_bales.seasonid=$seasonid and grower_number_of_bales.seasonid=$seasonid and system_estimate_prediction.seasonid=$seasonid  and users.id=$userid";
+$sql = "Select distinct growers.id,grower_number_of_bales.id as balesid,grower_num,bales,users.name,estimate,seasons.name as season_name,tags_generated from grower_number_of_bales join growers on grower_number_of_bales.growerid=growers.id join users on grower_number_of_bales.userid=users.id  join seasons on grower_number_of_bales.seasonid=seasons.id join system_estimate_prediction on growers.id=system_estimate_prediction.growerid join tags_total on tags_total.grower_number_of_balesid=grower_number_of_bales.id where grower_number_of_bales.seasonid=$seasonid and grower_number_of_bales.seasonid=$seasonid and system_estimate_prediction.seasonid=$seasonid  and users.id=$userid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -65,7 +65,7 @@ $result = $conn->query($sql);
 
 
       $value=$datasource->encryptor("encrypt",$row["balesid"]);
-      $temp=array("balesid"=>$value,"growerid"=>$row["id"],"grower_num"=>$row["grower_num"],"bales"=>$row["bales"],"name"=>$row["name"],"estimate"=>$row["estimate"],"season_name"=>$row["season_name"]);
+      $temp=array("balesid"=>$value,"growerid"=>$row["id"],"grower_num"=>$row["grower_num"],"bales"=>$row["bales"],"name"=>$row["name"],"estimate"=>$row["estimate"],"season_name"=>$row["season_name"],"generated_tags"=>$row["tags_generated"]);
       array_push($data1,$temp);
  
  
@@ -76,7 +76,7 @@ $result = $conn->query($sql);
 
 }else{
 
-$sql = "Select distinct growers.id,grower_number_of_bales.id as balesid,grower_num,bales,users.name,estimate,seasons.name as season_name from grower_number_of_bales join growers on grower_number_of_bales.growerid=growers.id join users on grower_number_of_bales.userid=users.id  join seasons on grower_number_of_bales.seasonid=seasons.id join system_estimate_prediction on growers.id=system_estimate_prediction.growerid where grower_number_of_bales.seasonid=$seasonid and grower_number_of_bales.seasonid=$seasonid and system_estimate_prediction.seasonid=$seasonid  and users.id=$userid and ( grower_num='$description' )";
+$sql = "Select distinct growers.id,grower_number_of_bales.id as balesid,grower_num,bales,users.name,estimate,seasons.name as season_name,tags_generated from grower_number_of_bales join growers on grower_number_of_bales.growerid=growers.id join users on grower_number_of_bales.userid=users.id  join seasons on grower_number_of_bales.seasonid=seasons.id join system_estimate_prediction on growers.id=system_estimate_prediction.growerid join tags_total on tags_total.grower_number_of_balesid=grower_number_of_bales.id where grower_number_of_bales.seasonid=$seasonid and grower_number_of_bales.seasonid=$seasonid and system_estimate_prediction.seasonid=$seasonid  and users.id=$userid and ( grower_num='$description' )";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -84,7 +84,7 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
 
     $value=$datasource->encryptor("encrypt",$row["balesid"]);
-     $temp=array("balesid"=>$value,"growerid"=>$row["id"],"grower_num"=>$row["grower_num"],"bales"=>$row["bales"],"name"=>$row["name"],"estimate"=>$row["estimate"],"season_name"=>$row["season_name"]);
+     $temp=array("balesid"=>$value,"growerid"=>$row["id"],"grower_num"=>$row["grower_num"],"bales"=>$row["bales"],"name"=>$row["name"],"estimate"=>$row["estimate"],"season_name"=>$row["season_name"],"generated_tags"=>$row["tags_generated"]);
       array_push($data1,$temp);
  
  
@@ -99,7 +99,7 @@ $result = $conn->query($sql);
 
 if ($description=="") {
 
-$sql = "Select distinct growers.id,grower_number_of_bales.id as balesid,grower_num,bales,users.name,estimate,seasons.name as season_name from grower_number_of_bales join growers on grower_number_of_bales.growerid=growers.id join users on grower_number_of_bales.userid=users.id  join seasons on grower_number_of_bales.seasonid=seasons.id join system_estimate_prediction on growers.id=system_estimate_prediction.growerid  join auction_growers on auction_growers.growerid=growers.id where grower_number_of_bales.seasonid=$seasonid and grower_number_of_bales.seasonid=$seasonid and system_estimate_prediction.seasonid=$seasonid  and auction_growers.seasonid=$seasonid";
+$sql = "Select distinct growers.id,grower_number_of_bales.id as balesid,grower_num,bales,users.name,estimate,seasons.name as season_name,tags_generated from grower_number_of_bales join growers on grower_number_of_bales.growerid=growers.id join users on grower_number_of_bales.userid=users.id  join seasons on grower_number_of_bales.seasonid=seasons.id join system_estimate_prediction on growers.id=system_estimate_prediction.growerid  join auction_growers on auction_growers.growerid=growers.id join tags_total on tags_total.grower_number_of_balesid=grower_number_of_bales.id where grower_number_of_bales.seasonid=$seasonid and grower_number_of_bales.seasonid=$seasonid and system_estimate_prediction.seasonid=$seasonid  and auction_growers.seasonid=$seasonid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -108,7 +108,7 @@ $result = $conn->query($sql);
 
 
       $value=$datasource->encryptor("encrypt",$row["balesid"]);
-      $temp=array("balesid"=>$value,"growerid"=>$row["id"],"grower_num"=>$row["grower_num"],"bales"=>$row["bales"],"name"=>"Auction","estimate"=>$row["estimate"],"season_name"=>$row["season_name"]);
+      $temp=array("balesid"=>$value,"growerid"=>$row["id"],"grower_num"=>$row["grower_num"],"bales"=>$row["bales"],"name"=>"Auction","estimate"=>$row["estimate"],"season_name"=>$row["season_name"],"generated_tags"=>$row["tags_generated"]);
       array_push($data1,$temp);
  
  
@@ -119,7 +119,7 @@ $result = $conn->query($sql);
 
 }else{
 
-$sql = "Select distinct growers.id,grower_number_of_bales.id as balesid,grower_num,bales,users.name,estimate,seasons.name as season_name from grower_number_of_bales join growers on grower_number_of_bales.growerid=growers.id join users on grower_number_of_bales.userid=users.id  join seasons on grower_number_of_bales.seasonid=seasons.id join system_estimate_prediction on growers.id=system_estimate_prediction.growerid  join auction_growers on auction_growers.growerid=growers.id where grower_number_of_bales.seasonid=$seasonid and grower_number_of_bales.seasonid=$seasonid and system_estimate_prediction.seasonid=$seasonid  and auction_growers.seasonid=$seasonid and ( grower_num='$description' )";
+$sql = "Select distinct growers.id,grower_number_of_bales.id as balesid,grower_num,bales,users.name,estimate,seasons.name as season_name,tags_generated from grower_number_of_bales join growers on grower_number_of_bales.growerid=growers.id join users on grower_number_of_bales.userid=users.id  join seasons on grower_number_of_bales.seasonid=seasons.id join system_estimate_prediction on growers.id=system_estimate_prediction.growerid  join auction_growers on auction_growers.growerid=growers.id join tags_total on tags_total.grower_number_of_balesid=grower_number_of_bales.id where grower_number_of_bales.seasonid=$seasonid and grower_number_of_bales.seasonid=$seasonid and system_estimate_prediction.seasonid=$seasonid  and auction_growers.seasonid=$seasonid and ( grower_num='$description' )";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -127,7 +127,7 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
 
     $value=$datasource->encryptor("encrypt",$row["balesid"]);
-     $temp=array("balesid"=>$value,"growerid"=>$row["id"],"grower_num"=>$row["grower_num"],"bales"=>$row["bales"],"name"=>"Auction","estimate"=>$row["estimate"],"season_name"=>$row["season_name"]);
+     $temp=array("balesid"=>$value,"growerid"=>$row["id"],"grower_num"=>$row["grower_num"],"bales"=>$row["bales"],"name"=>"Auction","estimate"=>$row["estimate"],"season_name"=>$row["season_name"],"generated_tags"=>$row["tags_generated"]);
       array_push($data1,$temp);
  
  
