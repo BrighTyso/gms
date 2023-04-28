@@ -2146,6 +2146,18 @@ foreign key(storeid) references store(id)
 
 
 
+create table if not exists developer(
+id integer primary key auto_increment,
+userid integer not null,
+company_code varchar(100) not null,
+warehouse_code varchar(100) not null,
+active integer not null default 1,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id)
+);
+
+
+
 DELIMITER $$
 create trigger on_grower_lat_long
 after insert on lat_long

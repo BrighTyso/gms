@@ -9,6 +9,13 @@ require_once("conn.php");
 require "validate.php";
 
 
+require "datasource.php";
+
+
+$company_code=new CompanyCode();
+$warehouse_code=new CompanyWarehouseCode();
+
+
 $data = json_decode(file_get_contents("php://input"));
 
 $username="";
@@ -99,9 +106,25 @@ $user_sql = "INSERT INTO users(name,surname,username,hash,rightsid,active,access
                        //$sql = "select * from login";
                          if ($conn->query($company_store)===TRUE) {
                          
-                           $temp=array("response"=>"success");
-                           array_push($response,$temp);
+                         $last = $conn->insert_id;
+
+                         $company_code=$warehouse_code->encryptor("encrypt",$last_id);
+                         $warehouse_code=$warehouse_code->encryptor("encrypt",$last);
+
+                          $developer = "INSERT INTO developer(userid,company_code,warehouse_code) VALUES ($last_id,'$company_code','$warehouse_code')";
+                            //$sql = "select * from login";
+                           if ($conn->query($developer)===TRUE) {
                            
+                             $temp=array("response"=>"success");
+                             array_push($response,$temp);
+                             
+                           }else{
+
+                            $temp=array("response"=>$conn->error);
+                            array_push($response,$temp);
+                            
+                           }
+                             
                          }else{
 
                           $temp=array("response"=>$conn->error);
@@ -117,7 +140,7 @@ $user_sql = "INSERT INTO users(name,surname,username,hash,rightsid,active,access
                    }
                 }else{
 
-                  $temp=array("response"=>"already Inserted");
+                  $temp=array("response"=>"already Created");
                   array_push($response,$temp);
 
                 }
