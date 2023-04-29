@@ -213,7 +213,7 @@ class CompanyWarehouseCode
 
 
 
-class productCode
+class ProductCode
 {
     private $conn;
 

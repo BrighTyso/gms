@@ -9,6 +9,10 @@ require_once("conn.php");
 require "validate.php";
 
 
+require "datasource.php";
+
+$datasource=new ProductCode();
+
 $data = json_decode(file_get_contents("php://input"));
 
 $name="";
@@ -44,8 +48,20 @@ $result = $conn->query($sql);
    if ($conn->query($user_sql)===TRUE) {
    
      $last_id = $conn->insert_id;
-     $temp=array("response"=>"success");
-     array_push($response,$temp);
+
+
+     $product_code=$datasource->encryptor("encrypt",$last_id);
+
+     $user_sql1 = "INSERT INTO developer_product_codes(productid,product_code) VALUES ($last_id,'$product_code')";
+     //$sql = "select * from login";
+     if ($conn->query($user_sql1)===TRUE) {
+     
+       $last_id = $conn->insert_id;
+       $temp=array("response"=>"success");
+       array_push($response,$temp);
+
+     }
+
 
    }else{
 

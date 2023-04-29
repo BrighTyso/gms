@@ -2,15 +2,15 @@
 
 class DataSource
 {
-	private $conn;
+    private $conn;
 
 
-		function __construct()
-		{
+        function __construct()
+        {
 
-			//$this->conn=$conn;
-			// code...
-		}
+            //$this->conn=$conn;
+            // code...
+        }
 
 
 
@@ -35,7 +35,7 @@ class DataSource
     }
 
     else if( $action == 'decrypt' ){
-    	//decrypt the given text/string/number
+        //decrypt the given text/string/number
         $output = openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
     }
 
@@ -54,15 +54,15 @@ class DataSource
 
 class DispatchNote
 {
-	private $conn;
+    private $conn;
 
 
-		function __construct()
-		{
+        function __construct()
+        {
 
-			//$this->conn=$conn;
-			// code...
-		}
+            //$this->conn=$conn;
+            // code...
+        }
 
 
 
@@ -87,7 +87,7 @@ class DispatchNote
     }
 
     else if( $action == 'decrypt' ){
-    	//decrypt the given text/string/number
+        //decrypt the given text/string/number
         $output = openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
     }
 
@@ -213,7 +213,7 @@ class CompanyWarehouseCode
 
 
 
-class productCode
+class ProductCode
 {
     private $conn;
 

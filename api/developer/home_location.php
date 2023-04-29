@@ -32,7 +32,7 @@ $long="";
 
 //userid=1&name="bright"&surname="kaponda"&grower_num="12333"&area="ggg"&province="tttt"&phone="0784428797"&id_num="12345666"&created_at="44-44-44"&lat="12.2223"&long="15.45555"
 
-if (isset($data->userid)  && isset($data->grower_num) && isset($data->latitude) && isset($data->longitude) && isset($data->sqliteid) && isset($data->season)){
+if (isset($data->userid)  && isset($data->grower_num) && isset($data->latitude) && isset($data->longitude) && isset($data->sqliteid)){
 
 
 $userid=$datasource->encryptor("decrypt",$data->userid);
@@ -43,8 +43,8 @@ $grower_num=$data->grower_num;
 $season=$data->season;
 //$sqlitegrowerid=$data->sqlitegrowerid;
 $lat_longid=$data->sqliteid;
-$hectares=$data->hectares;
-$created_at=$data->created_at;
+//$hectares=$data->hectares;
+$created_at=date("Y-m-d");
 
 
 $lat=$data->latitude;
@@ -74,7 +74,7 @@ $result = $conn->query($sql);
 
 
 
- $sql = "Select * from seasons where name='$season'";
+ $sql = "Select * from seasons where active=1";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
