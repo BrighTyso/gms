@@ -29,25 +29,51 @@ $long="";
 
 //userid=1&name="bright"&surname="kaponda"&grower_num="12333"&area="ggg"&province="tttt"&phone="0784428797"&id_num="12345666"&created_at="44-44-44"&lat="12.2223"&long="15.45555"
 
-if (isset($data->userid) &&  isset($data->grower_num)  && isset($data->latitude) && isset($data->longitude) && isset($data->sqliteid)){
+if (isset($data->userid) &&  isset($data->grower_num)  && isset($data->latitude) && isset($data->longitude)){
 
 try {
   
 
-$userid=$datasource->encryptor("decrypt",$data->userid);
+$code=$datasource->encryptor("decrypt",$data->userid);
+
+
 
 
 //$userid=$data->userid;
 $grower_num=$data->grower_num;
 $created_at=date("Y-m-d");
-$season=$data->season;
-$sqliteid=$data->sqliteid;
+//$season=$data->season;
+//$sqliteid=$data->sqliteid;
 
 $lat=$data->latitude;
 $long=$data->longitude;
 
 $response=0;
 $farm_response=0;
+
+
+
+
+$sql = "Select * from developer where company_code='$data->userid' and active=1";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+  
+   $userid=$row["userid"];
+
+   
+    
+   }
+
+ }
+
+
+
+
 
 
 $sql = "Select status from regulator_sync_status where status=1";
@@ -89,7 +115,7 @@ $result = $conn->query($sql);
 
 
 
-if ($statusid>0 && $seasonid>0) {
+if ($statusid>0 && $seasonid>0 && $userid>0) {
  
 // checks if grower is already in database
 
@@ -142,7 +168,7 @@ $result = $conn->query($sql1);
 
 	     //$sqlitegrowerid=0;
 
-	     $temp=array("sqliteid"=>$sqliteid);
+	     $temp=array("response"=>"success");
         array_push($data1,$temp);
 
 	   }else{

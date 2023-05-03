@@ -230,6 +230,7 @@ foreign key(storeitemid) references store_items(id)
 
 
 
+
 create table if not exists truck_destination(
 id integer primary key auto_increment,
 userid integer not null,
@@ -592,6 +593,8 @@ userid integer not null,
 growerid integer not null,
 productid integer not null,
 quantity integer not null,
+product_amount double(100,2) not null default 0,
+product_total_cost double(100,2) not null default 0,
 latitude varchar(100) not null,
 longitude varchar(100) not null,
 seasonid integer not null,
@@ -612,6 +615,17 @@ foreign key(seasonid) references seasons(id),
 foreign key(productid) references products(id)
 );
 
+
+
+
+
+create table if not exists invoice_amount(
+id integer primary key auto_increment,
+seasonid integer not null,
+amount integer not null,
+sync integer not null default 0
+
+);
 
 
 
@@ -2167,6 +2181,32 @@ product_code varchar(100) not null,
 active integer not null default 1,
 datetime TIMESTAMP not null,
 foreign key(productid) references products(id)
+);
+
+
+
+create table if not exists arc_product_grower(
+id integer primary key auto_increment,
+arc_productid integer not null,
+growerid integer not null,
+quantity integer not null,
+datetime TIMESTAMP not null,
+foreign key(arc_productid) references arc_products(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+
+create table if not exists arc_product_truck(
+id integer primary key auto_increment,
+arc_productid integer not null,
+disbursementid integer not null,
+quantity integer not null,
+datetime TIMESTAMP not null,
+foreign key(disbursementid) references disbursement(id),
+foreign key(arc_productid) references arc_products(id)
 );
 
 

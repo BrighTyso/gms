@@ -229,8 +229,18 @@ $result = $conn->query($sql2);
                            //$sql = "select * from login";
                                if ($conn->query($user_sql2)===TRUE) {
 
-                                $temp=array("response"=>"success");
-                               array_push($data1,$temp);
+                                    $last_id = $conn->insert_id;
+
+                                      $user_sql2 = "INSERT INTO arc_product_grower(arc_productid,growerid,quantity) VALUES ($last_id,$growerid,$quantity)";
+                                        //$sql = "select * from login";
+                                       if ($conn->query($user_sql2)===TRUE) {
+
+                                       // $last_id = $conn->insert_id;
+
+                                        $temp=array("response"=>"success");
+                                       array_push($data1,$temp);
+
+                                    }
 
                              }
 

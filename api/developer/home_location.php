@@ -35,12 +35,11 @@ $long="";
 if (isset($data->userid)  && isset($data->grower_num) && isset($data->latitude) && isset($data->longitude) && isset($data->sqliteid)){
 
 
-$userid=$datasource->encryptor("decrypt",$data->userid);
+$code=$datasource->encryptor("decrypt",$data->userid);
 
-echo $userid;
 //$userid=$data->userid;
 $grower_num=$data->grower_num;
-$season=$data->season;
+//$season=$data->season;
 //$sqlitegrowerid=$data->sqlitegrowerid;
 $lat_longid=$data->sqliteid;
 //$hectares=$data->hectares;
@@ -53,6 +52,23 @@ $long=$data->longitude;
 $response=0;
 $growerid=0;
 
+
+$sql = "Select * from developer where company_code='$data->userid' and active=1";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+  
+   $userid=$row["userid"];
+
+   
+    
+   }
+
+ }
 
 
 $sql = "Select status from regulator_sync_status where status=1";
@@ -91,7 +107,7 @@ $result = $conn->query($sql);
  }
 
 
- if ($statusid>0 && $seasonid>0) {
+ if ($statusid>0 && $seasonid>0 && $userid>0) {
 // code...
 
 
@@ -146,7 +162,7 @@ $result = $conn->query($sql);
 
 	     //$sqlitegrowerid=0;
 
-	     $temp=array("sqliteid"=>$lat_longid);
+	     $temp=array("response"=>"success");
         array_push($data1,$temp);
 
 	   }

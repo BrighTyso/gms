@@ -29,23 +29,22 @@ $productid=0;
 $seasonid=0;
 $growerid=0;
 $storeid=0;
+$userid=0;
 $contracted_to=0;
 $old_quantity=0;
-
-$userid=$data->userid;
-$lat=$data->latitude;
-$long=$data->longitude;
-$quantity=$data->quantity;
+$quantity_Enough=0;
 $created_at=date("Y-m-d");
-$description=$data->grower_num;
-$product=$data->product_code;
-$username=$data->username;
+
+
+$lat="";
+$long="";
+
+
 $sqliteid=0;
 $verifyLoan=0;
 $verifyHectares=0;
 $disbursement_trucksid=0;
 $disbursementid=0;
-$hectares=$data->hectares;
 $ready=0;
 
 
@@ -54,16 +53,90 @@ $ready=0;
 
 //http://192.168.1.190/gms/api/enter_loans.php?userid=1&product=sadza&quantity=1&latitude=13.2222&longitude=3.33376&created_at=23-09-2022&description=12333&seasonid=1&sqliteid=1
 
-if (isset($userid) && isset($description)  && isset($lat)  && isset($long)  && isset($product) && isset($quantity) && isset($season) && isset($created_at) && isset($hectares) && isset($username)){
+if (isset($data->grower_num)  && isset($data->product_code) && isset($data->warehouse_code)  && isset($data->hectares) && isset($data->quantity) && isset($data->userid)){
 
 
 
 
-$productid=$product_code->encryptor("encrypt",$product);
+$company=$data->userid;
+$quantity=$data->quantity;
+$description=$data->grower_num;
+$product=$data->product_code;
+$warehouse=$data->warehouse_code;
+$hectares=$data->hectares;
 
-$userid=$company_code->encryptor("encrypt",$product);
 
-$warehouseid=$warehouse_code->encryptor("encrypt",$product);
+
+$p_code=$product_code->encryptor("decrypt",$product);
+
+$c_code=$company_code->encryptor("decrypt",$company);
+
+$w_code=$warehouse_code->encryptor("decrypt",$warehouse);
+
+
+
+
+sleep(1.5);
+
+$sql = "Select * from developer where company_code='$data->userid' and warehouse_code='$warehouse' and active=1";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+  
+   $userid=$row["userid"];
+
+
+    
+   }
+
+ }
+
+
+
+
+$sql = "Select * from company_store where  id=$w_code and userid=$userid and active=1";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+  
+   $storeid=$row["storeid"];
+
+
+   
+    
+   }
+
+ }
+
+
+
+
+$sql = "Select * from developer_product_codes where  product_code='$product'  and active=1";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+  
+   $productid=$row["productid"];
+
+
+    
+   }
+
+ }
+
+
 
 
 
@@ -107,10 +180,7 @@ $result = $conn->query($sql);
 
 
 
- if ($statusid>0 && $seasonid>0 ) {
-
-
-
+ if ($statusid>0 && $seasonid>0 && $storeid>0 && $userid>0) {
 
 
 
@@ -148,7 +218,7 @@ $result = $conn->query($sql);
  // get selected  products id
 
 
-$product_sql = "Select * from products  where name='$product'";
+$product_sql = "Select * from products  where id=$productid";
 $result = $conn->query($product_sql);
  
  if ($result->num_rows > 0) {
@@ -159,13 +229,14 @@ $result = $conn->query($product_sql);
   
    $productid=$row["id"];
 
-   
     
    }
 
  }
 
 //check if loan is there
+
+ 
 
 
  $sql = "Select * from loans where loans.seasonid=$seasonid and productid=$productid  and  growerid=$growerid";
@@ -200,17 +271,18 @@ $result = $conn->query($sql1);
  }
 
 
-$sql2 = "Select store.id,quantity from store join store_items on store.id=store_items.storeid where name='$username' and productid=$productid and quantity>0 and quantity>=$quantity";
+$sql2 = "Select store.id,quantity,store_items.id as storeid from store join store_items on store.id=store_items.storeid where store.id=$storeid and productid=$productid and quantity>0 and quantity>=$quantity";
 $result = $conn->query($sql2);
  if ($result->num_rows > 0) {
    // output data of each row
    while($row = $result->fetch_assoc()) { 
    
+
    $storeid=$row["id"];
-   $quantity_Enough=$row["id"];
+   $quantity_Enough=$row["storeid"];
    $old_quantity=$row["quantity"];
 
-
+    
    }
 
  }
@@ -247,6 +319,9 @@ $result = $conn->query($sql2);
                                   //$sql = "select * from login";
                                if ($conn->query($user_sql2)===TRUE) {
 
+
+                                $last_id = $conn->insert_id;
+
                                 $temp=array("response"=>"success");
                                array_push($data1,$temp);
 
@@ -254,7 +329,9 @@ $result = $conn->query($sql2);
 
 
 
+                        
                          }
+
                 }
 
           }else{
@@ -274,15 +351,24 @@ $result = $conn->query($sql2);
                            //$sql = "select * from login";
                                if ($conn->query($user_sql2)===TRUE) {
 
-                                $temp=array("response"=>"success");
-                               array_push($data1,$temp);
+                                     $last_id = $conn->insert_id;
+
+                                      $user_sql2 = "INSERT INTO arc_product_grower(arc_productid,growerid,quantity) VALUES ($last_id,$growerid,$quantity)";
+                                        //$sql = "select * from login";
+                                       if ($conn->query($user_sql2)===TRUE) {
+
+                                       // $last_id = $conn->insert_id;
+
+                                        $temp=array("response"=>"success");
+                                       array_push($data1,$temp);
+
+                                    }
 
                              }
 
 
 
                          }
-
 
           }
 
@@ -301,17 +387,33 @@ $result = $conn->query($sql2);
    }else{
 
     if ($productid==0) {
+
        $temp=array("response"=>"Product Not Found");
       array_push($data1,$temp);
 
-    }elseif ($growerid==0) {
+    }elseif($userid==0 && $storeid==0){
+
+      $temp=array("response"=>"warehouse/Userid Not Found or Not Matching");
+      array_push($data1,$temp);
+
+    }
+    elseif ($growerid==0) {
+
        $temp=array("response"=>"Grower Not Found");
       array_push($data1,$temp);
 
     }elseif($verifyLoan==1){
- $temp=array("response"=>"Input Already Captured For Grower");
+
+      $temp=array("response"=>"Input Already Captured For Grower");
       array_push($data1,$temp);
+
+    }elseif($storeid==0){
+
+      $temp=array("response"=>"Store Not Found");
+      array_push($data1,$temp);
+
     }
+
 
 
    }

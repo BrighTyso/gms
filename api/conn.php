@@ -1,7 +1,7 @@
 <?php 
 $username="root";
 $host="localhost";
-$database="regulator";
+$database="gms";
 $password="";
 
 

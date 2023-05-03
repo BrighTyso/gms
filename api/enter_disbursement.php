@@ -118,13 +118,25 @@ if ($product_disbursed==0) {
                            //$sql = "select * from login";
                                if ($conn->query($user_sql)===TRUE) {
 
+
+                                $last_id_arc_product = $conn->insert_id;
+
                                
                                $user_sql = "INSERT INTO total_disbursement(disbursement_trucksid,disbursementid,userid,productid,storeid,quantity,created_at) VALUES ($disbursement_trucksid,$disbursemnt_last_id,$userid,$productid,$storeid,$quantity,'$created_at')";
                                    //$sql = "select * from login";
                                        if ($conn->query($user_sql)===TRUE) {
 
-                              $temp=array("response"=>"success");
-                               array_push($response,$temp);
+                                          $user_sql2 = "INSERT INTO arc_product_truck(arc_productid,disbursementid,quantity) VALUES ($last_id_arc_product,$disbursemnt_last_id,$quantity)";
+                                            //$sql = "select * from login";
+                                           if ($conn->query($user_sql2)===TRUE) {
+
+                                           // $last_id = $conn->insert_id;
+
+                                            $temp=array("response"=>"success");
+                                           array_push($data1,$temp);
+
+                                          }
+                                          
 
                                        }
 
