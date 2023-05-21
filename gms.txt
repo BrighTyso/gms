@@ -248,6 +248,9 @@ foreign key(userid) references users(id)
 
 
 
+
+
+
 create table if not exists disbursement(
 id integer primary key auto_increment,
 disbursement_trucksid integer not null,
@@ -593,6 +596,7 @@ userid integer not null,
 growerid integer not null,
 productid integer not null,
 quantity integer not null,
+receipt_number varchar(100) not null,
 product_amount double(100,2) not null default 0,
 product_total_cost double(100,2) not null default 0,
 latitude varchar(100) not null,
@@ -621,10 +625,12 @@ foreign key(productid) references products(id)
 
 create table if not exists invoice_amount(
 id integer primary key auto_increment,
+growerid integer not null,
 seasonid integer not null,
-amount integer not null,
-sync integer not null default 0
-
+amount double(100,2) not null default 0,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null
 );
 
 
@@ -823,13 +829,102 @@ foreign key(parameterid) references parameters(id)
 
 
 
+create table if not exists working_capital(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+receipt_number varchar(100) ,
+amount double(100,2) not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+create table if not exists working_capital_total(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+amount double(100,2) not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+
+create table if not exists inputs_total(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+amount double(100,2) not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+
+create table if not exists rollover(
+id integer primary key auto_increment,
+userid integer not null,
+rollover_seasonid integer not null,
+seasonid integer not null,
+growerid integer not null,
+amount double(100,2) not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(rollover_seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+create table if not exists rollover_total(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+amount double(100,2) not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+create table if not exists download_growers_rule(
+id integer primary key auto_increment,
+rule integer not null default 0
+);
+
+
+
+
 create table if not exists loan_payments(
 id integer primary key auto_increment,
 userid integer not null,
 seasonid integer not null,
 growerid integer not null,
-amount double(100,2) not null,
-mass double(100,2) not null,
+receipt_number varchar(100) not null,
+description varchar(100) not null,
+amount double(100,2) not null default 0,
+mass double(100,2) not null default 0,
 sync integer not null default 0,
 surrogate integer not null default 0,
 created_at varchar(100) not null,
@@ -847,8 +942,8 @@ id integer primary key auto_increment,
 userid integer not null,
 seasonid integer not null,
 growerid integer not null,
-amount double(100,2) not null,
-mass double(100,2) not null,
+amount double(100,2) not null default 0,
+mass double(100,2) not null default 0,
 sync integer not null default 0,
 surrogate integer not null default 0,
 created_at varchar(100) not null,
@@ -2550,6 +2645,5 @@ insert into charges(name) value("Transport");
 insert into charges(name) value("Agronomy");
 
 
-
-
+insert into download_growers_rule(rule) value(0);
 

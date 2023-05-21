@@ -193,7 +193,7 @@ $result = $conn->query($sql1);
      $temp=array("response"=>"Failed To Update");
       array_push($data1,$temp);
 
-   }
+    }
 
    }
 

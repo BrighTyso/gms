@@ -40,7 +40,7 @@ if (isset($data->seasonid) && isset($data->userid) && isset($data->grower_num) &
    }
 
 
-    $sql = "Select * from loan_payments where growerid=$growerid and seasonid=$seasonid and created_at='$created_at' and mass='$mass' limit 1";
+    $sql = "Select * from loan_payments where growerid=$growerid and seasonid=$seasonid and created_at='$created_at' and mass='$mass' and amount='$amount' limit 1";
     $result = $conn->query($sql);
      
      if ($result->num_rows > 0) {
@@ -76,7 +76,7 @@ if (isset($data->seasonid) && isset($data->userid) && isset($data->grower_num) &
 
 if ($growerid>0 && $loan_found==0) {
 
-      $user_sql = "INSERT INTO loan_payments(userid,seasonid,growerid,amount,mass,created_at) VALUES ($userid,$seasonid,$growerid,'$amount','$mass','$created_at')";
+      $user_sql = "INSERT INTO loan_payments(userid,seasonid,growerid,amount,mass,description,receipt_number,created_at) VALUES ($userid,$seasonid,$growerid,'$amount','$mass','Recovery','R1111','$created_at')";
          //$sql = "select * from login";
          if ($conn->query($user_sql)===TRUE) {
          

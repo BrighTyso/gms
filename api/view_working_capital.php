@@ -19,7 +19,7 @@ $seasonid=$data->seasonid;
 
 if ($description=="") {
  
-$sql = "Select distinct loan_payments.id,amount,mass,loan_payments.created_at,growers.grower_num,growers.name,growers.surname,loan_payments.receipt_number,loan_payments.description from loan_payments join growers on growers.id=loan_payments.growerid where loan_payments.seasonid=$seasonid order by loan_payments.id desc";
+$sql = "Select distinct working_capital.id,amount,working_capital.created_at,growers.grower_num,growers.name,growers.surname,working_capital.receipt_number from working_capital join growers on growers.id=working_capital.growerid where working_capital.seasonid=$seasonid order by working_capital.id desc";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -29,7 +29,7 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-     $temp=array("id"=>$row["id"],"amount"=>$row["amount"],"mass"=>$row["mass"],"grower_num"=>$row["grower_num"],"name"=>$row["name"],"surname"=>$row["surname"],"created_at"=>$row["created_at"],"description"=>$row["description"],"receipt_number"=>$row["receipt_number"]);
+     $temp=array("id"=>$row["id"],"amount"=>$row["amount"],"grower_num"=>$row["grower_num"],"name"=>$row["name"],"surname"=>$row["surname"],"created_at"=>$row["created_at"],"receipt_number"=>$row["receipt_number"]);
     array_push($data1,$temp);
    
     
@@ -42,7 +42,7 @@ $result = $conn->query($sql);
 
 // $sql = "Select distinct loan_payments.id,amount,mass,loan_payments.created_at,growers.grower_num,growers.name,growers.surname from loan_payments join growers on growers.id=loan_payments.growerid join lat_long on lat_long.growerid=growers.id join users on users.id=lat_long.userid where  (grower_num='$description' or province='$description' or username='$description') and loan_payments.seasonid='$seasonid'";
 
-$sql = "Select distinct loan_payments.id,amount,mass,loan_payments.created_at,growers.grower_num,growers.name,growers.surname,loan_payments.receipt_number,loan_payments.description from loan_payments join growers on growers.id=loan_payments.growerid where  (grower_num='$description' or province='$description' or receipt_number='$description' or description='$description') and loan_payments.seasonid=$seasonid order by loan_payments.id desc";
+$sql = "Select distinct working_capital.id,amount,working_capital.created_at,growers.grower_num,growers.name,growers.surname,working_capital.receipt_number from working_capital join growers on growers.id=working_capital.growerid where  (grower_num='$description' or province='$description' or receipt_number='$description') and working_capital.seasonid=$seasonid order by working_capital.id desc";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -52,7 +52,7 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-      $temp=array("id"=>$row["id"],"amount"=>$row["amount"],"mass"=>$row["mass"],"grower_num"=>$row["grower_num"],"name"=>$row["name"],"surname"=>$row["surname"],"created_at"=>$row["created_at"],"description"=>$row["description"],"receipt_number"=>$row["receipt_number"]);
+      $temp=array("id"=>$row["id"],"amount"=>$row["amount"],"grower_num"=>$row["grower_num"],"name"=>$row["name"],"surname"=>$row["surname"],"created_at"=>$row["created_at"],"receipt_number"=>$row["receipt_number"]);
     array_push($data1,$temp);
     
    }
