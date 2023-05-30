@@ -173,13 +173,20 @@ foreign key(userid) references users(id)
 );
 
 
+create table if not exists product_type(
+id integer primary key auto_increment,
+name varchar(100) not null
+);
 
 
 create table if not exists products(
 id integer primary key auto_increment,
 name varchar(100) not null,
 units varchar(100) not null,
-datetime TIMESTAMP not null
+package_units double(100,2) not null default 50,
+product_typeid integer not null ,
+datetime TIMESTAMP not null,
+foreign key(product_typeid) references product_type(id)
 );
 
 
@@ -308,20 +315,7 @@ foreign key(disbursement_trucksid) references truck_destination(id)
 
 
 
-create table  if not exists truck_to_grower(
-id integer primary key auto_increment,
-userid integer not null,
-growerid integer not null,
-disbursement_trucksid integer not null,
-productid integer not null,
-quantity integer not null,
-created_at varchar(100) not null,
-datetime TIMESTAMP not null,
-foreign key(userid) references users(id),
-foreign key(productid) references products(id),
-foreign key(disbursement_trucksid) references truck_destination(id),
-foreign key(growerid) references growers(id)
-);
+
 
 
 
@@ -364,6 +358,21 @@ foreign key(seasonid) references seasons(id)
 );
 
 
+
+create table  if not exists truck_to_grower(
+id integer primary key auto_increment,
+userid integer not null,
+growerid integer not null,
+disbursement_trucksid integer not null,
+productid integer not null,
+quantity integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(productid) references products(id),
+foreign key(disbursement_trucksid) references truck_destination(id),
+foreign key(growerid) references growers(id)
+);
 
 
 create table if not exists grower_profile(
@@ -582,7 +591,6 @@ foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
 foreign key(seasonid) references seasons(id)
 );
-
 
 
 
@@ -1834,6 +1842,42 @@ foreign key(grower_number_of_balesid) references grower_number_of_bales(id)
 );
 
 
+create table if not exists selling_points(
+id integer primary key auto_increment,
+name varchar(200) not null,
+datetime TIMESTAMP not null
+);
+
+
+
+
+create table if not exists company_to_selling_point(
+id integer primary key auto_increment,
+userid integer not null,
+companyid integer not null,
+selling_pointid integer not null,
+active integer not null default 1,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(companyid) references users(id),
+foreign key(selling_pointid) references selling_points(id)
+);
+
+
+
+create table if not exists company_users_to_selling_points(
+id integer primary key auto_increment,
+userid integer not null,
+companyid integer not null,
+company_userid integer not null,
+company_to_selling_pointid integer not null,
+active integer not null default 1,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(companyid) references users(id),
+foreign key(company_userid) references users(id),
+foreign key(company_to_selling_pointid) references company_to_selling_point(id)
+);
 
 
 
@@ -1844,6 +1888,8 @@ create table if not exists sold_bales(
 
 id integer primary key auto_increment,
 userid integer not null,
+company_userid integer not null,
+company_to_selling_pointid integer not null,
 seasonid integer not null,
 growerid integer not null,
 temp_barcode varchar(100) not null,
@@ -1862,10 +1908,11 @@ created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
-foreign key(growerid) references growers(id)
+foreign key(growerid) references growers(id),
+foreign key(company_userid) references users(id),
+foreign key(company_to_selling_pointid) references company_to_selling_point(id)
 
 );
-
 
 
 
@@ -1893,6 +1940,8 @@ foreign key(seasonid) references seasons(id)
 create table if not exists dispatch_note(
 id integer primary key auto_increment,
 userid integer not null,
+company_userid integer not null,
+company_to_selling_pointid integer not null,
 receiverid integer not null,
 seasonid integer not null,
 note varchar(100) not null,
@@ -1907,7 +1956,9 @@ open_close integer not null default 0,
 receiver_close integer not null default 0,
 foreign key(userid) references users(id),
 foreign key(receiverid) references users(id),
-foreign key(seasonid) references seasons(id)
+foreign key(seasonid) references seasons(id),
+foreign key(company_userid) references users(id),
+foreign key(company_to_selling_pointid) references company_to_selling_point(id)
 );
 
 
@@ -1960,7 +2011,7 @@ foreign key(dispatch_noteid) references dispatch_note(id)
 create table if not exists dispatch(
 id integer primary key auto_increment,
 userid integer not null,
-actionby integer not null default 0,  
+company_userid integer not null,
 dispatch_noteid integer not null,
 sold_balesid integer not null,
 latitude varchar(100) not null,
@@ -1970,7 +2021,8 @@ created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(sold_balesid) references sold_bales(id),
-foreign key(dispatch_noteid) references dispatch_note(id)
+foreign key(dispatch_noteid) references dispatch_note(id),
+foreign key(company_userid) references users(id)
 );
 
 
@@ -2043,16 +2095,23 @@ foreign key(grower_number_of_balesid) references grower_number_of_bales(id)
 
 
 
+
+
+
 create table if not exists bale_receiver(
 id integer primary key auto_increment,
 userid integer not null,
+company_userid integer not null,
+company_to_selling_pointid integer not null,
 actionby integer not null default 0,
 bale_tagid integer not null,
 latitude varchar(100) not null,
 longitude varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(bale_tagid) references bale_tags(id),
-foreign key(userid) references users(id)
+foreign key(userid) references users(id),
+foreign key(company_userid) references users(id),
+foreign key(company_to_selling_pointid) references company_to_selling_point(id)
 );
 
 
@@ -2127,6 +2186,8 @@ foreign key(growerid) references growers(id),
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
 );
+
+
 
 
 create table if not exists grower_total_received_kgs(
@@ -2283,14 +2344,11 @@ foreign key(productid) references products(id)
 create table if not exists arc_product_grower(
 id integer primary key auto_increment,
 arc_productid integer not null,
-growerid integer not null,
-quantity integer not null,
+loanid integer not null,
 datetime TIMESTAMP not null,
 foreign key(arc_productid) references arc_products(id),
-foreign key(growerid) references growers(id)
+foreign key(loanid) references loans(id)
 );
-
-
 
 
 
@@ -2306,289 +2364,43 @@ foreign key(arc_productid) references arc_products(id)
 
 
 
+create table if not exists selling_points(
+id integer primary key auto_increment,
+name varchar(200) not null,
+datetime TIMESTAMP not null
+);
+
+
+
+
+create table if not exists company_to_selling_point(
+id integer primary key auto_increment,
+userid integer not null,
+companyid integer not null,
+selling_pointid integer not null,
+active integer not null default 1,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(companyid) references users(id),
+foreign key(selling_pointid) references selling_points(id)
+);
+
+
+
+create table if not exists company_users_to_selling_points(
+id integer primary key auto_increment,
+userid integer not null,
+companyid integer not null,
+company_userid integer not null,
+company_to_selling_pointid integer not null,
+active integer not null default 1,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(companyid) references users(id),
+foreign key(company_userid) references users(id),
+foreign key(company_to_selling_pointid) references company_to_selling_point(id)
+);
 
-DELIMITER $$
-create trigger on_grower_lat_long
-after insert on lat_long
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"Home Location");
-END;
-$$
-DELIMITER ;
-
-
-
-
-
-
-DELIMITER $$
-create trigger on_grower_visit_barn_repair_and_maintenance
-after insert on barn_repair_and_maintenance
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"barn repair and maintenance");
-END;
-$$
-DELIMITER ;
-
-
-
-
-
-DELIMITER $$
-create trigger on_grower_barn_location
-after insert on barn_location
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"barn location");
-END;
-$$
-DELIMITER ;
-
-
-
-DELIMITER $$
-create trigger on_grower_grower_farm
-after insert on grower_farm
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"grower farm");
-END;
-$$
-DELIMITER ;
-
-
-DELIMITER $$
-create trigger on_grower_seed_beds
-after insert on seed_beds
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"seed beds");
-END;
-$$
-DELIMITER ;
-
-
-
-DELIMITER $$
-create trigger on_grower_ploughing
-after insert on ploughing
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"ploughing");
-END;
-$$
-DELIMITER ;
-
-
-
-DELIMITER $$
-create trigger on_grower_fertilization_ammonium
-after insert on fertilization_ammonium
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"fertilization ammonium");
-END;
-$$
-DELIMITER ;
-
-
-
-
-DELIMITER $$
-create trigger on_grower_visit_reaping
-after insert on reaping
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"reaping");
-END;
-$$
-DELIMITER ;
-
-
-
-
-DELIMITER $$
-create trigger on_grower_visit_curing
-after insert on curing
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"curing");
-END;
-$$
-DELIMITER ;
-
-
-
-DELIMITER $$
-create trigger on_grower_visit_fertilization_potassium
-after insert on fertilization_potassium
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"fertilization potassium");
-END;
-$$
-DELIMITER ;
-
-
-
-
-DELIMITER $$
-create trigger on_grower_visit_farm_mapping
-after insert on farm_mapping
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.first_lat,NEW.first_long,NEW.created_at,"farm mapping");
-END;
-$$
-DELIMITER ;
-
-
-
-
-DELIMITER $$
-create trigger on_grower_visit_hail_strike_mapping
-after insert on hail_strike_mapping
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.first_lat,NEW.first_long,NEW.created_at,"hail strike mapping");
-END;
-$$
-DELIMITER ;
-
-
-
-
-DELIMITER $$
-create trigger on_grower_visit_seedling_quality
-after insert on seedling_quality
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"seedling quality");
-END;
-$$
-DELIMITER ;
-
-
-
-DELIMITER $$
-create trigger on_grower_visit_plant_irrigated
-after insert on plant_irrigated
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"plant irrigated");
-END;
-$$
-DELIMITER ;
-
-
-
-
-DELIMITER $$
-create trigger on_grower_visit_planting_dryLand
-after insert on planting_dryLand
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"planting dryLand");
-END;
-$$
-DELIMITER ;
-
-
-
-
-DELIMITER $$
-create trigger on_grower_visit_crop_growth
-after insert on crop_growth
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"crop growth");
-END;
-$$
-DELIMITER ;
-
-
-
-
-
-DELIMITER $$
-create trigger on_grower_visit_crop_development
-after insert on crop_development
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"crop development");
-END;
-$$
-DELIMITER ;
-
-
-
-
-
-
-DELIMITER $$
-create trigger on_grower_visit_cultural_practices
-after insert on cultural_practices
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"cultural practices");
-END;
-$$
-DELIMITER ;
-
-
-
-
-
-DELIMITER $$
-create trigger on_grower_visit_hail_strike
-after insert on hail_strike
-for each row
-BEGIN
- insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"hail Strike");
-END;
-$$
-DELIMITER ;
-
-
-
-
-
-DELIMITER $$
-create trigger on_loan_verification
-after insert on con_loan
-for each row
-BEGIN
- UPDATE loans SET verified = 1  WHERE id = NEW.loanid;
-END;
-$$
-DELIMITER ;
-
-
-
-DELIMITER $$
-create   trigger on_product_update
-after update on store_items
-for each row
-BEGIN
-insert into arc_products(storeitemid,userid,old_quantity,new_quantity,created_at) value(OLD.id,New.userid,OLD.quantity,NEW.quantity,NEW.created_at);
-END;
-$$
-DELIMITER ;
-
-
-
-DELIMITER $$
-create trigger on_disbursement
-after insert on disbursement
-for each row
-BEGIN
- insert into total_disbursement(disbursement_trucksid,disbursementid,userid,productid,storeid,quantity,created_at
-) values(NEW.disbursement_trucksid,NEW.id,NEW.userid,NEW.productid,New.storeid,New.quantity,NEW.created_at);
-END; 
-$$
-DELIMITER ;
 
 
 
@@ -2620,6 +2432,7 @@ insert into rights(description,notes) value("Company","Company14");
 insert into rights(description,notes) value("Surrogate","Surrogate15");
 insert into rights(description,notes) value("Check Point","Check Point16");
 insert into rights(description,notes) value("Agronomist","Agronomy17");
+insert into rights(description,notes) value("Company Selling Point","SellingPoint18");
 
 insert into users(name,surname,username,hash,rightsid,active,access_code,created_at) value("sysadmin","sysadmin","sysadmin","173309254d744ee11186193a1b1b0394",1,1,0000,"2022-09-12");
 
@@ -2647,3 +2460,16 @@ insert into charges(name) value("Agronomy");
 
 insert into download_growers_rule(rule) value(0);
 
+
+insert into product_type(name) value("Fertilizer");
+insert into product_type(name) value("Seed");
+insert into product_type(name) value("Chemicals");
+insert into product_type(name) value("Hessian");
+
+
+insert into selling_points(name) value("Rusape");
+insert into selling_points(name) value("Harare");
+insert into selling_points(name) value("Karoi");
+insert into selling_points(name) value("Mvurwi");
+insert into selling_points(name) value("Marondera");
+insert into selling_points(name) value("Bindura");

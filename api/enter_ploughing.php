@@ -63,7 +63,7 @@ $result = $conn->query($sql);
    
     // $last_id = $conn->insert_id;
 
-      $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$lat','$long','$created_at','Ploughing Number of Plants');";
+      $insert_sql = "INSERT INTO visits(userid,growerid,seasonid,latitude,longitude,created_at,description) VALUES($userid,$growerid,$seasonid,'$lat','$long','$created_at','Ploughing Number of Plants');";
        //$gr = "select * from login";
        if ($conn->query($insert_sql)===TRUE) {
        

@@ -10,7 +10,7 @@ header("Access-Control-Allow-Headers:Access-Control-Allow-Headers,Content-Type,A
 require_once("../conn.php");
 //require "validate.php";
 
-require "../datasource.php";
+require "../dataSource.php";
 
 
 $company_code=new CompanyCode();
@@ -30,6 +30,7 @@ $seasonid=0;
 $growerid=0;
 $storeid=0;
 $userid=0;
+$receipt_number="";
 $contracted_to=0;
 $old_quantity=0;
 $quantity_Enough=0;
@@ -53,7 +54,7 @@ $ready=0;
 
 //http://192.168.1.190/gms/api/enter_loans.php?userid=1&product=sadza&quantity=1&latitude=13.2222&longitude=3.33376&created_at=23-09-2022&description=12333&seasonid=1&sqliteid=1
 
-if (isset($data->grower_num)  && isset($data->product_code) && isset($data->warehouse_code)  && isset($data->hectares) && isset($data->quantity) && isset($data->userid)){
+if (isset($data->grower_num)  && isset($data->product_code) && isset($data->warehouse_code)  && isset($data->hectares) && isset($data->quantity) && isset($data->userid) && isset($data->receiptnumber)){
 
 
 
@@ -64,6 +65,7 @@ $description=$data->grower_num;
 $product=$data->product_code;
 $warehouse=$data->warehouse_code;
 $hectares=$data->hectares;
+$receipt_number=$data->receiptnumber;
 
 
 
@@ -239,7 +241,7 @@ $result = $conn->query($product_sql);
  
 
 
- $sql = "Select * from loans where loans.seasonid=$seasonid and productid=$productid  and  growerid=$growerid";
+ $sql = "Select * from loans where (growerid=$growerid) and (loans.seasonid=$seasonid and productid=$productid and receipt_number='$receipt_number' and userid=$userid)";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -294,7 +296,7 @@ $result = $conn->query($sql2);
 
 
     
-     $insert_sql = "INSERT INTO loans(userid,growerid,productid,seasonid,quantity,latitude,longitude,hectares,verified,created_at) VALUES ($userid,$growerid,$productid,$seasonid,$quantity,'$lat','$long','$hectares',1,'$created_at')";
+     $insert_sql = "INSERT INTO loans(userid,growerid,productid,seasonid,quantity,latitude,longitude,hectares,verified,created_at,receipt_number) VALUES ($userid,$growerid,$productid,$seasonid,$quantity,'$lat','$long','$hectares',1,'$created_at','$receipt_number')";
          //$gr = "select * from login";
          if ($conn->query($insert_sql)===TRUE) {
          

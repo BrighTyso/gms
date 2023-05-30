@@ -1,7 +1,7 @@
 <?php
 require_once("conn.php");
 require "validate.php";
-require "datasource.php";
+require "dataSource.php";
 
 $barcode=validate($_GET['barcode']);
 $userid=$_GET['userid'];

@@ -1,14 +1,14 @@
 <?php
 require_once("conn.php");
 require "validate.php";
-require "datasource.php";
+require "dataSource.php";
 
 $datasource=new DataSource();
 
 
 $response=array();
 
-if(isset($_POST["qrcode"]) && isset($_POST["userid"]) && isset($_POST["barcode"])&& isset($_POST["created_at"])) {
+if(isset($_POST["qrcode"]) && isset($_POST["userid"]) && isset($_POST["barcode"])&& isset($_POST["created_at"])&& isset($_POST["company_to_selling_pointid"])&& isset($_POST["company_userid"])) {
 
 
 $ready_for_bookingid=0;
@@ -16,6 +16,11 @@ $qrcode=$_POST["qrcode"];
 $userid=$_POST["userid"];
 $barcode=$_POST["barcode"];
 $created_at=$_POST["created_at"];
+
+$company_userid=$_POST["company_userid"];
+$company_to_selling_pointid=$_POST["company_to_selling_pointid"];
+
+
 $grower_number_of_balesid=0;
 $booked=0;
 $status=0;
@@ -69,7 +74,7 @@ $result = $conn->query($sql);
 
 
 
-$sql22 = "Select * from bale_receiver where bale_tagid=$bale_tagid and userid=$userid";
+$sql22 = "Select * from bale_receiver where bale_tagid=$bale_tagid and company_to_selling_pointid=$company_to_selling_pointid and userid=$userid";
 $result = $conn->query($sql22);
  
  if ($result->num_rows > 0) {

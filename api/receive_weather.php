@@ -78,7 +78,7 @@ $result = $conn->query($sql);
 
 
 
-$sql = "Select * from grower_weather_total where seasonid=$seasonid and growerid=growerid";
+$sql = "Select * from grower_weather_total where seasonid=$seasonid and growerid=$growerid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

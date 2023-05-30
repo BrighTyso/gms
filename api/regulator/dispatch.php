@@ -1,7 +1,7 @@
 <?php
 require_once("conn.php");
 require "validate.php";
-require "datasource.php";
+require "dataSource.php";
 
 $barcode=validate($_GET['barcode']);
 $userid=$_GET['userid'];
@@ -9,6 +9,8 @@ $created_at=$_GET['created_at'];
 $latitude=$_GET['latitude'];
 $longitude=$_GET['longitude'];
 $dispatch_noteid=$_GET['dispatch_noteid'];
+$company_to_selling_pointid=$_GET['company_to_selling_pointid'];
+
 
 
 $barcode_found=0;
@@ -51,7 +53,7 @@ $result = $conn->query($sql11);
 
 
 
-$sql111 = "Select * from dispatch_note where id=$dispatch_noteid and open_close=0";
+$sql111 = "Select * from dispatch_note where id=$dispatch_noteid and company_to_selling_pointid=$company_to_selling_pointid and open_close=0";
 
 $result = $conn->query($sql111);
  
@@ -101,7 +103,7 @@ if ($auction_rights==0) {
 
 
 
-$sql = "Select sold_bales.id,mass,buyer from sold_bales join bale_tag_to_sold_bale on bale_tag_to_sold_bale.sold_balesid=sold_bales.id join bale_tags on bale_tags.id=bale_tag_to_sold_bale.bale_tagid where (barcode='$barcode' or temp_barcode='$barcode') and  bale_tag_to_sold_bale.userid=$userid and  sold_bales.seasonid=$seasonid";
+$sql = "Select sold_bales.id,mass,buyer from sold_bales join bale_tag_to_sold_bale on bale_tag_to_sold_bale.sold_balesid=sold_bales.id join bale_tags on bale_tags.id=bale_tag_to_sold_bale.bale_tagid where (barcode='$barcode' or temp_barcode='$barcode') and company_to_selling_pointid=$company_to_selling_pointid and  bale_tag_to_sold_bale.userid=$userid and  sold_bales.seasonid=$seasonid";
 
 $result = $conn->query($sql);
  
@@ -129,7 +131,7 @@ $result = $conn->query($sql);
 }else{
 
 
-$sql = "Select sold_bales.id,mass,buyer from sold_bales join bale_tag_to_sold_bale on bale_tag_to_sold_bale.sold_balesid=sold_bales.id join bale_tags on bale_tags.id=bale_tag_to_sold_bale.bale_tagid join grower_number_of_bales on bale_tags.grower_number_of_balesid=grower_number_of_bales.id join auction_growers on auction_growers.growerid=grower_number_of_bales.growerid where (barcode='$barcode' or temp_barcode='$barcode' or code='$barcode') and  sold_bales.seasonid=$seasonid and bale_tag_to_sold_bale.userid=$userid";
+$sql = "Select sold_bales.id,mass,buyer from sold_bales join bale_tag_to_sold_bale on bale_tag_to_sold_bale.sold_balesid=sold_bales.id join bale_tags on bale_tags.id=bale_tag_to_sold_bale.bale_tagid join grower_number_of_bales on bale_tags.grower_number_of_balesid=grower_number_of_bales.id join auction_growers on auction_growers.growerid=grower_number_of_bales.growerid where (barcode='$barcode' or temp_barcode='$barcode' or code='$barcode') and  sold_bales.seasonid=$seasonid and bale_tag_to_sold_bale.userid=$userid and company_to_selling_pointid=$company_to_selling_pointid";
 
 
 $result = $conn->query($sql);

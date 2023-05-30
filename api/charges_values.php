@@ -17,6 +17,7 @@ $created_at="";
 $seasonid=0;
 $value=0;
 $found=0;
+$processed_found=0;
 $response=array();
 
 
@@ -31,6 +32,19 @@ $userid=$data->userid;
 $seasonid=$data->seasonid;
 $created_at=$data->created_at;
 
+
+ $sql1 = "Select * from loans where processed=1 and seasonid=$seasonid limit 1";
+$result = $conn->query($sql1);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+    $processed_found=1;
+    
+   }
+ }
 
 
 
@@ -49,18 +63,29 @@ $result = $conn->query($sql);
 
 
    if ($found!=0) {
-     $sql = "UPDATE charges_amount SET parameterid = $parameterid , value=$value , created_at='$created_at' WHERE chargeid=$chargeid and seasonid=$seasonid";
 
-   //$sql = "select * from login";
-   if ($conn->query($sql)===TRUE) {
-     
-     $temp=array("response"=>"success");
-    array_push($response,$temp);
+    if ($processed_found==0) {
+
+           $sql = "UPDATE charges_amount SET parameterid = $parameterid , value=$value , created_at='$created_at' WHERE chargeid=$chargeid and seasonid=$seasonid";
+
+         //$sql = "select * from login";
+         if ($conn->query($sql)===TRUE) {
+           
+           $temp=array("response"=>"success");
+          array_push($response,$temp);
+
+         }else{
+
+          $temp=array("response"=>"failed");
+         array_push($response,$temp);
+         }
+
 
    }else{
 
-    $temp=array("response"=>"failed");
+   $temp=array("response"=>"Cannot Update Parameter On Processed Loans");
    array_push($response,$temp);
+
    }
 
    }else{
@@ -71,7 +96,7 @@ $result = $conn->query($sql);
 
  }else{
 
-if (found==0) {
+if ($found==0) {
 
   $user_sql = "INSERT INTO charges_amount(
 chargeid,seasonid,parameterid,userid,value,created_at) VALUES ($chargeid,$seasonid,parameterid,$userid,'$value','$created_at')";

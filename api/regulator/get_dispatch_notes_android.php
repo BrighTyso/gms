@@ -1,10 +1,11 @@
 <?php
 require_once("conn.php");
 require "validate.php";
-require "datasource.php";
+require "dataSource.php";
 
 
 $userid=$_GET['userid'];
+$company_to_selling_pointid=$_GET['company_to_selling_pointid'];
 $seasonid=0;
 
 
@@ -31,7 +32,7 @@ $result = $conn->query($sql);
 
 
 
-$sql11 = "Select distinct note,dispatch_note.id from dispatch_note join dispatch_note_total_dispatched on dispatch_note.id=dispatch_note_total_dispatched.dispatch_noteid join users on dispatch_note.receiverid=users.id where userid=$userid and seasonid=$seasonid and open_close=0";
+$sql11 = "Select distinct note,dispatch_note.id from dispatch_note join dispatch_note_total_dispatched on dispatch_note.id=dispatch_note_total_dispatched.dispatch_noteid join users on dispatch_note.receiverid=users.id where userid=$userid and company_to_selling_pointid=$company_to_selling_pointid and seasonid=$seasonid and open_close=0";
 
 $result = $conn->query($sql11);
  

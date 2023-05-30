@@ -9,7 +9,7 @@ require_once("conn.php");
 require "validate.php";
 
 
-require "datasource.php";
+require "dataSource.php";
 
 
 $company_code=new CompanyCode();

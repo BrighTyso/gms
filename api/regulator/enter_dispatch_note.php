@@ -26,7 +26,7 @@ $data1=array();
 
 //userid=1&name="bright"&surname="kaponda"&grower_num="12333"&area="ggg"&province="tttt"&phone="0784428797"&id_num="12345666"&created_at="44-44-44"&lat="12.2223"&long="15.45555"
 
-if (isset($data->userid) &&  isset($data->name) && isset($data->created_at) && isset($data->surname) && isset($data->horse_num) && isset($data->trailer_num) && isset($data->receiverid) && isset($data->season)){
+if (isset($data->userid) &&  isset($data->name) && isset($data->created_at) && isset($data->surname) && isset($data->horse_num) && isset($data->trailer_num) && isset($data->company_userid)&& isset($data->company_to_selling_pointid) && isset($data->receiverid) && isset($data->season)){
 
 $userid=$data->userid;
 $created_at=$data->created_at;
@@ -37,7 +37,8 @@ $horse_num=$data->horse_num;
 $trailer_num=$data->trailer_num;
 $receiverid=$data->receiverid;
 $note=$data->note;
-
+$company_userid=$data->company_userid;
+$company_to_selling_pointid=$data->company_to_selling_pointid;
 $response=0;
 $farm_response=0;
 
@@ -66,7 +67,7 @@ if ($seasonid>0) {
  
 // checks if grower is already in database
 
-	$sql = "INSERT INTO dispatch_note(userid,receiverid,seasonid,note,driver_name,driver_surname,horse_num ,trailer_num,created_at) VALUES ($userid,$receiverid,$seasonid,'$note','$name','$surname','$horse_num' ,'$trailer_num','$created_at')";
+	$sql = "INSERT INTO dispatch_note(userid,receiverid,seasonid,note,driver_name,driver_surname,horse_num ,trailer_num,company_userid,company_to_selling_pointid,created_at) VALUES ($userid,$receiverid,$seasonid,'$note','$name','$surname','$horse_num' ,'$trailer_num',$company_userid,$company_to_selling_pointid,'$created_at')";
 	   //$sql = "select * from login";
 	   if ($conn->query($sql)===TRUE) {
 	   

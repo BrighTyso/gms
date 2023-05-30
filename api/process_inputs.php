@@ -114,7 +114,7 @@ $found_working_capital=0;
 
 
 
-     $user_sql1 = "update loans set product_amount=product_amount+$amount,product_total_cost=product_total_cost+$total_cost,processed=1,processed_by=$userid where id=$loanid and processed=0";
+     $user_sql1 = "update loans set product_amount=$amount,product_total_cost=product_total_cost+$total_cost,processed=1,processed_by=$userid where id=$loanid and processed=0";
      //$sql = "select * from login";
      if ($conn->query($user_sql1)===TRUE) {
 

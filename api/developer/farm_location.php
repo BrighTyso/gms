@@ -7,7 +7,7 @@ header("Access-Control-Allow-Headers:Access-Control-Allow-Headers,Content-Type,A
 require_once("../conn.php");
 //require "validate.php";
 
-require "../datasource.php";
+require "../dataSource.php";
 
 
 $datasource=new CompanyCode();

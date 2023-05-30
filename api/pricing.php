@@ -17,6 +17,7 @@ $amount="";
 $seasonid=0;
 $created_at="";
 $found=0;
+$processed_found=0;
 $response=array();
 
 if (isset($data->userid) && isset($data->productid)  && isset($data->amount)  && isset($data->seasonid) && isset($data->created_at)){
@@ -38,6 +39,22 @@ $result = $conn->query($sql);
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
     $found=1;
+    
+   }
+ }
+
+
+
+
+ $sql = "Select * from loans where processed=1 and seasonid=$seasonid limit 1";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+    $processed_found=1;
     
    }
  }
@@ -66,6 +83,10 @@ if ($found==0) {
 
 }else{
 
+
+if ($processed_found==0) {
+  
+
 $sql = "UPDATE prices SET amount = $amount  WHERE productid=$productid and seasonid=$seasonid";
 
    //$sql = "select * from login";
@@ -79,6 +100,14 @@ $sql = "UPDATE prices SET amount = $amount  WHERE productid=$productid and seaso
     $temp=array("response"=>"failed");
    array_push($response,$temp);
    }
+
+
+ }else{
+
+$temp=array("response"=>"Cannot Update Price On Processed Loans");
+array_push($response,$temp);
+
+ }
 
 
 }

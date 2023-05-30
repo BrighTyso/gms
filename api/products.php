@@ -9,7 +9,7 @@ require_once("conn.php");
 require "validate.php";
 
 
-require "datasource.php";
+require "dataSource.php";
 
 $datasource=new ProductCode();
 
@@ -21,10 +21,12 @@ $found=0;
 $response=array();
 
 
-if (isset($data->name) && isset($data->unit)){
+if (isset($data->name) && isset($data->unit) && isset($data->package_unit) && isset($data->product_type)){
 
 $name=$data->name;
 $unit=$data->unit;
+$package_unit=$data->package_unit;
+$product_type=$data->product_type;
 
 
 
@@ -43,7 +45,7 @@ $result = $conn->query($sql);
  }
 
  if ($found==0) {
-   $user_sql = "INSERT INTO products(name,units) VALUES ('$name','$unit')";
+   $user_sql = "INSERT INTO products(name,units,package_units,product_typeid) VALUES ('$name','$unit','$package_unit',$product_type)";
    //$sql = "select * from login";
    if ($conn->query($user_sql)===TRUE) {
    

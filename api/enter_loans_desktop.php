@@ -22,6 +22,7 @@ $created_at=$data->created_at;
 $description=$data->grower;
 $productid=$data->productid;
 $seasonid=$data->seasonid;
+$receipt_number=$data->receiptnumber;
 $sqliteid=0;
 $verifyLoan=0;
 $verifyHectares=0;
@@ -113,7 +114,7 @@ $result = $conn->query($sql);
 //check if loan is there
 
 
- $sql = "Select * from loans where loans.seasonid=$seasonid and productid=$productid  and  growerid=$growerid";
+ $sql = "Select * from loans where (growerid=$growerid) and (loans.seasonid=$seasonid and productid=$productid and receipt_number='$receipt_number') ";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -151,7 +152,7 @@ $result = $conn->query($sql1);
 
     if ($disbursementid>0 && $disbursement_trucksid>0 ) {
 
-       $insert_sql = "INSERT INTO loans(userid,growerid,productid,seasonid,quantity,latitude,longitude,hectares,verified,created_at) VALUES ($userid,$growerid,$productid,$seasonid,$quantity,'$lat','$long','$hectares',1,'$created_at')";
+       $insert_sql = "INSERT INTO loans(userid,growerid,productid,seasonid,quantity,latitude,longitude,hectares,verified,created_at,receipt_number) VALUES ($userid,$growerid,$productid,$seasonid,$quantity,'$lat','$long','$hectares',1,'$created_at','$receipt_number')";
    //$gr = "select * from login";
    if ($conn->query($insert_sql)===TRUE) {
    

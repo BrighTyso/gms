@@ -21,7 +21,7 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-    $temp=array("name"=>$row["name"],"units"=>$row["units"]);
+    $temp=array("name"=>$row["name"],"units"=>$row["units"],"package_units"=>$row["package_units"],"product_typeid"=>$row["product_typeid"]);
     array_push($data1,$temp);
     
    }

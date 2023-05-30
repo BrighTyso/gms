@@ -1,7 +1,7 @@
 <?php
 require_once("conn.php");
 require "validate.php";
-require "datasource.php";
+require "dataSource.php";
 
 $userid=$_GET['userid'];
 $seasonid=0;
