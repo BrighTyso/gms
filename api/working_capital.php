@@ -22,6 +22,7 @@ $sqliteid=0;
 $statusid=0;
 $receipt_found=0;
 $working_capital_found=0;
+$active_grower_found=0;
 
 $data1=array();
 
@@ -79,6 +80,23 @@ $result = $conn->query($sql);
  }
 
 
+
+
+ $sql = "Select * from active_growers where growerid=$growerid and seasonid=$seasonid";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+   
+   $active_grower_found=$row["id"];
+  
+    
+   }
+
+ }
+
+
   $sql = "Select * from working_capital_total where growerid=$growerid and seasonid=$seasonid limit 1";
     $result = $conn->query($sql);
      
@@ -127,8 +145,21 @@ $result = $conn->query($sql);
                    //$sql = "select * from login";
                        if ($conn->query($user_sql)===TRUE) {
 
+                            if ($active_grower_found==0) {
+                              $user_sql = "INSERT INTO active_growers(userid,growerid,seasonid) VALUES ($userid,$growerid,$seasonid)";
+                       //$sql = "select * from login";
+                           if ($conn->query($user_sql)===TRUE) {
+
                             $temp=array("response"=>"success");
                             array_push($data1,$temp);
+
+                           }
+                        }else{
+                           $temp=array("response"=>"success");
+                            array_push($data1,$temp);
+                        }
+
+                           
                         
                        }else{
                         echo $conn->error;
@@ -140,8 +171,19 @@ $result = $conn->query($sql);
                      //$sql = "select * from login";
                      if ($conn->query($user_sql2)===TRUE) {
                      
-                        $temp=array("response"=>"success");
-                       array_push($data1,$temp);
+                                 if ($active_grower_found==0) {
+                                      $user_sql = "INSERT INTO active_growers(userid,growerid,seasonid) VALUES ($userid,$growerid,$seasonid)";
+                               //$sql = "select * from login";
+                                   if ($conn->query($user_sql)===TRUE) {
+
+                                    $temp=array("response"=>"success");
+                                    array_push($data1,$temp);
+
+                                   }
+                                }else{
+                                   $temp=array("response"=>"success");
+                                    array_push($data1,$temp);
+                                }
 
                      }else{
 

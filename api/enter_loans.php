@@ -36,6 +36,8 @@ $quantity=validate($_GET['quantity']);
 $created_at=validate($_GET['created_at']);
 $sqliteid=validate($_GET['sqliteid']);
 
+$receipt_number=validate($_GET['receipt_number']);
+$trucknumber=validate($_GET['trucknumber']);
 
 
 $sql = "Select * from growers where grower_num='$description' or phone='$description'";

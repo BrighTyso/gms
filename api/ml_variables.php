@@ -27,7 +27,7 @@ $variableid=$data->variableid;
 
 
 
-$sql = "Select * from machine_learning_products where  machine_learning_product_variablesid=$variableid ";
+$sql = "Select * from machine_learning_products where  machine_learning_product_variablesid=$variableid and productid=$productid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

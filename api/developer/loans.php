@@ -34,6 +34,8 @@ $receipt_number="";
 $contracted_to=0;
 $old_quantity=0;
 $quantity_Enough=0;
+$previous_growerid=0;
+$active_grower_found=0;
 $created_at=date("Y-m-d");
 
 
@@ -78,7 +80,7 @@ $w_code=$warehouse_code->encryptor("decrypt",$warehouse);
 
 
 
-sleep(1.5);
+sleep(3);
 
 $sql = "Select * from developer where company_code='$data->userid' and warehouse_code='$warehouse' and active=1";
 $result = $conn->query($sql);
@@ -111,8 +113,6 @@ $result = $conn->query($sql);
   
    $storeid=$row["storeid"];
 
-
-   
     
    }
 
@@ -153,6 +153,8 @@ $result = $conn->query($sql);
   
    $statusid=$row["status"];
 
+
+
   
    }
 
@@ -186,7 +188,6 @@ $result = $conn->query($sql);
 
 
 
-
 $sql = "Select * from growers where grower_num='$description'";
 $result = $conn->query($sql);
  
@@ -197,7 +198,7 @@ $result = $conn->query($sql);
    $growerid=$row["id"];
 
     
-    
+   
    }
 
  }
@@ -238,6 +239,37 @@ $result = $conn->query($product_sql);
 
 //check if loan is there
 
+
+ $sql = "Select * from loans where  (userid=$userid and loans.seasonid=$seasonid  and receipt_number='$receipt_number') ";
+  $result = $conn->query($sql);
+   
+   if ($result->num_rows > 0) {
+     // output data of each row
+     while($row = $result->fetch_assoc()) {
+      // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+     #$verifyLoan=1;
+      $previous_growerid=$row["growerid"];
+
+      
+     }
+   }
+
+
+
+    $sql = "Select * from active_growers where growerid=$growerid and seasonid=$seasonid";
+    $result = $conn->query($sql);
+ 
+     if ($result->num_rows > 0) {
+       // output data of each row
+       while($row = $result->fetch_assoc()) {
+       
+       $active_grower_found=$row["id"];
+      
+        
+       }
+
+     }
  
 
 
@@ -250,8 +282,9 @@ $result = $conn->query($sql);
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
    $verifyLoan=1;
+
   
-    
+   
    }
  }
 
@@ -292,7 +325,7 @@ $result = $conn->query($sql2);
 
 // then insert loan
 
-  if ($productid>0  && $growerid>0 && $verifyLoan==0 && $productid>0 && $storeid>0) {
+  if (($productid>0  && $growerid>0 && $verifyLoan==0 && $productid>0 && $storeid>0) && ($previous_growerid==$growerid || $previous_growerid==0)) {
 
 
     
@@ -321,11 +354,35 @@ $result = $conn->query($sql2);
                                   //$sql = "select * from login";
                                if ($conn->query($user_sql2)===TRUE) {
 
+                                $arc_products_id = $conn->insert_id;
 
-                                $last_id = $conn->insert_id;
+                                $user_sql2 = "INSERT INTO arc_product_grower(arc_productid,growerid,quantity) VALUES ($arc_products_id,$growerid,$quantity)";
+                                        //$sql = "select * from login";
+                                       if ($conn->query($user_sql2)===TRUE) {
 
-                                $temp=array("response"=>"success");
-                               array_push($data1,$temp);
+                                        $user_sql1 = "INSERT INTO arc_store_items(userid,storeid,productid,quantity,arc_productid,created_at,description,quantity_balance) VALUES ($userid,$storeid,$productid,$quantity,$arc_products_id,'$created_at','GROWER LOAN',$quantity)";
+                                  
+                                      if ($conn->query($user_sql1)===TRUE) {
+
+
+                                         if ($active_grower_found==0) {
+
+                                      $user_sql = "INSERT INTO active_growers(userid,growerid,seasonid) VALUES ($userid,$growerid,$seasonid)";
+                                        //$sql = "select * from login";
+                                             if ($conn->query($user_sql)===TRUE) {
+
+                                              $temp=array("response"=>"success","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
+                                             array_push($data1,$temp);
+
+                                             }
+                                          }else{
+                                              $temp=array("response"=>"success","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
+                                             array_push($data1,$temp);
+                                          }
+
+
+                                         }
+                                   }
 
                              }
 
@@ -337,8 +394,6 @@ $result = $conn->query($sql2);
                 }
 
           }else{
-
-
 
                     $user_sql1 = "update store_items set quantity=quantity-$quantity  where storeid=$storeid and productid=$productid";
                          //$sql = "select * from login";
@@ -361,8 +416,28 @@ $result = $conn->query($sql2);
 
                                        // $last_id = $conn->insert_id;
 
-                                        $temp=array("response"=>"success");
-                                       array_push($data1,$temp);
+                                        $user_sql1 = "INSERT INTO arc_store_items(userid,storeid,productid,quantity,arc_productid,created_at,description,quantity_balance) VALUES ($userid,$storeid,$productid,$quantity,$arc_products_id,'$created_at','GROWER LOAN',$quantity)";
+                                  
+                                      if ($conn->query($user_sql1)===TRUE) {
+
+                                        if ($active_grower_found==0) {
+
+                                      $user_sql = "INSERT INTO active_growers(userid,growerid,seasonid) VALUES ($userid,$growerid,$seasonid)";
+                                        //$sql = "select * from login";
+                                             if ($conn->query($user_sql)===TRUE) {
+
+                                              $temp=array("response"=>"success","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
+                                             array_push($data1,$temp);
+
+                                             }
+                                          }else{
+                                              $temp=array("response"=>"success","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
+                                             array_push($data1,$temp);
+                                          }
+
+                                         
+
+                                         }
 
                                     }
 
@@ -376,10 +451,50 @@ $result = $conn->query($sql2);
 
          }else{
 
-          $temp=array("response"=>"failed");
+          $temp=array("response"=>"failed","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
             array_push($data1,$temp);
 
         }
+
+  }else{
+
+     if ($previous_growerid!=$growerid) {
+
+          $temp=array("response"=>"Receipt Captured for another Grower","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
+          array_push($data1,$temp);
+
+        }elseif ($productid==0) {
+
+       $temp=array("response"=>"Product Not Found","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
+      array_push($data1,$temp);
+
+    }elseif($userid==0 && $storeid==0){
+
+      $temp=array("response"=>"warehouse/Userid Not Found or Not Matching","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
+      array_push($data1,$temp);
+
+    }
+    elseif ($growerid==0) {
+
+       $temp=array("response"=>"Grower Not Found","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
+      array_push($data1,$temp);
+
+    }elseif($verifyLoan==1){
+
+      $temp=array("response"=>"Input Already Captured For Grower","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
+      array_push($data1,$temp);
+
+    }elseif($storeid==0){
+
+      $temp=array("response"=>"Store Not Found","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
+      array_push($data1,$temp);
+
+    }elseif($verifyLoan==1){
+
+       $temp=array("response"=>"Loan Already Captured","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
+      array_push($data1,$temp);
+
+    }
 
   }
 
@@ -388,30 +503,40 @@ $result = $conn->query($sql2);
 
    }else{
 
-    if ($productid==0) {
+    if ($previous_growerid!=$growerid) {
 
-       $temp=array("response"=>"Product Not Found");
+          $temp=array("response"=>"Receipt Captured for another Grower","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
+          array_push($data1,$temp);
+
+        }elseif ($productid==0) {
+
+       $temp=array("response"=>"Product Not Found","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
       array_push($data1,$temp);
 
     }elseif($userid==0 && $storeid==0){
 
-      $temp=array("response"=>"warehouse/Userid Not Found or Not Matching");
+      $temp=array("response"=>"warehouse/Userid Not Found or Not Matching","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
       array_push($data1,$temp);
 
     }
     elseif ($growerid==0) {
 
-       $temp=array("response"=>"Grower Not Found");
+       $temp=array("response"=>"Grower Not Found","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
       array_push($data1,$temp);
 
     }elseif($verifyLoan==1){
 
-      $temp=array("response"=>"Input Already Captured For Grower");
+      $temp=array("response"=>"Input Already Captured For Grower","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
       array_push($data1,$temp);
 
     }elseif($storeid==0){
 
-      $temp=array("response"=>"Store Not Found");
+      $temp=array("response"=>"Store Not Found","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
+      array_push($data1,$temp);
+
+    }elseif($verifyLoan==1){
+
+       $temp=array("response"=>"Loan Already Captured","grower"=>$description,"product_code"=>$product,"warehouse_code"=>$warehouse,"receipt_number"=>$receipt_number);
       array_push($data1,$temp);
 
     }

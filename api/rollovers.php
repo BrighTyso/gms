@@ -8,118 +8,238 @@ require_once("conn.php");
 require "validate.php";
 
 
+
 $data = json_decode(file_get_contents("php://input"));
 
-$id=0;
-$productid=0;
+$userid=0;
 $growerid=0;
-$grower="";
+$grower_num="";
+$lat="";
+$long="";
+$kg_per_ha="";
 $seasonid=0;
-$receipt_number=0;
-$to_growerid=0;
-$loanid=0;
-$processed=0;
-$amount=0.0;
+$sqliteid=0;
+$statusid=0;
+$receipt_found=0;
+$working_capital_found=0;
+$active_grower_found=0;
+$rollover_seasonid=0;
+
 $data1=array();
 
 
 
 
-if (isset($data->userid) && isset($data->seasonid)){
+//http://192.168.1.190/gms/api/enter_hail_strike.php?userid=1&grower_num=V123456&latitude=13.2222&longitude=3.33376&created_at=23-09-2022&percentage_strike=12333&strike_date=12333&seasonid=1&sqliteid=1
+
+if (isset($data->rollover_seasonid) && isset($data->userid)  && isset($data->season) && isset($data->created_at) && isset($data->amount)  && isset($data->grower_num)){
+
+
+$userid=validate($data->userid);
+$season=validate($data->season);
+$grower_num=validate($data->grower_num);
+$rollover_seasonid=validate($data->rollover_seasonid);
+$created_at=validate($data->created_at);
+$amount=validate($data->amount);
 
 
 
 
-    $productid=$data->productid;
-    $growerid=$data->growerid;
-    $grower=$data->grower_num;
-    $seasonid=$data->seasonid;
-    //$receipt_number=$data->receipt_number;
+
+ $sql = "Select * from seasons where name='$season'";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+  
+   $seasonid=$row["id"];
+   
+    
+   }
+
+ }
 
 
-    $sql2 = "Select * from inputs_total join working_capital_total on working_capital_total.growerid=inputs_total.growerid join loan_payments on loan_payments.growerid=inputs_total.growerid join rollover_total.growerid=inputs_total.growerid where grower_num='$grower' limit 1";
-        $result2 = $conn->query($sql2);
-         
-         if ($result2->num_rows > 0) {
-           // output data of each row
-           while($row1 = $result2->fetch_assoc()) {
-            // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+ if ($seasonid>0) {
 
-           $to_growerid=$row1["id"];
 
+$sql = "Select * from growers where grower_num='$grower_num'";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+   
+   $growerid=$row["id"];
+  
+    
+   }
+
+ }
+
+
+
+
+ $sql = "Select * from active_growers where growerid=$growerid and seasonid=$seasonid";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+   
+   $active_grower_found=$row["id"];
+  
+    
+   }
+
+ }
+
+
+  $sql = "Select * from rollover_total where growerid=$growerid and seasonid=$seasonid limit 1";
+    $result = $conn->query($sql);
      
-            
-           }
-        }
-
-
-     $sql = "Select distinct loans.id as loanid,products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified,processed,product_total_cost,product_amount from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id  where loans.seasonid=$seasonid and productid=$productid  and growerid=$growerid  limit 1";
-
-      $result = $conn->query($sql);
-     
-      if ($result->num_rows > 0) {
+     if ($result->num_rows > 0) {
        // output data of each row
        while($row = $result->fetch_assoc()) {
+        // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-     
-        $processed=$row["processed"];
-        $loanid=$row["loanid"];
-        $amount=$row["product_total_cost"];
-
-
-
+        $working_capital_found=1;
+        
        }
 
      }
 
 
 
-     if ($loanid>0) {
+
+    $sql = "Select * from rollover where growerid=$growerid and seasonid=$seasonid and rollover_seasonid=$rollover_seasonid";
+    $result = $conn->query($sql);
      
-
-     if ($processed==0) {
-     
-             $user_sql1 = "update loans set growerid=$to_growerid where id=$loanid and seasonid=$seasonid";
-           //$sql = "select * from login";
-              if ($conn->query($user_sql1)===TRUE) {
-
-                $temp=array("response"=>"success");
-                array_push($data1,$temp);
-
-              }
-
-        }else{
-
-
-           $user_sql1 = "update inputs_total set amount=amount-$amount where growerid=$growerid and seasonid=$seasonid";
-                     //$sql = "select * from login";
-             if ($conn->query($user_sql1)===TRUE) {
-
-                   $user_sql2 = "update loans set growerid=$to_growerid,processed=0,product_total_cost=0,product_amount=0 where id=$loanid and seasonid=$seasonid";
-                   //$sql = "select * from login";
-                   if ($conn->query($user_sql2)===TRUE) {
-
-                        $temp=array("response"=>"success");
-                        array_push($data1,$temp);
-
-                      }
-
-                }
-
-        }
-
-      }
-
+     if ($result->num_rows > 0) {
+       // output data of each row
+       while($row = $result->fetch_assoc()) {
+       
+       $receipt_found=$row["id"];
+      
+        
+       }
 
      }
 
+// then insert loan
 
- 
+
+  if ($growerid>0 && $receipt_found==0 && $seasonid!=$rollover_seasonid) {
+
+   $insert_sql = "INSERT INTO rollover(userid,seasonid,growerid,rollover_seasonid,amount) VALUES ($userid,$seasonid,$growerid,$rollover_seasonid,'$amount')";
+   //$gr = "select * from login";
+   if ($conn->query($insert_sql)===TRUE) {
+   
+    // $last_id = $conn->insert_id;
+
+       if ($working_capital_found==0) {
+            
+                 $user_sql = "INSERT INTO rollover_total(userid,seasonid,growerid,amount) VALUES ($userid,$seasonid,$growerid,'$amount')";
+                   //$sql = "select * from login";
+                       if ($conn->query($user_sql)===TRUE) {
+
+                            if ($active_grower_found==0) {
+                              $user_sql = "INSERT INTO active_growers(userid,growerid,seasonid) VALUES ($userid,$growerid,$seasonid)";
+                       //$sql = "select * from login";
+                           if ($conn->query($user_sql)===TRUE) {
+
+                            $temp=array("response"=>"success");
+                            array_push($data1,$temp);
+
+                           }
+                        }else{
+                           $temp=array("response"=>"success");
+                            array_push($data1,$temp);
+                        }
+
+                           
+                        
+                       }else{
+
+                        $temp=array("response"=>$conn->error);
+                            array_push($data1,$temp);
+                        
+                       }
+
+                  }else{
+
+                      $user_sql2 = "update rollover_total set amount=amount+$amount where growerid = $growerid and seasonid=$seasonid";
+                     //$sql = "select * from login";
+                     if ($conn->query($user_sql2)===TRUE) {
+                     
+                                 if ($active_grower_found==0) {
+                                      $user_sql = "INSERT INTO active_growers(userid,growerid,seasonid) VALUES ($userid,$growerid,$seasonid)";
+                               //$sql = "select * from login";
+                                   if ($conn->query($user_sql)===TRUE) {
+
+                                    $temp=array("response"=>"success");
+                                    array_push($data1,$temp);
+
+                                   }
+                                }else{
+                                   $temp=array("response"=>"success");
+                                    array_push($data1,$temp);
+                                }
+
+                     }else{
+
+                      //$last_id = $conn->insert_id;
+                       $temp=array("response"=>"Failed To Update");
+                       array_push($data1,$temp);
+
+                     }
+
+                  }
+
+
+        }else{
+
+          $temp=array("response"=>$conn->error);
+         array_push($data1,$temp);
+
+        }
+
+
+   }else{
+
+    if ($receipt_found>0) {
+
+     $temp=array("response"=>"RollOver already captured");
+      array_push($data1,$temp);
+
+    }
+
+
+
+    if ($growerid==0) {
+
+     $temp=array("response"=>"Grower not found");
+      array_push($data1,$temp);
+
+    }
+
+   
+   }
+
+ }
+
+
+
+}
 
 
 
 
 echo json_encode($data1);
+
 
 ?>
 

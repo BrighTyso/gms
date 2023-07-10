@@ -14,6 +14,7 @@ $username="";
 $rightsid=0;
 $userid=0;
 
+$data1=array();
 
 if (isset($data->rightsid) && isset($data->username) && isset($data->userid)){
 
@@ -44,24 +45,31 @@ $user_sql = "update users set rightsid=$rightsid where id=$verifyid";
    if ($conn->query($user_sql)===TRUE) {
    
      $last_id = $conn->insert_id;
-     echo json_encode("success");
+     $temp=array("response"=>"success");
+       array_push($data1,$temp);
 
    }else{
 
-    echo json_encode($conn->error);
+     $temp=array("response"=>$conn->error);
+       array_push($data1,$temp);
 
    }
 }else{
-  echo json_encode("Username Not Found");
+   $temp=array("response"=>"Username Not Found");
+       array_push($data1,$temp);
+ 
 }
 
 
 }else{
 
-	echo json_encode("field cant be empty");
+	$temp=array("response"=>"Field Empty");
+  array_push($data1,$temp);
 }
 
 
+
+echo json_encode($data1); 
 
 ?>
 

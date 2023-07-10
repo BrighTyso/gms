@@ -59,7 +59,7 @@ if (isset($data->seasonid) && isset($data->userid) && isset($data->growerid) && 
      if ($loan_found==0) {
 
 
-        $user_sql = "INSERT INTO loan_payments(userid,seasonid,growerid,amount,mass,created_at) VALUES ($userid,$seasonid,$growerid,'$amount','$mass','$created_at')";
+        $user_sql = "INSERT INTO loan_payments(userid,seasonid,growerid,amount,mass,created_at,description,receipt_number) VALUES ($userid,$seasonid,$growerid,'$amount','$mass','$created_at','Recovery','R1111')";
          //$sql = "select * from login";
          if ($conn->query($user_sql)===TRUE) {
 
@@ -107,7 +107,7 @@ if (isset($data->seasonid) && isset($data->userid) && isset($data->growerid) && 
 
 
 }else{
-   $temp=array("response"=>"field cant be empty");
+   $temp=array("response"=>"field empty");
                array_push($response,$temp);
 
  

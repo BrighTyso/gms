@@ -93,6 +93,7 @@ $result = $conn->query($sql1);
 
 
 
+
 if ($product_disbursed==0) {
 
       if ($found>0) {
@@ -130,10 +131,16 @@ if ($product_disbursed==0) {
                                             //$sql = "select * from login";
                                            if ($conn->query($user_sql2)===TRUE) {
 
-                                           // $last_id = $conn->insert_id;
+                                              // $last_id = $conn->insert_id;
 
-                                            $temp=array("response"=>"success");
-                                           array_push($data1,$temp);
+                                              $user_sql1 = "INSERT INTO arc_store_items(userid,storeid,productid,quantity,arc_productid,created_at,description,quantity_balance) VALUES ($userid,$storeid,$productid,$quantity,$last_id_arc_product,'$created_at','PRODUCT DISBURSEMENT',$quantity)";
+          
+                                            if ($conn->query($user_sql1)===TRUE) {
+
+                                                $temp=array("response"=>"success");
+                                                   array_push($response,$temp);
+
+                                               }
 
                                           }
                                           

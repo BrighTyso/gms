@@ -8,13 +8,14 @@ $datasource=new DataSource();
 
 $response=array();
 
-if(isset($_POST["qrcode"]) && isset($_POST["userid"]) && isset($_POST["barcode"])) {
+if(isset($_POST["qrcode"]) && isset($_POST["userid"]) && isset($_POST["barcode"])&& isset($_POST["company_userid"])) {
 
 
 $ready_for_bookingid=0;
 $qrcode=$_POST["qrcode"];
 $userid=$_POST["userid"];
 $barcode=$_POST["barcode"];
+$company_userid=$_POST["company_userid"];
 $companyid=0;
 // description , company name 
 $grower_number_of_balesid=0;
@@ -176,7 +177,7 @@ if ($user_found>0 && $bale_tag_to_sold_bales==0 && $bale_tagid>0 && $booked>0 &&
                if ($conn->query($user_sql1)===TRUE) {
 
 
-                $insert_sql = "INSERT INTO bale_rejected(userid,bale_tagid,created_at) VALUES ($userid,$bale_tagid,'$created_at')";
+                $insert_sql = "INSERT INTO bale_rejected(userid,bale_tagid,created_at,company_userid) VALUES ($userid,$bale_tagid,'$created_at',$company_userid)";
                   //$gr = "select * from login";
                      if ($conn->query($insert_sql)===TRUE) {
 
@@ -213,7 +214,7 @@ if ($user_found>0 && $bale_tag_to_sold_bales==0 && $bale_tagid>0 && $booked>0 &&
   }else if ($user_found==0) {
 
       $temp=array("response"=>"User Have No Right To Reject This Bale.");
-        array_push($response,$temp);
+      array_push($response,$temp);
 
   }
 

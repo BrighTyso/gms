@@ -25,12 +25,13 @@ $data1=array();
 
 //userid=1&name="bright"&surname="kaponda"&grower_num="12333"&area="ggg"&province="tttt"&phone="0784428797"&id_num="12345666"&created_at="44-44-44"&lat="12.2223"&long="15.45555"
 
-if (isset($_GET['qrcode']) &&  isset($_GET['userid'])  &&  isset($_GET['growerid']) &&  isset($_GET['bales']) &&  isset($_GET['season']) &&  isset($_GET['created_at']) &&  isset($_GET['latitude']) &&  isset($_GET['longitude']) &&  isset($_GET['sell_date'])){
+if (isset($_GET['qrcode']) &&  isset($_GET['userid'])  &&  isset($_GET['growerid']) &&  isset($_GET['bales']) &&  isset($_GET['season']) &&  isset($_GET['created_at']) &&  isset($_GET['latitude']) &&  isset($_GET['longitude']) &&  isset($_GET['sell_date']) &&  isset($_GET['company_userid'])){
 
  
 
 $qrcode=$_GET['qrcode'];
 $bales=$_GET['bales'];
+$company_userid=$_GET['company_userid'];
 $growerid=$_GET['growerid'];
 $season=$_GET['season'];
 $created_at=$_GET['created_at'];
@@ -107,7 +108,7 @@ $result = $conn->query($sql1);
 
 
 
-   $grower_bales = "INSERT INTO ready_for_booking(userid,grower_number_of_balesid,bales,latitude,longitude,created_at,sell_date) VALUES ($userid,$value,$bales,'$latitude','$longitude','$created_at','$sell_date')";
+   $grower_bales = "INSERT INTO ready_for_booking(userid,grower_number_of_balesid,bales,latitude,longitude,created_at,sell_date,company_userid) VALUES ($userid,$value,$bales,'$latitude','$longitude','$created_at','$sell_date',$company_userid)";
      
      if ($conn->query($grower_bales)===TRUE) {
      

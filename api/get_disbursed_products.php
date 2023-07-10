@@ -19,7 +19,7 @@ $data1=array();
 
 if ($description!="") {
   
-$sql = "Select distinct truck_destination.trucknumber,truck_destination.id,disbursement.storeid,disbursement.productid,disbursement.quantity ,products.name,products.units,destination,store.name as store_name,total_disbursement.quantity as total,total_disbursement.created_at from disbursement join truck_destination on truck_destination.id=disbursement.disbursement_trucksid join products on products.id=disbursement.productid join store on store.id=disbursement.storeid join total_disbursement on total_disbursement.disbursementid=disbursement.id where truck_destination.trucknumber='$description' or truck_destination.destination='$description'";
+$sql = "Select distinct truck_destination.trucknumber,truck_destination.id,disbursement.storeid,disbursement.productid,disbursement.quantity ,products.name,products.units,destination,store.name as store_name,total_disbursement.quantity as total,total_disbursement.created_at from disbursement join truck_destination on truck_destination.id=disbursement.disbursement_trucksid join products on products.id=disbursement.productid join store on store.id=disbursement.storeid join total_disbursement on total_disbursement.disbursementid=disbursement.id where truck_destination.trucknumber='$description' or truck_destination.destination='$description' order by truck_destination.id desc";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -35,7 +35,7 @@ $result = $conn->query($sql);
 
 }else{
 
-$sql = "Select distinct truck_destination.trucknumber,truck_destination.id,disbursement.storeid,disbursement.productid,disbursement.quantity ,products.name,products.units,destination,store.name as store_name,total_disbursement.quantity as total,total_disbursement.created_at from disbursement join truck_destination on truck_destination.id=disbursement.disbursement_trucksid join products on products.id=disbursement.productid join store on store.id=disbursement.storeid join total_disbursement on total_disbursement.disbursementid=disbursement.id";
+$sql = "Select distinct truck_destination.trucknumber,truck_destination.id,disbursement.storeid,disbursement.productid,disbursement.quantity ,products.name,products.units,destination,store.name as store_name,total_disbursement.quantity as total,total_disbursement.created_at from disbursement join truck_destination on truck_destination.id=disbursement.disbursement_trucksid join products on products.id=disbursement.productid join store on store.id=disbursement.storeid join total_disbursement on total_disbursement.disbursementid=disbursement.id  order by truck_destination.id desc";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

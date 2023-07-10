@@ -20,7 +20,7 @@ $found=0;
 
 $response=array();
 
-if (isset($data->trucknumber) && isset($data->userid) && isset($data->destination) && isset($data->name) && isset($data->surname)){
+if (isset($data->trucknumber) && isset($data->userid) && isset($data->destination) && isset($data->name) && isset($data->surname) && isset($data->seasonid)){
 
 
 $trucknumber=$data->trucknumber;
@@ -29,6 +29,7 @@ $driver_surname=$data->surname;
 $destination=$data->destination;
 $created_at=$data->created_at;
 $userid=$data->userid;
+$seasonid=$data->seasonid;
 
 
 
@@ -52,9 +53,22 @@ if ($found==0) {
    if ($conn->query($user_sql)===TRUE) {
    
      $last_id = $conn->insert_id;
-     $temp=array("response"=>"success");
-     array_push($response,$temp);
-     
+
+     $user_sql = "INSERT INTO truck_disbursment_sync_active(userid,disbursement_trucksid,seasonid) VALUES ($userid,$last_id,$seasonid)";
+   //$sql = "select * from login";
+         if ($conn->query($user_sql)===TRUE) {
+         
+           
+           $temp=array("response"=>"success");
+           array_push($response,$temp);
+           
+         }else{
+
+         $temp=array("response"=>$conn->error);
+         array_push($response,$temp);
+
+         }
+           
    }else{
 
    $temp=array("response"=>$conn->error);

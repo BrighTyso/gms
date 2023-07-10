@@ -17,7 +17,7 @@ $rule=0;
 if ($username!="" && $hash!="") {
   
 
-$sql = "Select * from users where hash='$hash' and  username='$username' and  active=1";
+$sql = "Select * from users where hash='$hash' and  username='$username' and  active=1 limit 1";
 
 $result = $conn->query($sql);
  
@@ -27,6 +27,8 @@ $result = $conn->query($sql);
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
       $userid=$row["id"];
 
+
+
    }
  }
 
@@ -35,8 +37,7 @@ $result = $conn->query($sql);
 
 if ($userid>0) {
 
-
-        $sql = "Select truck_destination.id,truck_destination.userid,truck_destination.trucknumber,truck_destination.driver_name,truck_destination.driver_surname,truck_destination.destination,truck_destination.close_open,truck_destination.created_at ,disbursement.id as disbursementid,disbursement.disbursement_trucksid,disbursement.productid,disbursement.storeid,disbursement.quantity from truck_destination join disbursement on disbursement.disbursement_trucksid=truck_destination.id where trucknumber='$trucknumber' or truck_destination.id=$trucknumber";
+        $sql = "Select truck_destination.id,truck_destination.userid,truck_destination.trucknumber,truck_destination.driver_name,truck_destination.driver_surname,truck_destination.destination,truck_destination.close_open,truck_destination.created_at ,disbursement.id as disbursementid,disbursement.disbursement_trucksid,disbursement.productid,disbursement.storeid,disbursement.quantity from truck_destination join disbursement on disbursement.disbursement_trucksid=truck_destination.id join truck_disbursment_sync_active on truck_disbursment_sync_active.disbursement_trucksid=truck_destination.id join user_to_truck_disbursment on user_to_truck_disbursment.disbursement_trucksid=truck_destination.id where (trucknumber='$trucknumber' or truck_destination.id=$trucknumber) and truck_disbursment_sync_active.active=1 and  user_to_truck_disbursment.truck_userid=$userid and truck_destination.close_open=1";
         $result = $conn->query($sql);
          
          if ($result->num_rows > 0) {

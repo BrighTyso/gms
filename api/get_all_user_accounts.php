@@ -20,7 +20,7 @@ $data1=array();
 if ($description=="" ) {
 	
 
-$sql = "Select users.name,surname,username,active,users.id,rights.description,created_at from users join rights on users.rightsid=rights.id";
+$sql = "Select users.name,surname,username,active,users.id,rights.description,created_at from users join rights on users.rightsid=rights.id where users.username!='sysadmin'";
 
 $result = $conn->query($sql);
  
@@ -38,8 +38,9 @@ $result = $conn->query($sql);
 
 }else{
 
+  if ($description!='sysadmin'){
 
-$sql = "Select users.name,surname,username,active,users.id,rights.description,created_at  from users join rights on users.rightsid=rights.id where username='$description' or name='$description' or surname='$description' or description='$description'";
+$sql = "Select users.name,surname,username,active,users.id,rights.description,created_at  from users join rights on users.rightsid=rights.id where username='$description' or name='$description' or surname='$description' or description='$description' ";
 
 $result = $conn->query($sql);
  
@@ -53,6 +54,8 @@ $result = $conn->query($sql);
     
    }
  }
+
+}
 
 }
 

@@ -40,6 +40,14 @@ datetime TIMESTAMP not null
 
 
 
+create table if not exists currency(
+id integer primary key auto_increment,
+description varchar(100) not null,
+datetime TIMESTAMP not null
+);
+
+
+
 create table if not exists users(
 
 id integer primary key auto_increment,
@@ -190,6 +198,27 @@ foreign key(product_typeid) references product_type(id)
 );
 
 
+
+
+
+
+
+create table if not exists supplier(
+id integer primary key auto_increment,
+userid integer not null,
+name varchar(100) not null,
+location varchar(100) not null,
+email varchar(100) not null,
+phone  varchar(100) not null,
+active integer not null default 1,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id)
+);
+
+
+
+
 create table if not exists store(
 id integer primary key auto_increment,
 userid integer not null,
@@ -232,6 +261,45 @@ datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(storeitemid) references store_items(id)
 );
+
+
+
+
+create table if not exists arc_store_items(
+id integer primary key auto_increment,
+userid integer not null,
+storeid integer not null,
+arc_productid integer not null,
+productid integer not null,
+quantity integer not null default 0,
+quantity_balance integer not null default 0,
+description varchar(100) not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(storeid) references store(id),
+foreign key(productid) references products(id),
+foreign key(arc_productid) references arc_products(id)
+);
+
+
+
+create table if not exists arc_store_items_invoice(
+id integer primary key auto_increment,
+userid integer not null,
+arc_store_itemsid integer not null,
+seasonid integer not null,
+supplierid integer not null,
+currencyid integer not null,
+invoice_number varchar(100) not null,
+unit_price double(200,2) not null,
+datetime TIMESTAMP not null,
+foreign key(arc_store_itemsid) references arc_store_items(id),
+foreign key(supplierid) references supplier(id),
+foreign key(userid) references users(id),
+foreign key(currencyid) references currency(id)
+);
+
 
 
 
@@ -617,6 +685,7 @@ processed_at varchar(100),
 verified_by integer default 0,
 hectares varchar(100) default 0,
 verified_at varchar(100),
+android_captureid integer not null default 0,
 sync integer not null default 0,
 surrogate integer not null default 0,
 created_at varchar(100) not null,
@@ -686,7 +755,10 @@ foreign key(confirmid) references con_loan(id)
 
 
 
-
+create table if not exists loan_deduction_point(
+id integer primary key auto_increment,
+point integer not null default 0
+);
 
 
 
@@ -1611,6 +1683,7 @@ foreign key(growerid) references growers(id)
 create table if not exists ready_for_booking(
 id integer primary key auto_increment,
 userid integer not null,
+company_userid integer not null,
 grower_number_of_balesid integer not null,
 bales integer not null,
 latitude varchar(100) not null,
@@ -1620,7 +1693,8 @@ created_at varchar(100) not null,
 sell_date varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
-foreign key(grower_number_of_balesid) references grower_number_of_bales(id)
+foreign key(grower_number_of_balesid) references grower_number_of_bales(id),
+foreign key(company_userid) references users(id)
 );
 
 
@@ -1628,6 +1702,7 @@ foreign key(grower_number_of_balesid) references grower_number_of_bales(id)
 create table if not exists rejected_bales(
 id integer primary key auto_increment,
 userid integer not null,
+company_userid integer not null,
 ready_for_bookingid integer not null,
 bales integer not null default 0,
 latitude varchar(100) not null,
@@ -1637,7 +1712,8 @@ created_at varchar(100) not null,
 sell_date varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
-foreign key(ready_for_bookingid) references ready_for_booking(id)
+foreign key(ready_for_bookingid) references ready_for_booking(id),
+foreign key(company_userid) references users(id)
 ); 
 
 
@@ -2119,12 +2195,13 @@ foreign key(company_to_selling_pointid) references company_to_selling_point(id)
 create table if not exists bale_booked(
 id integer primary key auto_increment,
 userid integer not null,
-actionby integer not null default 0,
+company_userid integer not null default 0,
 bale_tagid integer not null,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(bale_tagid) references bale_tags(id),
-foreign key(userid) references users(id)
+foreign key(userid) references users(id),
+foreign key(company_userid) references users(id)
 );
 
 
@@ -2133,11 +2210,13 @@ foreign key(userid) references users(id)
 create table if not exists bale_rejected(
 id integer primary key auto_increment,
 userid integer not null,
+company_userid integer not null,
 bale_tagid integer not null,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null,
 foreign key(bale_tagid) references bale_tags(id),
-foreign key(userid) references users(id)
+foreign key(userid) references users(id),
+foreign key(company_userid) references users(id)
 );
 
 
@@ -2366,8 +2445,11 @@ foreign key(arc_productid) references arc_products(id)
 
 create table if not exists selling_points(
 id integer primary key auto_increment,
-name varchar(200) not null,
-datetime TIMESTAMP not null
+userid integer not null default 1,
+name varchar(200) not null unique,
+active integer not null default 1,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id)
 );
 
 
@@ -2403,6 +2485,147 @@ foreign key(company_to_selling_pointid) references company_to_selling_point(id)
 
 
 
+create table if not exists user_to_store(
+id integer primary key auto_increment,
+userid integer not null,
+loan_userid integer not null,
+storeid integer not null,
+active integer not null default 1,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(storeid) references store(id),
+foreign key(loan_userid) references users(id)
+);
+
+
+
+
+
+create table if not exists transfer_products(
+id integer primary key auto_increment,
+userid integer not null,
+fromStoreid integer not null,
+toStoreid integer not null,
+quantity integer not null,
+arc_store_itemid integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(fromStoreid) references store(id),
+foreign key(toStoreid) references store(id),
+foreign key(arc_store_itemid) references arc_store_items(id)
+);
+
+
+
+create table if not exists store_hold_area(
+id integer primary key auto_increment,
+userid integer not null,
+store_itemid integer not null,
+quantity integer not null DEFAULT 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(store_itemid) references store_items(id)
+);
+
+
+
+
+
+create table if not exists arc_store_hold_area(
+id integer primary key auto_increment,
+userid integer not null,
+store_hold_areaid integer not null,
+old_quantity integer not null,
+new_quantity integer not null,
+quantity integer not null DEFAULT 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(store_hold_areaid) references store_hold_area(id)
+);
+
+
+
+
+
+
+
+create table if not exists active_growers(
+id integer primary key auto_increment,
+userid integer not null,
+growerid integer not null,
+seasonid integer not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+
+
+create table if not exists user_to_truck_disbursment(
+id integer primary key auto_increment,
+userid integer not null,
+disbursement_trucksid integer not null,
+truck_userid integer not null,
+seasonid integer not null,
+active integer not null default 1,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(truck_userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(disbursement_trucksid) references truck_destination(id)
+);
+
+
+
+
+
+create table if not exists truck_disbursment_sync_active(
+id integer primary key auto_increment,
+userid integer not null,
+disbursement_trucksid integer not null,
+active integer not null default 0,
+seasonid integer not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(disbursement_trucksid) references truck_destination(id)
+);
+
+
+
+create table if not exists reg_location(
+id integer primary key auto_increment,
+userid integer not null ,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+hectares varchar(100),
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists distance(
+id integer primary key auto_increment,
+userid integer not null ,
+distance double(100,2) not null default 0,
+seasonid integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
 
 
 insert into machine_learning_product_variables(description) value("Basal");
@@ -2473,3 +2696,12 @@ insert into selling_points(name) value("Karoi");
 insert into selling_points(name) value("Mvurwi");
 insert into selling_points(name) value("Marondera");
 insert into selling_points(name) value("Bindura");
+
+
+
+insert into currency(description) value("USD");
+insert into currency(description) value("RANDS");
+insert into currency(description) value("ZWL");
+
+insert into loan_deduction_point(point) value(0);
+

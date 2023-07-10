@@ -7,11 +7,6 @@ header("Access-Control-Allow-Headers:Access-Control-Allow-Headers,Content-Type,A
 require_once("../conn.php");
 //require "validate.php";
 
-require "../dataSource.php";
-
-
-$datasource=new CompanyCode();
-
 
 
 $data = json_decode(file_get_contents("php://input"));

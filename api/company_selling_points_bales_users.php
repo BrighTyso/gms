@@ -12,8 +12,8 @@ require "validate.php";
 require "datasource.php";
 
 
-$company_code=new CompanyCode();
-$warehouse_code=new CompanyWarehouseCode();
+#$company_code=new CompanyCode();
+#$warehouse_code=new CompanyWarehouseCode();
 
 
 $data = json_decode(file_get_contents("php://input"));

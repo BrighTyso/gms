@@ -10,7 +10,7 @@ $latitude=$_GET['latitude'];
 $longitude=$_GET['longitude'];
 $dispatch_noteid=$_GET['dispatch_noteid'];
 $company_to_selling_pointid=$_GET['company_to_selling_pointid'];
-
+$company_userid=$_GET['company_userid'];
 
 
 $barcode_found=0;

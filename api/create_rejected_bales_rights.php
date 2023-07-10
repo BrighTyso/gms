@@ -34,8 +34,6 @@ $created_at=$data->created_at;
 
 
 
-
-
 $sql = "Select * from rejected_bales_rights where companyid=$companyid and useridrights=$useridrights and seasonid=$seasonid limit 1";
 $result = $conn->query($sql);
  

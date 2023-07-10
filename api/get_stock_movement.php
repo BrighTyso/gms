@@ -19,7 +19,7 @@ $data1=array();
 
 if ($description=="") {
   
-$sql = "Select store.name,products.name as product_name,arc_products.old_quantity,arc_products.new_quantity,arc_products.created_at from arc_products join store_items on arc_products.storeitemid=store_items.id join products on products.id=store_items.productid join store on store.id=store_items.storeid  order by arc_products.id desc";
+$sql = "Select store.name,products.name as product_name,arc_products.old_quantity,arc_products.new_quantity,arc_products.created_at,arc_store_items.description,arc_store_items.arc_productid,arc_store_items.quantity from arc_products join store_items on arc_products.storeitemid=store_items.id join products on products.id=store_items.productid join store on store.id=store_items.storeid join arc_store_items on arc_store_items.arc_productid=arc_products.id order by arc_products.id desc";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -27,7 +27,7 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-    $temp=array("old_quantity"=>$row["old_quantity"],"created_at"=>$row["created_at"],"name"=>$row["name"],"product_name"=>$row["product_name"],"new_quantity"=>$row["new_quantity"]);
+    $temp=array("old_quantity"=>$row["old_quantity"],"created_at"=>$row["created_at"],"name"=>$row["name"],"product_name"=>$row["product_name"],"new_quantity"=>$row["new_quantity"],"description"=>$row["description"],"arc_productid"=>$row["arc_productid"],"quantity"=>$row["quantity"]);
     array_push($data1,$temp);
     
    }
@@ -35,7 +35,7 @@ $result = $conn->query($sql);
 
 }else{
 
-$sql = "Select store.name,products.name as product_name,arc_products.old_quantity,arc_products.new_quantity,arc_products.created_at from arc_products join store_items on arc_products.storeitemid=store_items.id join products on products.id=store_items.productid join store on store.id=store_items.storeid where products.name='$description' or store.name='$description' order by arc_products.id desc";
+$sql = "Select store.name,products.name as product_name,arc_products.old_quantity,arc_products.new_quantity,arc_products.created_at,arc_store_items.description,arc_store_items.arc_productid,arc_store_items.quantity from arc_products join store_items on arc_products.storeitemid=store_items.id join products on products.id=store_items.productid join store on store.id=store_items.storeid join arc_store_items on arc_store_items.arc_productid=arc_products.id where products.name='$description' or store.name='$description' order by arc_products.id desc";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -43,8 +43,9 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-    $temp=array("old_quantity"=>$row["old_quantity"],"created_at"=>$row["created_at"],"name"=>$row["name"],"product_name"=>$row["product_name"],"new_quantity"=>$row["new_quantity"]);
+     $temp=array("old_quantity"=>$row["old_quantity"],"created_at"=>$row["created_at"],"name"=>$row["name"],"product_name"=>$row["product_name"],"new_quantity"=>$row["new_quantity"],"description"=>$row["description"],"arc_productid"=>$row["arc_productid"],"quantity"=>$row["quantity"]);
     array_push($data1,$temp);
+    
     
    }
  }
