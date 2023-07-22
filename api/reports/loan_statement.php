@@ -38,7 +38,7 @@ if ($description==""){
 
 
 
-$sql11 = "Select growers.id,growers.name,growers.surname,growers.grower_num from  growers join active_growers on active_growers.growerid=growers.id where active_growers.seasonid=$seasonid";
+$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num from  growers join active_growers on active_growers.growerid=growers.id where active_growers.seasonid=$seasonid";
 
 $result1 = $conn->query($sql11);
  
@@ -80,7 +80,7 @@ $result1 = $conn->query($sql11);
 
 
 
-    $sql12 = "Select * from inputs_total join growers on growers.id=inputs_total.growerid where inputs_total.seasonid=$seasonid and inputs_total.growerid=$growerid";
+    $sql12 = "Select  * from inputs_total join growers on growers.id=inputs_total.growerid where inputs_total.seasonid=$seasonid and inputs_total.growerid=$growerid";
 
     $result2 = $conn->query($sql12);
      
@@ -171,7 +171,7 @@ $result1 = $conn->query($sql11);
 
 
 
-$sql11 = "Select growers.id,growers.name,growers.surname,growers.grower_num from  growers join active_growers on active_growers.growerid=growers.id where active_growers.seasonid=$seasonid and (name ='$description' or grower_num='$description' or province='$description' or area='$description') limit 200";
+$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num from  growers join active_growers on active_growers.growerid=growers.id where active_growers.seasonid=$seasonid and (name ='$description' or grower_num='$description' or province='$description' or area='$description') limit 200";
 
 $result1 = $conn->query($sql11);
  
@@ -239,7 +239,7 @@ $result1 = $conn->query($sql11);
 
 
 
-      $sql13 = "Select * from working_capital_total join growers on growers.id=working_capital_total.growerid where working_capital_total.seasonid=$seasonid and working_capital_total.growerid=$growerid";
+    $sql13 = "Select * from working_capital_total join growers on growers.id=working_capital_total.growerid where working_capital_total.seasonid=$seasonid and working_capital_total.growerid=$growerid";
 
     $result3 = $conn->query($sql13);
      

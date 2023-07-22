@@ -8,39 +8,48 @@ require_once("conn.php");
 require "validate.php";
 
 
+
 $data = json_decode(file_get_contents("php://input"));
 
+
 $data1=array();
-
-$description=$data->description;
-
+$found=0;
 
 
-//http://192.168.1.190/gms/api/get_seedbed.php
+if (isset($data->userid)  && isset($data->seasonid)) {
+ 
+$userid=$data->userid;
+$seasonid=$data->seasonid;
 
-if ($description!="") {
-  $sql = "select * from growers where grower_num='$description' or name='$description' or surname='$description' or area='$description' or province='$description' limit 300";
+
+
+$sql = "SELECT * FROM loan_deduction_point  limit 1";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
    // output data of each row
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
-    $temp=array("name"=>$row["name"],"surname"=>$row["surname"],"grower_num"=>$row["grower_num"],"area"=>$row["area"],"province"=>$row["province"],"phone"=>$row["phone"],"id_num"=>$row["id_num"],"id"=>$row["id"]);
-    array_push($data1,$temp);
+   
+    $found=$row['point'];
+  
     
    }
  }
-}else{
 
-  $sql = "select * from growers limit 300";
+
+ if ($found>0) {
+   
+
+$sql = "select trucknumber,truck_destination.id from truck_destination join truck_disbursment_sync_active on truck_disbursment_sync_active.disbursement_trucksid=truck_destination.id join disbursement on disbursement.disbursement_trucksid=truck_destination.id where truck_disbursment_sync_active.seasonid=$seasonid and truck_destination.close_open=1 and disbursement.quantity>0";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
    // output data of each row
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
-       $temp=array("name"=>$row["name"],"surname"=>$row["surname"],"grower_num"=>$row["grower_num"],"area"=>$row["area"],"province"=>$row["province"],"phone"=>$row["phone"],"id_num"=>$row["id_num"],"id"=>$row["id"]);
+
+    $temp=array("id"=>$row["id"],"trucknumber"=>$row["trucknumber"]);
     array_push($data1,$temp);
     
    }
@@ -48,11 +57,22 @@ $result = $conn->query($sql);
 
 }
 
+}
 
 
 
- echo json_encode($data1); 
+
+
+
+ echo json_encode($data1);
+
+
 
 
 
 ?>
+
+
+
+
+

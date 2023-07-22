@@ -406,6 +406,9 @@ foreign key(productid) references products(id)
 );
 
 
+
+
+
 create table if not exists growers(
 id integer primary key auto_increment,
 userid integer not null,
@@ -451,6 +454,8 @@ sync integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null
 );
+
+
 
 
 
@@ -2609,6 +2614,7 @@ seasonid integer not null,
 hectares varchar(100),
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
 foreign key(seasonid) references seasons(id)
@@ -2623,9 +2629,142 @@ distance double(100,2) not null default 0,
 seasonid integer not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
+datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
 );
+
+
+
+create table if not exists transfer_grower_loan(
+id integer primary key auto_increment,
+userid integer not null ,
+from_growerid integer not null,
+to_growerid integer not null,
+loanid integer not null,
+seasonid integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(from_growerid) references growers(id),
+foreign key(to_growerid) references growers(id),
+foreign key(loanid) references loans(id)
+);
+
+
+
+
+
+create table if not exists chairman(
+id integer primary key auto_increment,
+userid integer not null,
+name varchar(100) not null,
+surname varchar(100) not null,
+active integer not null default 1,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id)
+);
+
+
+
+
+create table if not exists grower_chairman(
+id integer primary key auto_increment,
+userid integer not null,
+growerid integer not null,
+chairmanid integer not null,
+seasonid integer not null,
+active integer not null default 1,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(chairmanid) references chairman(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+create table if not exists chairman_field_officer(
+id integer primary key auto_increment,
+userid integer not null,
+fieldofficerid integer not null,
+chairmanid integer not null,
+seasonid integer not null,
+active integer not null default 1,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(chairmanid) references chairman(id),
+foreign key(seasonid) references seasons(id),
+foreign key(fieldofficerid) references users(id)
+);
+
+
+
+
+
+create table if not exists field_officer_area_manager(
+id integer primary key auto_increment,
+userid integer not null,
+area_managerid integer not null,
+fieldofficerid integer not null,
+seasonid integer not null,
+active integer not null default 1,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(fieldofficerid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(area_managerid) references users(id)
+);
+
+
+
+
+
+
+
+create table if not exists grower_managers(
+id integer primary key auto_increment,
+userid integer not null,
+growerid integer not null,
+seasonid integer not null,
+chairman varchar(100) not null,
+fieldOfficer varchar(100) not null,
+area_manager varchar(100) not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+
+create table if not exists loan_adjustments(
+id integer primary key auto_increment,
+userid integer not null,
+loanid integer not null,
+old_quantity integer not null,
+new_quantity integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(loanid) references loans(id)
+);
+
+
+
+
+
+
+
+
 
 
 insert into machine_learning_product_variables(description) value("Basal");
@@ -2656,6 +2795,9 @@ insert into rights(description,notes) value("Surrogate","Surrogate15");
 insert into rights(description,notes) value("Check Point","Check Point16");
 insert into rights(description,notes) value("Agronomist","Agronomy17");
 insert into rights(description,notes) value("Company Selling Point","SellingPoint18");
+insert into rights(description,notes) value("Chairman","Chairman19");
+
+
 
 insert into users(name,surname,username,hash,rightsid,active,access_code,created_at) value("sysadmin","sysadmin","sysadmin","173309254d744ee11186193a1b1b0394",1,1,0000,"2022-09-12");
 

@@ -101,11 +101,17 @@ $result = $conn->query($sql1);
 
 	   }
 
+}else{
+
+
+
 }
 
 
 }else{
 
+ $temp=array("response"=>"already created");
+  array_push($data,$temp);
 	
 }
 

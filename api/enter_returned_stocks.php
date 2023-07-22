@@ -21,6 +21,8 @@ $userid=0;
 $found=0;
 $quantity_Enough=0;
 $product_disbursed=0;
+$storeitemid=0;
+$old_quantity=0;
 
 $response=array();
 
@@ -74,42 +76,58 @@ $result = $conn->query($sql);
 
 
 
-
-
-//  $sql1 = "Select * from disbursement where disbursement_trucksid=$disbursement_trucksid and  productid=$productid ";
-// $result = $conn->query($sql1);
+$sql1 = "Select * from store_items where storeid=$storeid  and  productid=$productid ";
+$result = $conn->query($sql1);
  
-//  if ($result->num_rows > 0) {
-//    // output data of each row
-//    while($row = $result->fetch_assoc()) {
-//     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-//     //$found=$row["id"];
-//     $product_disbursed=$row["id"];
+    //$found=$row["id"];
+    $storeitemid=$row["id"];
+    $old_quantity=$row["quantity"];
     
-//    }
-//  }
+   }
+ }
 
 
 
-if ($disbursement_trucksid>0) {
+if ($disbursement_trucksid>0 && $storeitemid>0) {
 
     $user_sql1 = "update store_items set quantity=quantity+$quantity  where storeid = $storeid and productid=$productid";
          //$sql = "select * from login";
          if ($conn->query($user_sql1)===TRUE) {
+
+            $new_quantity=$old_quantity+$quantity;
          
              $user_sql2 = "update disbursement set quantity=quantity-$quantity  where storeid = $storeid and productid=$productid and disbursement_trucksid=$disbursement_trucksid";
              //$sql = "select * from login";
              if ($conn->query($user_sql2)===TRUE) {
              
             $last_id = $conn->insert_id;
+            
                $user_sql = "INSERT INTO returned_stock(disbursement_trucksid,userid,productid,storeid,quantity,created_at) VALUES ($disbursement_trucksid,$userid,$productid,$storeid,$quantity,'$created_at')";
            //$sql = "select * from login";
                if ($conn->query($user_sql)===TRUE) {
 
-                    $temp=array("response"=>"success");
-                    array_push($response,$temp);
-                
+
+                 $user_sql2 = "INSERT INTO arc_products(userid,storeitemid,old_quantity,new_quantity,created_at) VALUES ($userid,$storeid,$old_quantity,$new_quantity,'$created_at')";
+                                  //$sql = "select * from login";
+                               if ($conn->query($user_sql2)===TRUE) {
+
+                                $arc_products_id = $conn->insert_id;
+
+                                $user_sql1 = "INSERT INTO arc_store_items(userid,storeid,productid,quantity,arc_productid,created_at,description,quantity_balance) VALUES ($userid,$storeid,$productid,$quantity,$arc_products_id,'$created_at','RETURNED PRODUCTS',$quantity)";
+                          
+                                      if ($conn->query($user_sql1)===TRUE) {
+
+                                        $temp=array("response"=>"success");
+                                        array_push($response,$temp);
+
+                                         }
+                         }
+                            
                }
 
              }else{
@@ -138,7 +156,7 @@ if ($disbursement_trucksid>0) {
 }else{
 
 
-$temp=array("response"=>"Field Cant Be Empty");
+$temp=array("response"=>"Field  Empty");
 array_push($response,$temp);
 	
 }

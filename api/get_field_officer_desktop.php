@@ -8,34 +8,48 @@ require_once("conn.php");
 require "validate.php";
 
 
+
 $data = json_decode(file_get_contents("php://input"));
+
 
 $data1=array();
 
+
+if (isset($data->userid)) {
+ 
 $userid=$data->userid;
 
-//http://192.168.1.190/gms/api/get_seedbed.php
 
-if ($userid!="") {
-  $sql = "select * from selling_points ";
+$sql = "select name,surname,id,username from users where active=1 and (rightsid=8 or rightsid=9 or rightsid=14)";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
    // output data of each row
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
-    $temp=array("name"=>$row["name"],"id"=>$row["id"]);
+
+    $temp=array("id"=>$row["id"],"name"=>$row["name"],"surname"=>$row["surname"],"username"=>$row["username"]);
     array_push($data1,$temp);
     
    }
  }
+
 }
 
 
 
 
- echo json_encode($data1); 
+
+
+ echo json_encode($data1);
+
+
 
 
 
 ?>
+
+
+
+
+

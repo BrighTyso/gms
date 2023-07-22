@@ -24,6 +24,8 @@ $id_num=$data->id_num;
 $created_at=$data->created_at;
 //$hectares=$data->hectares;
 $seasonid=$data->seasonid;
+$response=0;
+$growerid=0;
 
 
 
@@ -31,8 +33,6 @@ $seasonid=$data->seasonid;
 
 if (isset($userid) && isset($name)  && isset($surname)  && isset($grower_num)  && isset($area)  &&  isset($province)  && isset($phone)  && isset($id_num)   && isset($created_at)){
 
-$response=0;
-$growerid=0;
 
 
 // checks if grower is already in database
@@ -69,10 +69,24 @@ if ($response==0) {
       array_push($data1,$temp);
 
 
+   }else{
+
+    $temp=array("response"=>$conn->error);
+      array_push($data1,$temp);
+
    }
+
+ }else{
+
+  $temp=array("response"=>"grower Already in database");
+  array_push($data1,$temp);
 
  }
 
+}else{
+
+     $temp=array("response"=>"Field Empty");
+      array_push($data1,$temp);
 }
 
 

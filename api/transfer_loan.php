@@ -20,12 +20,14 @@ $to_growerid=0;
 $loanid=0;
 $processed=0;
 $amount=0.0;
+$userid=0;
+$created_at="";
 $data1=array();
 
 
 
 
-if (isset($data->productid) && isset($data->growerid) && isset($data->seasonid)  && isset($data->grower_num)){
+if (isset($data->productid) && isset($data->growerid) && isset($data->seasonid)  && isset($data->grower_num) && isset($data->receiptnumber)){
 
 
 
@@ -34,7 +36,9 @@ if (isset($data->productid) && isset($data->growerid) && isset($data->seasonid) 
     $growerid=$data->growerid;
     $grower=$data->grower_num;
     $seasonid=$data->seasonid;
-    //$receipt_number=$data->receipt_number;
+    $userid=$data->userid;
+    $created_at=$data->created_at;
+    $receipt_number=validate($data->receiptnumber);
 
 
     $sql2 = "Select * from growers where grower_num='$grower' limit 1";
@@ -53,7 +57,7 @@ if (isset($data->productid) && isset($data->growerid) && isset($data->seasonid) 
         }
 
 
-     $sql = "Select distinct loans.id as loanid,products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified,processed,product_total_cost,product_amount from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id  where loans.seasonid=$seasonid and productid=$productid  and growerid=$growerid  limit 1";
+     $sql = "Select distinct loans.id as loanid,products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified,processed,product_total_cost,product_amount from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id  where loans.seasonid=$seasonid and productid=$productid  and growerid=$growerid and loans.receipt_number='$receipt_number' limit 1";
 
       $result = $conn->query($sql);
      
@@ -83,8 +87,19 @@ if (isset($data->productid) && isset($data->growerid) && isset($data->seasonid) 
            //$sql = "select * from login";
               if ($conn->query($user_sql1)===TRUE) {
 
-                $temp=array("response"=>"success");
-                array_push($data1,$temp);
+                $insert_sql = "INSERT INTO transfer_grower_loan(userid,from_growerid,to_growerid,loanid,seasonid,created_at) VALUES ($userid,$growerid,$to_growerid,$loanid,$seasonid,'$created_at')";
+   //$gr = "select * from login";
+                    if ($conn->query($insert_sql)===TRUE) {
+
+                        $temp=array("response"=>"success");
+                        array_push($data1,$temp);
+
+                  }else{
+
+                    $temp=array("response"=>$conn->error);
+                        array_push($data1,$temp);
+
+                  }
 
               }
 
@@ -99,8 +114,20 @@ if (isset($data->productid) && isset($data->growerid) && isset($data->seasonid) 
                    //$sql = "select * from login";
                    if ($conn->query($user_sql2)===TRUE) {
 
+                    $insert_sql = "INSERT INTO transfer_grower_loan(userid,from_growerid,to_growerid,loanid,seasonid,created_at) VALUES ($userid,$growerid,$to_growerid,$loanid,$seasonid,'$created_at')";
+   //$gr = "select * from login";
+                    if ($conn->query($insert_sql)===TRUE) {
+
                         $temp=array("response"=>"success");
                         array_push($data1,$temp);
+
+                         }else{
+
+                    $temp=array("response"=>$conn->error);
+                        array_push($data1,$temp);
+
+                  }
+
 
                       }
 
@@ -108,8 +135,12 @@ if (isset($data->productid) && isset($data->growerid) && isset($data->seasonid) 
 
         }
 
-      }
+      }else{
 
+            $temp=array("response"=>"loan Id Not Found");
+             array_push($data1,$temp);
+
+      }
 
      }
 

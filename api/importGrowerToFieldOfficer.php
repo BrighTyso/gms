@@ -22,7 +22,7 @@ $userid=$data->userid;
 $officerid=$data->officerid;
 $seasonid=$data->seasonid;
 $growerid=0;
-$grower_num=$data->grower_num;
+$grower_num=validate($data->grower_num);
 $created_at=$data->created_at;
 
 $grower_found=0;
@@ -72,8 +72,20 @@ $grower_found=0;
             $temp=array("response"=>"success");
             array_push($response,$temp);
         
+       }else{
+          $temp=array("response"=>$conn->error);
+            array_push($response,$temp);
        }
        
+   }else{
+    if ($grower_found>0) {
+      $temp=array("response"=>"Grower Already Assigned");
+            array_push($response,$temp);
+    }else if($growerid==0){
+      $temp=array("response"=>"Grower not found");
+      array_push($response,$temp);
+
+    }
    }
 
 
