@@ -333,7 +333,7 @@ $result = $conn->query($sql2);
          //$gr = "select * from login";
          if ($conn->query($insert_sql)===TRUE) {
          
-          // $last_id = $conn->insert_id;
+           $loan_id = $conn->insert_id;
 
          if ($verifyHectares==0) {
 
@@ -356,7 +356,7 @@ $result = $conn->query($sql2);
 
                                 $arc_products_id = $conn->insert_id;
 
-                                $user_sql2 = "INSERT INTO arc_product_grower(arc_productid,growerid,quantity) VALUES ($arc_products_id,$growerid,$quantity)";
+                                $user_sql2 = "INSERT INTO arc_product_grower(arc_productid,loanid) VALUES ($arc_products_id,$loan_id)";
                                         //$sql = "select * from login";
                                        if ($conn->query($user_sql2)===TRUE) {
 
@@ -410,7 +410,7 @@ $result = $conn->query($sql2);
 
                                      $last_id = $conn->insert_id;
 
-                                      $user_sql2 = "INSERT INTO arc_product_grower(arc_productid,growerid,quantity) VALUES ($last_id,$growerid,$quantity)";
+                                      $user_sql2 = "INSERT INTO arc_product_grower(arc_productid,loanid) VALUES ($last_id,$loan_id)";
                                         //$sql = "select * from login";
                                        if ($conn->query($user_sql2)===TRUE) {
 

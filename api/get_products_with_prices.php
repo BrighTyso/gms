@@ -1,4 +1,5 @@
 <?php
+
 header("Access-Control-Allow-Origin: *");
 header("Content-Type:application/json");
 header("Access-Control-Allow-Origin-Methods:POST");
@@ -8,44 +9,44 @@ require_once("conn.php");
 require "validate.php";
 
 
-
 $data = json_decode(file_get_contents("php://input"));
 
+$userid=0;
+$productid=0;
+$amount="";
+$seasonid=0;
+$created_at="";
+$found=0;
+$processed_found=0;
+$response=array();
 
-$data1=array();
+if (isset($data->userid) && isset($data->seasonid) ){
 
-
-if (isset($data->userid)) {
- 
 $userid=$data->userid;
+$seasonid=$data->seasonid;
 
 
-$sql = "select name,surname,id from areaManager where active=1 ";
+
+
+$sql = "Select products.id,products.name from prices join products on products.id=prices.productid where  seasonid=$seasonid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
    // output data of each row
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
-
-    $temp=array("id"=>$row["id"],"name"=>$row["name"],"surname"=>$row["surname"]);
-    array_push($data1,$temp);
+    $temp=array("name"=>$row["name"],"id"=>$row["id"]);
+    array_push($response,$temp);
     
    }
  }
+
 
 }
 
 
 
-
-
-
- echo json_encode($data1);
-
-
-
-
+echo json_encode($response);
 
 ?>
 

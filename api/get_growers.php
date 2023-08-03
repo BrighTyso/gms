@@ -19,7 +19,7 @@ $seasonid=$data->seasonid;
 
 if ($description!="" && $seasonid!=""){
 
-$sql = "Select  growers.id,users.username , growers.name as grower_name , growers.surname as grower_surname, growers.grower_num, growers.id_num,area,province,latitude,longitude from growers join lat_long on growers.id=lat_long.growerid join users on users.id=lat_long.userid where  growers.grower_num='$description'  or growers.phone='$description'  or growers.surname='$description' or growers.area='$description' or users.username='$description' and lat_long.seasonid=$seasonid";
+$sql = "Select  growers.id,users.username , growers.name as grower_name , growers.surname as grower_surname, growers.grower_num, growers.id_num,area,province,latitude,longitude from growers join lat_long on growers.id=lat_long.growerid join users on users.id=lat_long.userid where  growers.grower_num='$description'  or growers.phone='$description'  or growers.surname='$description' or growers.area='$description' or users.username='$description' and lat_long.seasonid=$seasonid order by lat_long.id desc limit 30";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -38,7 +38,7 @@ $result = $conn->query($sql);
 
 }else if ($description=="" && $seasonid!=""){
 
-$sql = "Select growers.id,users.username , growers.name as grower_name , growers.surname as grower_surname, growers.grower_num, growers.id_num, area, province,latitude,longitude from growers join lat_long on growers.id=lat_long.growerid join users on users.id=lat_long.userid where  lat_long.seasonid='$seasonid'";
+$sql = "Select growers.id,users.username , growers.name as grower_name , growers.surname as grower_surname, growers.grower_num, growers.id_num, area, province,latitude,longitude from growers join lat_long on growers.id=lat_long.growerid join users on users.id=lat_long.userid where  lat_long.seasonid='$seasonid' order by lat_long.id desc limit 30";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

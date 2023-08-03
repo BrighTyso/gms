@@ -17,6 +17,11 @@ $seasonid=$data->seasonid;
 $data1=array();
 // get grower locations
 
+$chairman="";
+$fieldOfficer="";
+$area_manager="";
+$growerid=0;
+
 if ($userid!="") {
   
 
@@ -28,12 +33,29 @@ $result = $conn->query($sql11);
  if ($result->num_rows > 0) {
    // output data of each row
    while($row = $result->fetch_assoc()) {
-    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-    //  $temp=array("name"=>$row["name"],"surname"=>$row["surname"] ,"username"=>$row["username"] ,"id"=>$row["id"],"rights"=>$row["rightsid"]);
-    // array_push($data1,$temp);
+      $growerid=$row["growerid"];
 
-   $temp=array("name"=>$row["name"],"grower_num"=>$row["grower_num"],"surname"=>$row["surname"],"amount"=>$row["amount"]);
+
+
+      $sql = "Select * from grower_managers  where  growerid=$growerid and seasonid=$seasonid limit 1";
+      $result1 = $conn->query($sql);
+       
+       if ($result1->num_rows > 0) {
+         // output data of each row
+         while($row1 = $result1->fetch_assoc()) {
+
+          // product id
+            $chairman=$row1["chairman"];
+            $fieldOfficer=$row1["fieldOfficer"];
+            $area_manager=$row1["area_manager"];
+         
+          
+         }
+
+       }
+
+   $temp=array("id_num"=>$row["id_num"],"phone"=>$row["phone"],"area"=>$row["area"],"chairman"=>$chairman,"fieldOfficer"=>$fieldOfficer,"area_manager"=>$area_manager,"name"=>$row["name"],"grower_num"=>$row["grower_num"],"surname"=>$row["surname"],"amount"=>$row["amount"]);
     array_push($data1,$temp);
 
    

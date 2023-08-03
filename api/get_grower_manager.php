@@ -8,48 +8,38 @@ require_once("conn.php");
 require "validate.php";
 
 
-
 $data = json_decode(file_get_contents("php://input"));
-
 
 $data1=array();
 
-
-if (isset($data->userid)) {
- 
-$userid=$data->userid;
+$growerid=$data->growerid;
+$seasonid=$data->seasonid;
 
 
-$sql = "select name,surname,id from areaManager where active=1 ";
+
+//http://192.168.1.190/gms/api/get_seedbed.php
+
+
+$sql = "select * from grower_managers where growerid=$growerid and seasonid=$seasonid limit 1";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
    // output data of each row
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
-
-    $temp=array("id"=>$row["id"],"name"=>$row["name"],"surname"=>$row["surname"]);
+       $temp=array("fieldOfficer"=>$row["fieldOfficer"],"area_manager"=>$row["area_manager"],"chairman"=>$row["chairman"],"id"=>$row["id"]);
     array_push($data1,$temp);
     
    }
  }
 
-}
 
 
 
 
 
-
- echo json_encode($data1);
-
-
+ echo json_encode($data1); 
 
 
 
 ?>
-
-
-
-
-

@@ -116,7 +116,7 @@ if ($response==0 && $seasonid>0) {
 
    	if ($grower_field_officer_found==0) {
 
-   			$grower_field_sql = "INSERT INTO grower_managers(userid,growerid,seasonid,chairman,fieldOfficer,area_manager,created_at) VALUES ($userid,$last_id,$seasonid,'$chairman','$fieldOfficer','$area_manager','$created_at')";
+   			$grower_field_sql = "INSERT INTO grower_managers(userid,growerid,seasonid,chairman,fieldOfficer,area_manager,created_at) VALUES ($userid,$last_id,$seasonid,'$chairman','$fieldOffice','$area_manager','$created_at')";
 	   //$sql = "select * from login";
 			  	 if ($conn->query($grower_field_sql)===TRUE) {
 

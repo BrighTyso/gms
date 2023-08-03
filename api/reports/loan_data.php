@@ -47,7 +47,7 @@ if ($description==""){
 
 
 
-$sql11 = "Select growers.id,growers.name,growers.surname,growers.grower_num from  growers join active_growers on active_growers.growerid=growers.id where active_growers.seasonid=$seasonid ";
+$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num from  growers join active_growers on active_growers.growerid=growers.id where active_growers.seasonid=$seasonid ";
 
 $result1 = $conn->query($sql11);
  
@@ -185,7 +185,7 @@ $result1 = $conn->query($sql11);
 
 }else{
 
-$sql11 = "Select growers.id,growers.name,growers.surname,growers.grower_num from growers join active_growers on active_growers.growerid=growers.id where active_growers.seasonid=$seasonid and ( name ='$description' or grower_num='$description' or province='$description' or area='$description')";
+$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num from growers join active_growers on active_growers.growerid=growers.id where active_growers.seasonid=$seasonid and ( name ='$description' or grower_num='$description' or province='$description' or area='$description' or grower_num like '%$description')";
 
 $result1 = $conn->query($sql11);
  

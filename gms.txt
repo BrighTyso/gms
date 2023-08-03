@@ -433,6 +433,7 @@ foreign key(seasonid) references seasons(id)
 create table  if not exists truck_to_grower(
 id integer primary key auto_increment,
 userid integer not null,
+loanid integer not null default 0,
 growerid integer not null,
 disbursement_trucksid integer not null,
 productid integer not null,
@@ -442,8 +443,11 @@ datetime TIMESTAMP not null,
 foreign key(userid) references users(id),
 foreign key(productid) references products(id),
 foreign key(disbursement_trucksid) references truck_destination(id),
-foreign key(growerid) references growers(id)
+foreign key(growerid) references growers(id),
+foreign key(loanid) references loans(id)
 );
+
+
 
 
 create table if not exists grower_profile(
@@ -454,9 +458,6 @@ sync integer not null default 0,
 created_at varchar(100) not null,
 datetime TIMESTAMP not null
 );
-
-
-
 
 
 
@@ -2670,6 +2671,8 @@ foreign key(userid) references users(id)
 
 
 
+
+
 create table if not exists grower_chairman(
 id integer primary key auto_increment,
 userid integer not null,
@@ -2760,6 +2763,49 @@ foreign key(loanid) references loans(id)
 
 
 
+
+
+create table if not exists fieldoffice(
+id integer primary key auto_increment,
+userid integer not null,
+name varchar(100) not null,
+surname varchar(100) not null,
+active integer not null default 1,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id)
+);
+
+
+
+
+create table if not exists areaManager(
+id integer primary key auto_increment,
+userid integer not null,
+name varchar(100) not null,
+surname varchar(100) not null,
+active integer not null default 1,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id)
+);
+
+
+
+
+
+create table if not exists truck_recon(
+id integer primary key auto_increment,
+userid integer not null,
+productid integer not null,
+disbursement_trucksid integer not null,
+quantity varchar(100) not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(productid) references products(id),
+foreign key(disbursement_trucksid) references truck_destination(id)
+);
 
 
 

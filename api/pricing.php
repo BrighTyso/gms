@@ -46,7 +46,7 @@ $result = $conn->query($sql);
 
 
 
- $sql = "Select * from loans where processed=1 and seasonid=$seasonid limit 1";
+ $sql = "Select * from loans where processed=1 and productid=$productid and seasonid=$seasonid limit 1";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -92,7 +92,7 @@ $sql = "UPDATE prices SET amount = $amount  WHERE productid=$productid and seaso
    //$sql = "select * from login";
    if ($conn->query($sql)===TRUE) {
      
-     $temp=array("response"=>"successfully Updated Price");
+     $temp=array("response"=>"success");
     array_push($response,$temp);
 
    }else{

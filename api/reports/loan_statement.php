@@ -38,7 +38,7 @@ if ($description==""){
 
 
 
-$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num from  growers join active_growers on active_growers.growerid=growers.id where active_growers.seasonid=$seasonid";
+$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num,growers.area,growers.id_num from  growers join active_growers on active_growers.growerid=growers.id where active_growers.seasonid=$seasonid";
 
 $result1 = $conn->query($sql11);
  
@@ -46,6 +46,7 @@ $result1 = $conn->query($sql11);
    // output data of each row
    while($row1 = $result1->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+    $loans_data=array();
     $growerid=0;
     $input_total=0;
     $working_capital=0;
@@ -57,6 +58,8 @@ $result1 = $conn->query($sql11);
     $grower_name=$row1["name"];
     $grower_surname=$row1["surname"];
     $grower_num=$row1["grower_num"];
+    $grower_area=$row1["area"];
+    $grower_id_num=$row1["id_num"];
 
 
 
@@ -160,7 +163,7 @@ $result1 = $conn->query($sql11);
      $loan_balance=$total_loan_amount+$loan_interest;
 
 
-   $temp=array("grower_name"=>$grower_name,"grower_surname"=>$grower_surname,"grower_num"=>$grower_num,"loan_total_amount"=>$loan_balance,"working_capital"=>$working_capital,"roll_over"=>$roll_over,"input_total"=>$input_total,"interest"=>$loan_interest,"inputs"=>$loans_data);
+   $temp=array("grower_area"=>$grower_area,"grower_id_num"=>$grower_id_num,"grower_name"=>$grower_name,"grower_surname"=>$grower_surname,"grower_num"=>$grower_num,"loan_total_amount"=>$loan_balance,"working_capital"=>$working_capital,"roll_over"=>$roll_over,"input_total"=>$input_total,"interest"=>$loan_interest,"inputs"=>$loans_data);
     array_push($data1,$temp);
 
    
@@ -171,7 +174,7 @@ $result1 = $conn->query($sql11);
 
 
 
-$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num from  growers join active_growers on active_growers.growerid=growers.id where active_growers.seasonid=$seasonid and (name ='$description' or grower_num='$description' or province='$description' or area='$description') limit 200";
+$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num,growers.area,growers.id_num from  growers join active_growers on active_growers.growerid=growers.id where active_growers.seasonid=$seasonid and (name ='$description' or grower_num='$description' or province='$description' or area='$description') limit 200";
 
 $result1 = $conn->query($sql11);
  
@@ -186,6 +189,8 @@ $result1 = $conn->query($sql11);
     $grower_name=$row1["name"];
     $grower_surname=$row1["surname"];
     $grower_num=$row1["grower_num"];
+    $grower_area=$row1["area"];
+    $grower_id_num=$row1["id_num"];
 
     $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and processed=1 and loans.growerid=$growerid order by product_amount ";
     $result = $conn->query($sql);
@@ -287,7 +292,7 @@ $result1 = $conn->query($sql11);
      $loan_balance=$total_loan_amount+$loan_interest;
 
 
-   $temp=array("grower_name"=>$grower_name,"grower_surname"=>$grower_surname,"grower_num"=>$grower_num,"loan_total_amount"=>$loan_balance,"working_capital"=>$working_capital,"roll_over"=>$roll_over,"input_total"=>$input_total,"interest"=>$loan_interest,"inputs"=>$loans_data);
+    $temp=array("grower_area"=>$grower_area,"grower_id_num"=>$grower_id_num,"grower_name"=>$grower_name,"grower_surname"=>$grower_surname,"grower_num"=>$grower_num,"loan_total_amount"=>$loan_balance,"working_capital"=>$working_capital,"roll_over"=>$roll_over,"input_total"=>$input_total,"interest"=>$loan_interest,"inputs"=>$loans_data);
     array_push($data1,$temp);
 
    

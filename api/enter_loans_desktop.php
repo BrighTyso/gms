@@ -224,7 +224,7 @@ if ($deduction_point==0) {
          if ($conn->query($insert_sql)===TRUE) {
 
          
-          // $last_id = $conn->insert_id;
+           $loan_id = $conn->insert_id;
 
          if ($verifyHectares==0) {
 
@@ -248,7 +248,7 @@ if ($deduction_point==0) {
                                 $arc_products_id = $conn->insert_id;
 
 
-                                $user_sql2 = "INSERT INTO arc_product_grower(arc_productid,growerid,quantity) VALUES ($arc_products_id,$growerid,$quantity)";
+                                $user_sql2 = "INSERT INTO arc_product_grower(arc_productid,loanid) VALUES ($arc_products_id,$loan_id)";
                                         //$sql = "select * from login";
                                        if ($conn->query($user_sql2)===TRUE) {
 
@@ -322,7 +322,7 @@ if ($deduction_point==0) {
                                      //$last_id = $conn->insert_id;
                                      $arc_products_id = $conn->insert_id;
 
-                                      $user_sql2 = "INSERT INTO arc_product_grower(arc_productid,growerid,quantity) VALUES ($arc_products_id,$growerid,$quantity)";
+                                      $user_sql2 = "INSERT INTO arc_product_grower(arc_productid,loanid) VALUES ($arc_products_id,$loan_id)";
                                         //$sql = "select * from login";
                                        if ($conn->query($user_sql2)===TRUE) {
 
@@ -422,7 +422,7 @@ if ($deduction_point==0) {
 }else{
 
 
-$sql = "Select * from truck_destination where (truck_destination.trucknumber='$trucknumber' or id=$trucknumber) and close_open=1";
+$sql = "Select * from truck_destination where (truck_destination.trucknumber='$trucknumber' or id='$trucknumber') and close_open=1";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -555,7 +555,7 @@ $result = $conn->query($sql1);
    //$gr = "select * from login";
    if ($conn->query($insert_sql)===TRUE) {
    
-    // $last_id = $conn->insert_id;
+     $loan_id = $conn->insert_id;
 
    if ($verifyHectares==0) {
 
@@ -569,7 +569,7 @@ $result = $conn->query($sql1);
    //$sql = "select * from login";
    if ($conn->query($user_sql1)===TRUE) {
    
-       $insert_sql = "INSERT INTO truck_to_grower(userid,growerid,disbursement_trucksid,quantity,productid,created_at) VALUES ($userid,$growerid,$disbursement_trucksid,$quantity,$productid,'$created_at')";
+       $insert_sql = "INSERT INTO truck_to_grower(userid,growerid,disbursement_trucksid,quantity,productid,loanid,created_at) VALUES ($userid,$growerid,$disbursement_trucksid,$quantity,$productid,$loan_id,'$created_at')";
              //$sql = "select * from login";
              if ($conn->query($insert_sql)===TRUE) {
              
@@ -616,7 +616,7 @@ $result = $conn->query($sql1);
    //$sql = "select * from login";
    if ($conn->query($user_sql1)===TRUE) {
    
-           $insert_sql = "INSERT INTO truck_to_grower(userid,growerid,disbursement_trucksid,quantity,productid,created_at) VALUES ($userid,$growerid,$disbursement_trucksid,$quantity,$productid,'$created_at')";
+           $insert_sql = "INSERT INTO truck_to_grower(userid,growerid,disbursement_trucksid,quantity,productid,loanid,created_at) VALUES ($userid,$growerid,$disbursement_trucksid,$quantity,$productid,$loan_id,'$created_at')";
          //$sql = "select * from login";
          if ($conn->query($insert_sql)===TRUE) {
          
@@ -632,8 +632,10 @@ $result = $conn->query($sql1);
                  }
 
               }else{
+
                  $temp=array("response"=>"success");
                   array_push($data1,$temp);
+                  
               }
 
          }else{

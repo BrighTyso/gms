@@ -8,19 +8,19 @@ require_once("conn.php");
 require "validate.php";
 
 
-
 $data = json_decode(file_get_contents("php://input"));
+
+$truckid=$data->truckid;
+$userid=$data->userid;
 
 
 $data1=array();
 
-
-if (isset($data->userid)) {
- 
-$userid=$data->userid;
+//http://192.168.1.190/gms/api/get_province.php
 
 
-$sql = "select name,surname,id from areaManager where active=1 ";
+  
+$sql = "Select truck_destination.trucknumber,store.name,products.name as product_name,returned_stock.quantity,returned_stock.created_at from returned_stock join products on products.id=returned_stock.productid join store on store.id=returned_stock.storeid join truck_destination on returned_stock.disbursement_trucksid=truck_destination.id where returned_stock.disbursement_trucksid=$truckid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -28,24 +28,16 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-    $temp=array("id"=>$row["id"],"name"=>$row["name"],"surname"=>$row["surname"]);
+    $temp=array("quantity"=>$row["quantity"],"created_at"=>$row["created_at"],"name"=>$row["name"],"product_name"=>$row["product_name"],"trucknumber"=>$row["trucknumber"]);
     array_push($data1,$temp);
     
    }
  }
 
-}
-
-
-
 
 
 
  echo json_encode($data1);
-
-
-
-
 
 ?>
 

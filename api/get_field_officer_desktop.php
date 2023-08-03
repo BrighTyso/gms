@@ -20,7 +20,7 @@ if (isset($data->userid)) {
 $userid=$data->userid;
 
 
-$sql = "select name,surname,id,username from users where active=1 and (rightsid=8 or rightsid=9 or rightsid=14)";
+$sql = "select name,surname,id from fieldoffice where active=1 ";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -28,7 +28,7 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-    $temp=array("id"=>$row["id"],"name"=>$row["name"],"surname"=>$row["surname"],"username"=>$row["username"]);
+    $temp=array("id"=>$row["id"],"name"=>$row["name"],"surname"=>$row["surname"]);
     array_push($data1,$temp);
     
    }

@@ -41,7 +41,7 @@ $result = $conn->query($sql);
  if ($found>0) {
    
 
-$sql = "select distinct trucknumber,truck_destination.id,destination from truck_destination join truck_disbursment_sync_active on truck_disbursment_sync_active.disbursement_trucksid=truck_destination.id join disbursement on disbursement.disbursement_trucksid=truck_destination.id where truck_disbursment_sync_active.seasonid=$seasonid and truck_destination.close_open=1 and disbursement.quantity>0";
+$sql = "select distinct trucknumber,truck_destination.id,destination from truck_destination join truck_disbursment_sync_active on truck_disbursment_sync_active.disbursement_trucksid=truck_destination.id join disbursement on disbursement.disbursement_trucksid=truck_destination.id where truck_disbursment_sync_active.seasonid=$seasonid and truck_destination.close_open=1 ";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

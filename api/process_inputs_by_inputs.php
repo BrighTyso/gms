@@ -16,10 +16,11 @@ $data = json_decode(file_get_contents("php://input"));
 $data1=array();
 
 
-if (isset($data->userid) && isset($data->seasonid)) {
+if (isset($data->userid) && isset($data->seasonid) && isset($data->productid)) {
  
 $userid=$data->userid;
 $seasonid=$data->seasonid;
+$productid=$data->productid;
 $found=0;
 $growerid=0;
 $fetched_records=0;
@@ -28,7 +29,7 @@ $found_rollover=0;
 $found_working_capital=0;
 
 
-  $sql = "Select distinct loans.id as loanid,products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified,amount from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and  prices.seasonid=$seasonid and processed=0 and verified=1 order by growers.grower_num limit 5000";
+  $sql = "Select distinct loans.id as loanid,products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified,amount from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and  prices.seasonid=$seasonid and loans.productid=$productid and processed=0 and verified=1 order by growers.grower_num limit 5000";
 
   $result = $conn->query($sql);
  

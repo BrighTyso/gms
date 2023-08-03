@@ -19,7 +19,7 @@ $description=$data->description;
 //http://192.168.1.190/gms/api/get_seedbed.php
 
 if ($description!="") {
-  $sql = "select * from growers where grower_num='$description' or name='$description' or surname='$description' or area='$description' or province='$description' limit 300";
+  $sql = "select * from growers where grower_num='$description' or name='$description' or surname='$description' or area='$description' or province='$description' order by grower_num desc limit 30";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -33,7 +33,7 @@ $result = $conn->query($sql);
  }
 }else{
 
-  $sql = "select * from growers limit 300";
+  $sql = "select * from growers order by id desc limit 30";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
