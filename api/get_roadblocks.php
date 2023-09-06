@@ -11,18 +11,19 @@ require_once("conn.php");
 
 $data = json_decode(file_get_contents("php://input"));
 
-$description=$data->description;
+$userid=$data->userid;
 $seasonid=$data->seasonid;
-$startDate=$data->startDate;
-$endDate=$data->endDate;
+$created_at=$data->created_at;
+//$startDate=$data->startDate;
+//$endDate=$data->endDate;
 
 $data1=array();
 // get grower locations
 
-if ($description!="" && $seasonid!="") {
+if ($userid!="" && $seasonid!="") {
 	
 
-$sql = "Select road_blocks.created_at,latitude,longitude,time,username from road_blocks join users on users.id=road_blocks.userid where  users.username='$description' and road_blocks.created_at between '$startDate' and '$endDate' ORDER BY road_blocks.created_at,road_blocks.time,road_blocks.id";
+$sql = "Select road_blocks.created_at,latitude,longitude,time,username from road_blocks join users on users.id=road_blocks.userid where  users.id=$userid and road_blocks.created_at='$created_at' ORDER BY road_blocks.created_at,road_blocks.time,road_blocks.id";
 
 $result = $conn->query($sql);
  
@@ -38,9 +39,9 @@ $result = $conn->query($sql);
  }
 
 
-}else if ($description=="" ){
+}else if ($userid=="" ){
 	// get alll
-	$sql = "Select road_blocks.created_at,latitude,longitude,time,username from road_blocks join users on users.id=road_blocks.userid where road_blocks.created_at between '$startDate' and '$endDate' ORDER BY road_blocks.created_at,road_blocks.time,road_blocks.id";
+	$sql = "Select road_blocks.created_at,latitude,longitude,time,username from road_blocks join users on users.id=road_blocks.userid where  road_blocks.created_at='$created_at' ORDER BY road_blocks.created_at,road_blocks.time,road_blocks.id";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

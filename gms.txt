@@ -7,7 +7,7 @@ notes varchar(100) not null
 
 create table if not exists company_name(
 id integer not null,
-active integer not null,
+active integer not null default 1,
 company_name varchar(100) not null
 );
 
@@ -2808,7 +2808,235 @@ foreign key(disbursement_trucksid) references truck_destination(id)
 );
 
 
+create table if not exists balancing_side(
+id integer primary key auto_increment,
+description varchar(100) unique not null,
+datetime TIMESTAMP not null
+);
 
+
+create table if not exists main_accounts(
+id integer primary key auto_increment,
+description varchar(100) unique not null,
+datetime TIMESTAMP not null
+);
+
+
+
+create table if not exists main_account_balancing_side(
+id integer primary key auto_increment,
+main_accountid integer not null,
+balancing_sideid integer not null,
+datetime TIMESTAMP not null,
+foreign key(main_accountid) references main_accounts(id),
+foreign key(balancing_sideid) references balancing_side(id)
+);
+
+
+
+
+create table if not exists sub_accounts(
+id integer primary key auto_increment,
+description varchar(100) not null,
+main_accountid integer not null,
+datetime TIMESTAMP not null,
+foreign key(main_accountid) references main_accounts(id)
+);
+
+
+
+
+create table if not exists assets(
+id integer primary key auto_increment,
+userid integer not null,
+name varchar(100) not null,
+serial_number varchar(100) not null,
+location varchar(100) not null,
+description varchar(100) not null,
+active integer not null default 1,
+sub_accountid integer not null,
+datetime TIMESTAMP not null,
+foreign key(sub_accountid) references sub_accounts(id),
+foreign key(userid) references users(id)
+);
+
+
+create table if not exists assets_purchase_price(
+id integer primary key auto_increment,
+userid integer not null,
+assetid integer not null,
+currencyid integer not null,
+sub_accountid integer not null,
+payment_typeid integer not null,
+amount double(100,2) not null,
+receipt_num varchar(100) not null,
+description varchar(100) not null,
+transaction_at varchar(100) not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(assetid) references assets(id),
+foreign key(currencyid) references currency(id),
+foreign key(sub_accountid) references sub_accounts(id),
+foreign key(payment_typeid) references sub_accounts(id),
+foreign key(userid) references users(id)
+);
+
+
+create table if not exists assets_value_movement(
+id integer primary key auto_increment,
+userid integer not null,
+assetid integer not null,
+old_value double(100,2) not null default 0,
+new_value double(100,2) not null default 0,
+description varchar(100) not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(assetid) references assets(id),
+foreign key(userid) references users(id)
+);
+
+
+
+
+
+create table if not exists expenses(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+currencyid integer not null,
+sub_accountid integer not null,
+payment_typeid integer not null,
+amount double(100,2) not null,
+receipt_num varchar(100) not null,
+description varchar(100) not null,
+transaction_at varchar(100) not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(currencyid) references currency(id),
+foreign key(sub_accountid) references sub_accounts(id),
+foreign key(payment_typeid) references sub_accounts(id),
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+
+
+create table if not exists revenue(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+currencyid integer not null,
+sub_accountid integer not null,
+payment_typeid integer not null,
+amount double(100,2) not null,
+receipt_num varchar(100) not null,
+description varchar(100) not null,
+transaction_at varchar(100) not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(currencyid) references currency(id),
+foreign key(sub_accountid) references sub_accounts(id),
+foreign key(payment_typeid) references sub_accounts(id),
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists assets_debit(
+id integer primary key auto_increment,
+userid integer not null,
+assets_purchase_priceid integer not null,
+sub_accountid integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(assets_purchase_priceid) references assets_purchase_price(id),
+foreign key(sub_accountid) references sub_accounts(id),
+foreign key(userid) references users(id)
+);
+
+
+create table if not exists assets_credit(
+id integer primary key auto_increment,
+userid integer not null,
+assets_purchase_priceid integer not null,
+sub_accountid integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(assets_purchase_priceid) references assets_purchase_price(id),
+foreign key(sub_accountid) references sub_accounts(id),
+foreign key(userid) references users(id)
+);
+
+
+
+
+create table if not exists revenue_debit(
+id integer primary key auto_increment,
+userid integer not null,
+revenueid integer not null,
+sub_accountid integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(revenueid) references revenue(id),
+foreign key(sub_accountid) references sub_accounts(id),
+foreign key(userid) references users(id)
+);
+
+
+create table if not exists revenue_credit(
+id integer primary key auto_increment,
+userid integer not null,
+revenueid integer not null,
+sub_accountid integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(revenueid) references revenue(id),
+foreign key(sub_accountid) references sub_accounts(id),
+foreign key(userid) references users(id)
+);
+
+
+create table if not exists expenses_debit(
+id integer primary key auto_increment,
+userid integer not null,
+expensesid integer not null,
+sub_accountid integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(expensesid) references expenses(id),
+foreign key(sub_accountid) references sub_accounts(id),
+foreign key(userid) references users(id)
+);
+
+
+create table if not exists expenses_credit(
+id integer primary key auto_increment,
+userid integer not null,
+expensesid integer not null,
+sub_accountid integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(expensesid) references expenses(id),
+foreign key(sub_accountid) references sub_accounts(id),
+foreign key(userid) references users(id)
+);
+
+
+
+create table if not exists exempt_user(
+id integer primary key auto_increment,
+userid integer not null,
+fieldOfficerid integer not null,
+used integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(fieldOfficerid) references users(id)
+);
 
 
 
@@ -2816,7 +3044,7 @@ foreign key(disbursement_trucksid) references truck_destination(id)
 insert into machine_learning_product_variables(description) value("Basal");
 insert into machine_learning_product_variables(description) value("AN");
 insert into machine_learning_product_variables(description) value("Potassium");
-
+insert into machine_learning_product_variables(description) value("Seed");
 
 insert into assessment_type(name) value("Qualitative");
 insert into assessment_type(name) value("Quantitative");
@@ -2885,11 +3113,86 @@ insert into selling_points(name) value("Mvurwi");
 insert into selling_points(name) value("Marondera");
 insert into selling_points(name) value("Bindura");
 
-
-
 insert into currency(description) value("USD");
 insert into currency(description) value("RANDS");
 insert into currency(description) value("ZWL");
 
 insert into loan_deduction_point(point) value(0);
+
+
+insert into balancing_side(description) value("Debit");
+insert into balancing_side(description) value("Credit");
+
+
+insert into main_accounts(description) value("Assets");
+insert into main_accounts(description) value("Liabilities");
+insert into main_accounts(description) value("Stockholder's Equity");
+insert into main_accounts(description) value("Revenue");
+insert into main_accounts(description) value("Cost Of Merchandise Sold");
+insert into main_accounts(description) value("Expenses");
+
+
+insert into main_account_balancing_side(main_accountid,balancing_sideid)value(1,1);
+insert into main_account_balancing_side(main_accountid,balancing_sideid)value(2,2);
+insert into main_account_balancing_side(main_accountid,balancing_sideid)value(3,2);
+insert into main_account_balancing_side(main_accountid,balancing_sideid)value(4,2);
+insert into main_account_balancing_side(main_accountid,balancing_sideid)value(5,1);
+insert into main_account_balancing_side(main_accountid,balancing_sideid)value(6,1);
+
+
+insert into sub_accounts(description,main_accountid) value("Cash In Bank",1);
+insert into sub_accounts(description,main_accountid) value("Cash In Hand",1);
+insert into sub_accounts(description,main_accountid) value("Accounts Receivable",1);
+insert into sub_accounts(description,main_accountid) value("Merchandise Inventory",1);
+insert into sub_accounts(description,main_accountid) value("Office Supplies",1);
+insert into sub_accounts(description,main_accountid) value("Store Supplies",1);
+insert into sub_accounts(description,main_accountid) value("Prepaid Insurance",1);
+insert into sub_accounts(description,main_accountid) value("Store Equipment",1);
+insert into sub_accounts(description,main_accountid) value("Office Equipment",1);
+insert into sub_accounts(description,main_accountid) value("Computer Equipment",1);
+insert into sub_accounts(description,main_accountid) value("Other",1);
+
+
+insert into sub_accounts(description,main_accountid) value("Accounts Payable",2);
+insert into sub_accounts(description,main_accountid) value("Income Tax Payable",2);
+insert into sub_accounts(description,main_accountid) value("Sales Tax Payable",2);
+insert into sub_accounts(description,main_accountid) value("Other",2);
+
+
+insert into sub_accounts(description,main_accountid) value("Capital Stock",3);
+insert into sub_accounts(description,main_accountid) value("Retained Earnings",3);
+insert into sub_accounts(description,main_accountid) value("Income Summary",3);
+insert into sub_accounts(description,main_accountid) value("Other",3);
+
+
+insert into sub_accounts(description,main_accountid) value("Sales",4);
+insert into sub_accounts(description,main_accountid) value("Sales Returns And Allowances",4);
+insert into sub_accounts(description,main_accountid) value("Sales Discounts",4);
+insert into sub_accounts(description,main_accountid) value("Commission Receivable",4);
+insert into sub_accounts(description,main_accountid) value("Other",4);
+
+
+
+insert into sub_accounts(description,main_accountid) value("Purchases",5);
+insert into sub_accounts(description,main_accountid) value("Purchases Returns And Allowances",5);
+insert into sub_accounts(description,main_accountid) value("Purchases Discounts",5);
+insert into sub_accounts(description,main_accountid) value("Transport In",5);
+insert into sub_accounts(description,main_accountid) value("Other",5);
+
+
+
+insert into sub_accounts(description,main_accountid) value("Bank Card Fees Expenses",6);
+insert into sub_accounts(description,main_accountid) value("Insurance Expenses",6);
+insert into sub_accounts(description,main_accountid) value("Miscellaneous Expenses",6);
+insert into sub_accounts(description,main_accountid) value("Office Supplies Expenses",6);
+insert into sub_accounts(description,main_accountid) value("Rent Expenses",6);
+insert into sub_accounts(description,main_accountid) value("Salaries Expenses",6);
+insert into sub_accounts(description,main_accountid) value("Store Supplies Expenses ",6);
+insert into sub_accounts(description,main_accountid) value("Utilities Expenses",6);
+insert into sub_accounts(description,main_accountid) value("Income Tax Expenses",6);
+insert into sub_accounts(description,main_accountid) value("Advertising Expenses",6);
+insert into sub_accounts(description,main_accountid) value("Maintenance Expenses",6);
+insert into sub_accounts(description,main_accountid) value("Depreciation expense",6);
+insert into sub_accounts(description,main_accountid) value("Commission Payable",6);
+insert into sub_accounts(description,main_accountid) value("Other",6);
 

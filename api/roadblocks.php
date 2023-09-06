@@ -10,37 +10,73 @@ $time="";
 $created_at="";
 $sqliteid=0;
 
+
+
 $data=array();
 
 
 //http://192.168.1.190/gms/api/roadblocks.php?userid=1&latitude=12.3444&longitude1.89000=&seasonid=1&time=12:30&created_at=2022-06-12
 
-if ( isset($_GET['userid'])  && isset($_GET['latitude'])  && isset($_GET['longitude'])  && isset($_GET['seasonid']) && isset($_GET['time']) && isset($_GET['created_at']) && isset($_GET['sqliteid'])){
+if (isset($_POST['data']) ){
+
+$data_received=$_POST['data'];
 
 
-$userid=validate($_GET['userid']);
-//$growerid=validate($_POST['growerid']);
-$latitude=validate($_GET['latitude']);
-$longitude=validate($_GET['longitude']);
-$time=validate($_GET['time']);
-$seasonid=validate($_GET['seasonid']);
-$created_at=validate($_GET['created_at']);
-$sqliteid=validate($_GET["sqliteid"]);
+$values=json_decode($data_received,true);
 
 
-$sql = "INSERT INTO road_blocks(userid,latitude,longitude,seasonid,time,created_at) VALUES ($userid,'$latitude','$longitude',$seasonid,'$time','$created_at')";
+//echo json_encode($values);
 
 
-   //$gr = "select * from login";
-   if ($conn->query($sql)===TRUE) {
+for ($row = 0; $row < count($values); $row++) {
+
+  $found=0;
+
+  $userid=validate($values[$row]['userid']);
+  $latitude=validate($values[$row]['latitude']);
+  $longitude=validate($values[$row]['longitude']);
+  $time=validate($values[$row]['time']);
+  $seasonid=validate($values[$row]['seasonid']);
+  $created_at=validate($values[$row]['created_at']);
+  $sqliteid=validate($values[$row]["sqliteid"]);
+
+
+    $sql = "Select distinct * from road_blocks where userid=$userid and latitude='$latitude' and longitude='$longitude' and seasonid=$seasonid and time='$time' and created_at='$created_at' ";
+  $result = $conn->query($sql);
    
-     //$last_id = $conn->insert_id;
+   if ($result->num_rows > 0) {
+     // output data of each row
+     while($row1 = $result->fetch_assoc()) {
+      // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-    $temp=array("id"=>$sqliteid);
-    array_push($data,$temp);
+      $found=1;
+      
+     }
+   }
+
+   if ($found==0 && $userid!=0) {
+
+
+       $sql1 = "INSERT INTO road_blocks(userid,latitude,longitude,seasonid,time,created_at) VALUES ($userid,'$latitude','$longitude',$seasonid,'$time','$created_at')";
+
+
+     //$gr = "select * from login";
+     if ($conn->query($sql1)===TRUE) {
+     
+       //$last_id = $conn->insert_id;
+
+      $temp=array("id"=>$sqliteid);
+      array_push($data,$temp);
+
+
+     }
 
 
    }
+
+  
+}
+
 
 
 
