@@ -2911,6 +2911,8 @@ receipt_num varchar(100) not null,
 description varchar(100) not null,
 transaction_at varchar(100) not null,
 created_at varchar(100) not null,
+legder integer not null default 0,
+journal integer not null default 0,
 datetime TIMESTAMP not null,
 foreign key(currencyid) references currency(id),
 foreign key(sub_accountid) references sub_accounts(id),
@@ -2936,6 +2938,8 @@ receipt_num varchar(100) not null,
 description varchar(100) not null,
 transaction_at varchar(100) not null,
 created_at varchar(100) not null,
+legder integer not null default 0,
+journal integer not null default 0,
 datetime TIMESTAMP not null,
 foreign key(currencyid) references currency(id),
 foreign key(sub_accountid) references sub_accounts(id),
@@ -3040,6 +3044,233 @@ foreign key(fieldOfficerid) references users(id)
 
 
 
+create table if not exists fixed_assets(
+id integer primary key auto_increment,
+userid integer not null,
+sub_accountid integer not null,
+foreign key(userid) references users(id),
+foreign key(sub_accountid) references sub_accounts(id)
+);
+
+
+
+
+create table if not exists promissory_note_type(
+id integer primary key auto_increment,
+name varchar(100) not null
+);
+
+
+
+
+create table if not exists creditors_debtors(
+id integer primary key auto_increment,
+userid integer not null,
+name varchar(100) not null,
+surname varchar(100) not null,
+company_name varchar(100) not null,
+location varchar(100) not null,
+phone varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id)
+);
+
+
+
+
+create table if not exists notes_payable(
+id integer primary key auto_increment,
+userid integer not null,
+creditors_debtorid integer not null,
+currencyid integer not null,
+sub_accountid integer not null,
+payment_typeid integer not null,
+receipt_num varchar(100) not null,
+principal_value double(100,2) not null,
+face_value double(100,2) not null,
+interest double(100,2) not null default 0,
+time_months integer not null,
+promissory_note_typeid integer not null,
+due_date varchar(100) not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(currencyid) references currency(id),
+foreign key(sub_accountid) references sub_accounts(id),
+foreign key(payment_typeid) references sub_accounts(id),
+foreign key(creditors_debtorid) references creditors_debtors(id),
+foreign key(promissory_note_typeid) references promissory_note_type(id)
+);
+
+
+
+
+
+
+create table if not exists notes_receivable(
+id integer primary key auto_increment,
+userid integer not null,
+creditors_debtorid integer not null,
+currencyid integer not null,
+sub_accountid integer not null,
+payment_typeid integer not null,
+receipt_num varchar(100) not null,
+principal_value double(100,2) not null,
+face_value double(100,2) not null,
+interest double(100,2) not null default 0,
+time_months integer not null,
+promissory_note_typeid integer not null,
+due_date varchar(100) not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null, 
+foreign key(userid) references users(id),
+foreign key(currencyid) references currency(id),
+foreign key(sub_accountid) references sub_accounts(id),
+foreign key(payment_typeid) references sub_accounts(id),
+foreign key(creditors_debtorid) references creditors_debtors(id),
+foreign key(promissory_note_typeid) references promissory_note_type(id)
+);
+
+
+
+
+create table if not exists notes_receivable_debit(
+id integer primary key auto_increment,
+userid integer not null,
+notes_receivableid integer not null,
+sub_accountid integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(notes_receivableid) references notes_receivable(id),
+foreign key(sub_accountid) references sub_accounts(id),
+foreign key(userid) references users(id)
+);
+
+
+
+
+create table if not exists notes_receivable_credit(
+id integer primary key auto_increment,
+userid integer not null,
+notes_receivableid integer not null,
+sub_accountid integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(notes_receivableid) references notes_receivable(id),
+foreign key(sub_accountid) references sub_accounts(id),
+foreign key(userid) references users(id)
+);
+
+
+
+
+
+create table if not exists notes_payable_debit(
+id integer primary key auto_increment,
+userid integer not null,
+notes_payableid integer not null,
+sub_accountid integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(notes_payableid) references notes_payable(id),
+foreign key(sub_accountid) references sub_accounts(id),
+foreign key(userid) references users(id)
+);
+
+
+
+
+create table if not exists notes_payable_credit(
+id integer primary key auto_increment,
+userid integer not null,
+notes_payableid integer not null,
+sub_accountid integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(notes_payableid) references notes_payable(id),
+foreign key(sub_accountid) references sub_accounts(id),
+foreign key(userid) references users(id)
+);
+
+
+
+create table if not exists create_general_legder_accounts(
+id integer primary key auto_increment,
+userid integer not null,
+sub_accountid integer not null,
+account_name varchar(100) not null,
+explanation varchar(100) not null,
+seasonid integer not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(sub_accountid) references sub_accounts(id)
+);
+
+
+create table if not exists post_to_general_legder(
+id integer primary key auto_increment,
+userid integer not null,
+create_general_legder_accountid integer not null,
+post_ref integer not null,
+explanation varchar(100),
+debit_value double(100,2) not null default 0,
+credit_value double(100,2) not null default 0,
+balance_debit double(100,2) not null default 0,
+balance_credit double(100,2) not null default 0,
+balanced integer not null default 0,
+transaction_date varchar(100) not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(create_general_legder_accountid) references create_general_legder_accounts(id)
+);
+
+
+
+create table if not exists balance_ledger(
+id integer primary key auto_increment,
+userid integer not null,
+create_general_legder_accountid integer not null,
+amount double(100,2) not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(create_general_legder_accountid) references create_general_legder_accounts(id)
+);
+
+
+
+create table if not exists number_of_bales_collected(
+id integer primary key auto_increment,
+userid integer not null,
+growerid integer not null,
+seasonid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+quantity integer not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+create table if not exists fuel_allocation(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+fuel_userid integer not null,
+quantity double(100,2) not null default 0,
+allocation_date varchar(100) not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(fuel_userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
 
 insert into machine_learning_product_variables(description) value("Basal");
 insert into machine_learning_product_variables(description) value("AN");
@@ -3120,6 +3351,7 @@ insert into currency(description) value("ZWL");
 insert into loan_deduction_point(point) value(0);
 
 
+
 insert into balancing_side(description) value("Debit");
 insert into balancing_side(description) value("Credit");
 
@@ -3169,6 +3401,7 @@ insert into sub_accounts(description,main_accountid) value("Sales",4);
 insert into sub_accounts(description,main_accountid) value("Sales Returns And Allowances",4);
 insert into sub_accounts(description,main_accountid) value("Sales Discounts",4);
 insert into sub_accounts(description,main_accountid) value("Commission Receivable",4);
+insert into sub_accounts(description,main_accountid) value("Interest Income",4);
 insert into sub_accounts(description,main_accountid) value("Other",4);
 
 
@@ -3194,5 +3427,6 @@ insert into sub_accounts(description,main_accountid) value("Advertising Expenses
 insert into sub_accounts(description,main_accountid) value("Maintenance Expenses",6);
 insert into sub_accounts(description,main_accountid) value("Depreciation expense",6);
 insert into sub_accounts(description,main_accountid) value("Commission Payable",6);
+insert into sub_accounts(description,main_accountid) value("Interest Expense",6);
 insert into sub_accounts(description,main_accountid) value("Other",6);
 

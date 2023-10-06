@@ -57,7 +57,7 @@ $result = $conn->query($sql);
 }else{
 
 
-$sql = "Select distinct amount,receipt_num,expenses.description as expense_description,transaction_at,created_at,sub_accounts.description,expenses.id,currency.description as currency_name from expenses join sub_accounts on expenses.sub_accountid=sub_accounts.id join currency on currency.id=expenses.currencyid where expenses.description='$description'  ";
+$sql = "Select distinct amount,receipt_num,expenses.description as expense_description,transaction_at,created_at,sub_accounts.description,expenses.id,currency.description as currency_name from expenses join sub_accounts on expenses.sub_accountid=sub_accounts.id join currency on currency.id=expenses.currencyid where expenses.description='$description'";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

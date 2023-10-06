@@ -8,19 +8,20 @@ require_once("conn.php");
 require "validate.php";
 
 
-
 $data = json_decode(file_get_contents("php://input"));
 
 
 $data1=array();
 
-
-if (isset($data->userid)) {
- 
+#$description=$data->description;
+$seasonid=$data->seasonid;
 $userid=$data->userid;
+$start_date=substr($data->startDate,0,-8);
+$end_date=substr($data->endDate,0,-8);
 
 
-$sql = "select name,surname,username,id from users where active=1 ";
+
+$sql = "Select distinct * from distance where (created_at between '$start_date' and '$end_date') and seasonid=$seasonid and userid=$userid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -28,28 +29,15 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-    $temp=array("id"=>$row["id"],"name"=>$row["name"],"surname"=>$row["surname"],"username"=>$row["username"]);
+     $temp=array("id"=>$row["id"],"distance"=>$row["distance"]);
     array_push($data1,$temp);
     
    }
  }
 
-}
 
 
 
-
-
-
- echo json_encode($data1);
-
-
-
-
+ echo json_encode($data1); 
 
 ?>
-
-
-
-
-

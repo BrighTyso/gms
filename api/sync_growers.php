@@ -82,11 +82,24 @@ if ($response==0) {
 	   //$sql = "select * from login";
 	   if ($conn->query($lat_long_sql)===TRUE) {
 	   
-	    // $last_id = $conn->insert_id;
+	    $last_id = $conn->insert_id;
+
+	     //$sqlitegrowerid=0;
+
+
+       $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$lat','$long','$created_at','Home Location');";
+       //$gr = "select * from login";
+       if ($conn->query($insert_sql)===TRUE) {
+       
+        // $last_id = $conn->insert_id;
+
+            $temp=array("growerid"=>$sqlitegrowerid,"lat_longid"=>$lat_longid);
+            array_push($data,$temp);
+
+       }// $last_id = $conn->insert_id;
 	     //echo $last_id;
 
-	   	    $temp=array("growerid"=>$sqlitegrowerid,"lat_longid"=>$lat_longid);
-           array_push($data,$temp);
+	   	    
 
 	   }
 
@@ -125,8 +138,20 @@ if ($response==0) {
 
 	     //$sqlitegrowerid=0;
 
-	     $temp=array("growerid"=>$sqlitegrowerid,"lat_longid"=>$lat_longid);
-        array_push($data,$temp);
+	     //$sqlitegrowerid=0;
+
+
+       $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$lat','$long','$created_at','Home Location');";
+       //$gr = "select * from login";
+       if ($conn->query($insert_sql)===TRUE) {
+       
+        // $last_id = $conn->insert_id;
+
+            $temp=array("growerid"=>$sqlitegrowerid,"lat_longid"=>$lat_longid);
+            array_push($data,$temp);
+
+       }// $last_id = $conn->insert_id;
+	     //echo $last_id;
 
 	   }
 

@@ -23,7 +23,7 @@ $data1=array();
 if ($userid!="" && $seasonid!="") {
 	
 
-$sql = "Select road_blocks.created_at,latitude,longitude,time,username from road_blocks join users on users.id=road_blocks.userid where  users.id=$userid and road_blocks.created_at='$created_at' ORDER BY road_blocks.created_at,road_blocks.time,road_blocks.id";
+$sql = "Select road_blocks.created_at,latitude,longitude,time,username from road_blocks join users on users.id=road_blocks.userid where  users.id=$userid and road_blocks.created_at='$created_at' ORDER BY road_blocks.created_at,road_blocks.id,road_blocks.time";
 
 $result = $conn->query($sql);
  
@@ -41,7 +41,7 @@ $result = $conn->query($sql);
 
 }else if ($userid=="" ){
 	// get alll
-	$sql = "Select road_blocks.created_at,latitude,longitude,time,username from road_blocks join users on users.id=road_blocks.userid where  road_blocks.created_at='$created_at' ORDER BY road_blocks.created_at,road_blocks.time,road_blocks.id";
+	$sql = "Select road_blocks.created_at,latitude,longitude,time,username from road_blocks join users on users.id=road_blocks.userid where  road_blocks.created_at='$created_at' ORDER BY road_blocks.created_at,road_blocks.id,road_blocks.time";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
