@@ -945,3 +945,52 @@ created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
 );
+
+
+
+create table if not exists grower_new_image(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+image_location varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists grower_farm_image(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+image_location varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+create table if not exists grower_signatures(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+image_location varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);

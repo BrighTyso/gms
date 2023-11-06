@@ -109,7 +109,7 @@ $result = $conn->query($sql);
              if ($conn->query($user_sql1)===TRUE) {
 
 
-              $barcodes='images/'.$code.'.png';
+              $barcodes='../images/'.$code.'.png';
 
 
               $color=[0,0,0];

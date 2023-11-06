@@ -25,6 +25,7 @@ if (isset($data->loanid) && isset($data->quantity) && isset($data->userid) && is
   $loan_payment_found=0;
   $loan_found=0;
   $processed=0;
+  $created_at=date("Y-m-d");
 
 
  $sql = "Select truck_to_grower.id,disbursement_trucksid,processed from truck_to_grower join loans on loans.id=truck_to_grower.loanid where loanid=$loanid limit 1";
@@ -40,8 +41,6 @@ if (isset($data->loanid) && isset($data->quantity) && isset($data->userid) && is
         $disbursement_trucksid=$row["disbursement_trucksid"];
         $processed=$row["processed"];
 
-        
-        
         
        }
 
@@ -102,22 +101,157 @@ if ($truck_to_growerid>0 && $disbursement_trucksid>0 && $loanid>0 && $loan_found
 
 
 
-        if($truck_to_growerid==0){
 
-          $temp=array("response"=>"Loan Not Found");
-          array_push($response,$temp);
+          $store_to_grower=0;
+          $storeitemid=0;
+          $store_quantity=0;
+          $storeid=0;
+          $processed=0;
+          $loan_quantity=0;
 
-        }elseif($disbursement_trucksid==0){
 
-          $temp=array("response"=>"Disbursment Truck Not Found");
-          array_push($response,$temp);
+    $sql = "Select * from arc_product_grower join arc_products on arc_product_grower.arc_productid=arc_products.id  join loans on loans.id=arc_product_grower.loanid where arc_product_grower.loanid=$loanid";
+      $result = $conn->query($sql);
+       
+       if ($result->num_rows > 0) {
+         // output data of each row
+         while($row = $result->fetch_assoc()) { 
+         
+         $store_to_grower=$row["id"];
+         $storeitemid=$row["storeitemid"];
+         $processed=$row["processed"];  
+         $loan_quantity=$row["quantity"];
 
-        }elseif($processed>0){
 
-          $temp=array("response"=>"Loan Already Processed");
-          array_push($response,$temp);
+         }
 
-        }
+       }
+
+
+
+
+       $sql = "Select * from store_items  where productid=$productid and id=$storeitemid";
+      $result = $conn->query($sql);
+       
+       if ($result->num_rows > 0) {
+         // output data of each row
+         while($row = $result->fetch_assoc()) { 
+         
+         $store_quantity=$row["quantity"];
+         $storeid=$row["storeid"];
+           
+         }
+
+       }
+
+
+
+       if ($store_to_grower>0  && $processed==0) {
+  
+
+$user_sql = "delete from loan_adjustments where loanid=$loanid";
+      
+               if ($conn->query($user_sql)===TRUE) {
+
+
+        $user_sql = "delete from arc_product_grower where loanid=$loanid";
+      
+               if ($conn->query($user_sql)===TRUE) {
+
+  
+              $user_sql = "delete from loans where id=$loanid and processed=0";
+      
+               if ($conn->query($user_sql)===TRUE) {
+
+            
+                $user_sql1 = "update store_items set quantity=quantity+$loan_quantity  where id=$storeitemid and productid=$productid";
+                   //$sql = "select * from login";
+                   if ($conn->query($user_sql1)===TRUE) {
+
+
+                            $new_quantity=$store_quantity+$loan_quantity;
+
+
+                            $user_sql2 = "INSERT INTO arc_products(userid,storeitemid,old_quantity,new_quantity,created_at) VALUES ($userid,$storeitemid,$store_quantity,$new_quantity,'$created_at')";
+                                  //$sql = "select * from login";
+                               if ($conn->query($user_sql2)===TRUE) {
+
+                                $arc_products_id = $conn->insert_id;
+
+
+                                    $user_sql1 = "INSERT INTO arc_store_items(userid,storeid,productid,quantity,arc_productid,created_at,description,quantity_balance) VALUES ($userid,$storeid,$productid,$loan_quantity,$arc_products_id,'$created_at','GROWER LOAN DELETED',$loan_quantity)";
+                              
+                                    if ($conn->query($user_sql1)===TRUE) {
+
+                                        $temp=array("response"=>"success");
+                                       array_push($response,$temp);
+
+                                   }else{
+
+                                    $temp=array("response"=>$conn->error);
+                                    array_push($response,$temp);
+
+                                   }
+                               
+                              }else{
+
+                              $temp=array("response"=>$conn->error);
+                              array_push($response,$temp);
+
+                              
+                         
+
+                   }
+
+                       }else{
+
+                        $temp=array("response"=>$conn->error);
+                        array_push($response,$temp);
+
+                       }
+
+
+                   }else{
+
+
+                    $temp=array("response"=>$conn->error);
+                            array_push($response,$temp);
+                   }
+
+         }else{
+
+
+            $temp=array("response"=>$conn->error);
+                    array_push($response,$temp);
+           }
+
+
+
+     }else{
+
+
+        $temp=array("response"=>$conn->error);
+                array_push($response,$temp);
+       }
+
+
+
+        // if($truck_to_growerid==0){
+
+        //   $temp=array("response"=>"Loan Not Found");
+        //   array_push($response,$temp);
+
+        // }elseif($disbursement_trucksid==0){
+
+        //   $temp=array("response"=>"Disbursment Truck Not Found");
+        //   array_push($response,$temp);
+
+        // }elseif($processed>0){
+
+        //   $temp=array("response"=>"Loan Already Processed");
+        //   array_push($response,$temp);
+
+        // }
 
         
        
@@ -125,6 +259,12 @@ if ($truck_to_growerid>0 && $disbursement_trucksid>0 && $loanid>0 && $loan_found
 
 
 }
+
+
+
+}
+
+
 
 
 

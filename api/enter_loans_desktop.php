@@ -150,7 +150,6 @@ if ($deduction_point==0) {
                               $previous_growerid=$row["growerid"];
 
 
-
                               
                              }
                            }
@@ -166,9 +165,6 @@ if ($deduction_point==0) {
                               // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
                              $verifyLoan=1;
-
-
-
                               
                              }
                            }
@@ -215,7 +211,7 @@ if ($deduction_point==0) {
 
 
 
-  if (($productid>0  && $growerid>0 && $verifyLoan==0 && $productid>0 && $storeid>0 && $quantity_Enough>0) && ($previous_growerid==$growerid || $previous_growerid==0)) {
+  if (($productid>0  && $growerid>0 && $verifyLoan==0) && ($previous_growerid==$growerid || $previous_growerid==0)  &&  ($quantity_Enough>0)) {
 
 
     
@@ -404,9 +400,14 @@ if ($deduction_point==0) {
 
           $temp=array("response"=>"User Store Not Found");
             array_push($data1,$temp);
-        }else{
+        }elseif($verifyLoan==1){
 
           $temp=array("response"=>"Receipt already Captured");
+            array_push($data1,$temp);
+
+        }elseif($quantity_Enough==0){
+
+          $temp=array("response"=>"Out Of Stock");
             array_push($data1,$temp);
 
         }

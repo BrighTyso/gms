@@ -24,7 +24,7 @@ $data1=array();
 if (isset($data->code)){
 
 $code=$data->code;
-$barcodes='images/'.$code.'.png';
+$barcodes='../images/'.$code.'.png';
 
 
 $color=[255,255,0];
