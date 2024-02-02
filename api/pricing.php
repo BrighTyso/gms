@@ -18,6 +18,7 @@ $seasonid=0;
 $created_at="";
 $found=0;
 $processed_found=0;
+$found_product_has_items=0;
 $response=array();
 
 if (isset($data->userid) && isset($data->productid)  && isset($data->amount)  && isset($data->seasonid) && isset($data->created_at)){
@@ -44,6 +45,19 @@ $result = $conn->query($sql);
  }
 
 
+$sql = "Select * from itemized_product where  productid=$productid and seasonid=$seasonid";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+    $found_product_has_items=$row["id"];
+    
+    
+   }
+ }
 
 
  $sql = "Select * from loans where processed=1 and productid=$productid and seasonid=$seasonid limit 1";
@@ -61,7 +75,7 @@ $result = $conn->query($sql);
 
 
 
-if ($found==0) {
+if ($found==0 &&  $found_product_has_items==0) {
 
  $user_sql = "INSERT INTO prices(userid,productid,amount,seasonid,created_at) VALUES ($userid,$productid,'$amount',$seasonid,'$created_at')";
    //$sql = "select * from login";
@@ -84,7 +98,7 @@ if ($found==0) {
 }else{
 
 
-if ($processed_found==0) {
+if ($processed_found==0 &&  $found_product_has_items==0) {
   
 
 $sql = "UPDATE prices SET amount = $amount  WHERE productid=$productid and seasonid=$seasonid";

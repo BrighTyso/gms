@@ -30,6 +30,7 @@ $data1=array();
 
 
 
+
 //http://192.168.1.190/gms/api/enter_hail_strike.php?userid=1&grower_num=V123456&latitude=13.2222&longitude=3.33376&created_at=23-09-2022&percentage_strike=12333&strike_date=12333&seasonid=1&sqliteid=1
 
 if (isset($data->code) && $data->code!="" && isset($data->userid)  && isset($data->grower_number_of_balesid)  && isset($data->created_at)){

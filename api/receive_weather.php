@@ -149,7 +149,7 @@ $result = $conn->query($sql);
 
   }else if($found>0){
 
-  $temp=array("response"=>"Weather already recorded for this grower");
+  $temp=array("response"=>"Weather already recorded(".$grower_num.")");
   array_push($response,$temp);
 
   }

@@ -20,12 +20,8 @@ $data1=array();
 if (isset($_POST['barcode']) && isset($_POST['userid'])){
 
 
-
 $barcode=$_POST['barcode'];
 $userid=$_POST['userid'];
-
-
-
 
 
 if ($barcode!="") {

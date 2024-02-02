@@ -17,7 +17,9 @@ $description=$data->description;
 $seasonid=$data->seasonid;
 $startDate=substr($data->startDate,0,-8);
 $endDate=substr($data->endDate,0,-8);
-
+$hours_worked=0;
+$total_growers=0;
+$grower_visits=0;
 
 
 if ($description=="All" || $description=="all") {
@@ -31,8 +33,84 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-     $temp=array("longitude"=>$row["longitude"],"latitude"=>$row["latitude"],"userid"=>$row["userid"],"seasonid"=>$row["seasonid"],"time"=>$row["time"],"eod"=>$row["eod"],"created_at"=>$row["created_at"],"eod_created_at"=>$row["eod_created_at"],"username"=>$row["username"],"time"=>$row["time"]);
+        $userid=$row['userid'];
+        $created_at=$row['created_at'];
+        $distance=0;
+        $hours_worked=0;
+        $total_growers=0;
+        $grower_visits=0;
+
+
+
+
+        $sql1 = "Select distinct growerid from visits where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result1 = $conn->query($sql1);
+       
+      $visited_growers=$result1->num_rows;
+
+
+      $sql2 = "Select distinct * from distance where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $distance+=$row2['distance'];
+
+          
+
+         }
+      }
+
+
+
+
+      $sql2 = "Select distinct growerid from  visits where userid=$userid and seasonid=$seasonid ";
+
+      $result2 = $conn->query($sql2);
+
+      $total_growers=$result2->num_rows;
+
+
+      $sql2 = "Select distinct growerid,created_at from  visits where  userid=$userid and seasonid=$seasonid ";
+
+      $result1 = $conn->query($sql2);
+
+      $grower_visits=$result1->num_rows;
+
+
+
+
+      $sql2 = "Select distinct * from hours_worked where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $hours_worked+=$row2['hours'];
+
+          
+
+         }
+      }
+
+
+
+      $kms=$distance/1000;
+
+
+
+
+     $temp=array("longitude"=>$row["longitude"],"latitude"=>$row["latitude"],"userid"=>$row["userid"],"seasonid"=>$row["seasonid"],"time"=>$row["time"],"eod"=>$row["eod"],"created_at"=>$row["created_at"],"eod_created_at"=>$row["eod_created_at"],"username"=>$row["username"],"time"=>$row["time"]
+,"distance"=>$kms,"hours"=>$hours_worked,"visits"=>$visited_growers,"total_growers"=>$total_growers,"total_visits"=>$grower_visits);
     array_push($data1,$temp);
+   
    
     
    }
@@ -51,8 +129,85 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-     $temp=array("longitude"=>$row["longitude"],"latitude"=>$row["latitude"],"userid"=>$row["userid"],"seasonid"=>$row["seasonid"],"time"=>$row["time"],"eod"=>$row["eod"],"created_at"=>$row["created_at"],"eod_created_at"=>$row["eod_created_at"],"username"=>$row["username"],"time"=>$row["time"]);
+        $userid=$row['userid'];
+        $created_at=$row['created_at'];
+        $distance=0;
+        $hours_worked=0;
+        $total_growers=0;
+        $grower_visits=0;
+
+
+
+
+        $sql1 = "Select distinct growerid from visits where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result1 = $conn->query($sql1);
+       
+      $visited_growers=$result1->num_rows;
+
+
+      $sql2 = "Select distinct * from distance where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $distance+=$row2['distance'];
+
+          
+
+         }
+      }
+
+
+
+
+      $sql2 = "Select distinct growerid from  visits where userid=$userid and seasonid=$seasonid ";
+
+      $result2 = $conn->query($sql2);
+
+      $total_growers=$result2->num_rows;
+
+
+      $sql2 = "Select distinct growerid,created_at from  visits where  userid=$userid and seasonid=$seasonid ";
+
+      $result1 = $conn->query($sql2);
+
+      $grower_visits=$result1->num_rows;
+
+
+
+
+      $sql2 = "Select distinct * from hours_worked where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $hours_worked+=$row2['hours'];
+
+          
+
+         }
+      }
+
+
+
+      $kms=$distance/1000;
+
+
+
+
+     $temp=array("longitude"=>$row["longitude"],"latitude"=>$row["latitude"],"userid"=>$row["userid"],"seasonid"=>$row["seasonid"],"time"=>$row["time"],"eod"=>$row["eod"],"created_at"=>$row["created_at"],"eod_created_at"=>$row["eod_created_at"],"username"=>$row["username"],"time"=>$row["time"]
+,"distance"=>$kms,"hours"=>$hours_worked,"visits"=>$visited_growers,"total_growers"=>$total_growers,"total_visits"=>$grower_visits);
     array_push($data1,$temp);
+   
+   
    
     
    }

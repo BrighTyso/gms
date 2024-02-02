@@ -2158,7 +2158,6 @@ foreign key(seasonid) references seasons(id)
 
 
 
-
 create table if not exists bale_tags(
 id integer primary key auto_increment,
 userid integer not null,
@@ -3320,6 +3319,291 @@ foreign key(seasonid) references seasons(id)
 );
 
 
+
+
+create table if not exists grower_id_image(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+image_location varchar(100) not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+create table if not exists hours_worked(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+hours double(100,2) not null default 0,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists product_items(
+id integer primary key auto_increment,
+userid integer not null,
+description varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id)
+);
+
+
+
+create table if not exists itemized_product(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+productid integer not null,
+product_itemid integer not null,
+quantity integer not null ,
+price double(100,2) not null,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(productid) references products(id),
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(product_itemid) references product_items(id)
+);
+
+
+
+
+create table if not exists assign_bale_tags(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+bale_tag varchar(100) not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+create table if not exists bale_collector(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+name varchar(100) not null,
+surname varchar(100) not null,
+id_num varchar(100) not null,
+transporter_number varchar(100) not null,
+number_plate varchar(100) not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists bale_collector_delivery_note(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+bale_collectorid integer not null,
+latitude varchar(100) not nll,
+longitude varchar(100) not null,
+created_at varchar(100) not null,
+open_close integer not null default 0,
+sync integer not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(bale_collectorid) references bale_collector(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists collector_id_num(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+bale_collector_delivery_noteid integer not null,
+image_location varchar(100) not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(bale_collector_delivery_noteid) references bale_collector_delivery_note(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+create table if not exists collector_signature(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+bale_collector_delivery_noteid integer not null,
+image_location varchar(100) not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(bale_collector_delivery_noteid) references bale_collector_delivery_note(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+create table if not exists bales_collected(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+bale_collector_delivery_noteid integer not null,
+growerid integer not null,
+bale_tag varchar(100) not null,
+latitude varchar(100) not nll,
+longitude varchar(100) not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(bale_collector_delivery_noteid) references bale_collector_delivery_note(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+create table if not exists grower_bale_signature(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+bale_collector_delivery_noteid integer not null,
+growerid integer not null,
+image_location varchar(100) not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(bale_collector_delivery_noteid) references bale_collector_delivery_note(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+
+
+
+
+create table if not exists bales_received(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+bale_collector_delivery_noteid integer not null,
+bale_tag varchar(100) not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(bale_collector_delivery_noteid) references bale_collector_delivery_note(id)
+);
+
+
+
+
+create table if not exists tickets(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+image_location varchar(100) not null,
+description varchar(300) not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+create table if not exists field_officer_task(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+task_url varchar(100) not null,
+description varchar(100) not null,
+duration_days integer not null,
+created_at varchar(100) not null,
+end_at varchar(100) not null,
+sync integer not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+
+
+
+
+
+create table if not exists task_viewer(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+task_url varchar(100) not null,
+duration_days integer not null,
+created_by_id integer not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(created_by_id) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+
+
+create table if not exists task_grower_data(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+task_url varchar(100) not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+created_at varchar(100) not null,
+time_created varchar(100) not null,
+sync integer not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
 insert into machine_learning_product_variables(description) value("Basal");
 insert into machine_learning_product_variables(description) value("AN");
 insert into machine_learning_product_variables(description) value("Potassium");
@@ -3334,7 +3618,7 @@ insert into rights(description,notes) value("System administrator","System admin
 insert into rights(description,notes) value("I.T Assistant","I.T Assistant2");
 insert into rights(description,notes) value("Accountant","Accountant3");
 insert into rights(description,notes) value("Account Clerk","Account Clerk4");
-insert into rights(description,notes) value("Hr Admin","Account Clerk5");
+insert into rights(description,notes) value("Hr Admin","Hr Admin5");
 insert into rights(description,notes) value("Hr Assistant","Hr Assistant6");
 insert into rights(description,notes) value("Area Manager","Area Manager7");
 insert into rights(description,notes) value("Field Officer","Field Officer8");

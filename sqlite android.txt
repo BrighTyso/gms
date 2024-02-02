@@ -994,3 +994,217 @@ foreign key(userid) references users(id),
 foreign key(growerid) references growers(id),
 foreign key(seasonid) references seasons(id)
 );
+
+
+
+
+create table if not exists grower_id_image(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+image_location varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists hours_worked(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+hours doubl(100,2) not null default 0,
+created_at varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists assign_bale_tags(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+bale_tag varchar(100) not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+create table if not exists bale_collector(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+name varchar(100) not null,
+surname varchar(100) not null,
+id_num varchar(100) not null,
+transporter_number varchar(100) not null,
+number_plate varchar(100) not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists bale_collector_delivery_note(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+bale_collectorid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+created_at varchar(100) not null,
+open_close integer not null default 0,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(bale_collectorid) references bale_collector(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+
+create table if not exists collector_id_num(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+bale_collector_delivery_noteid integer not null,
+image_location varchar(100) not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(bale_collector_delivery_noteid) references bale_collector_delivery_note(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists collector_signature(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+bale_collector_delivery_noteid integer not null,
+image_location varchar(100) not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(bale_collector_delivery_noteid) references bale_collector_delivery_note(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+create table if not exists bales_collected(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+bale_collector_delivery_noteid integer not null,
+growerid integer not null,
+bale_tag varchar(100) not null,
+latitude varchar(100) not nll,
+longitude varchar(100) not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(bale_collector_delivery_noteid) references bale_collector_delivery_note(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+create table if not exists grower_bale_signature(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+bale_collector_delivery_noteid integer not null,
+growerid integer not null,
+image_location varchar(100) not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(bale_collector_delivery_noteid) references bale_collector_delivery_note(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+create table if not exists field_officer_task(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+task_url varchar(100) not null,
+description varchar(100) not null,
+duration_days integer not null,
+created_at varchar(100) not null,
+end_at varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+create table if not exists task_viewer(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+task_url varchar(100) not null,
+duration_days integer not null,
+created_by_id integer not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(created_by_id) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists task_grower_data(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+task_url varchar(100) not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+created_at varchar(100) not null,
+time_created varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+
+
+public static final String TABLE_BALES_COLLECTED="bales_collected";
+public static final String TABLE_GROWER_BALE_SIGNATURE="grower_bale_signature";
+public static final String TABLE_COLLECTOR_SIGNATURE="collector_signature";
+public static final String TABLE_COLLECTOR_ID_NUM="collector_id_num";
+public static final String TABLE_BALE_COLLECTOR_DELIVERY_NOTE="bale_collector_delivery_note";
+public static final String TABLE_BALE_COLLECTOR="bale_collector";
+public static final String TABLE_ASSIGN_BALE_TAGS="assign_bale_tags";
+
+
+
+public static final String TABLE_TASK_GROWER_DATA="task_grower_data";
+
+ 

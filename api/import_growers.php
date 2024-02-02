@@ -37,7 +37,7 @@ if (isset($userid) && isset($name)  && isset($surname)  && isset($grower_num)  &
 
 // checks if grower is already in database
 
-$sql = "Select growers.id from growers  where  grower_num='$grower_num'";
+$sql = "Select growers.id from growers  where  grower_num='$grower_num' or grower_num like '%$grower_num%'";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

@@ -99,7 +99,7 @@ $result = $conn->query($sql);
 if ($found==0) {
 
   $user_sql = "INSERT INTO charges_amount(
-chargeid,seasonid,parameterid,userid,value,created_at) VALUES ($chargeid,$seasonid,parameterid,$userid,'$value','$created_at')";
+chargeid,seasonid,parameterid,userid,value,created_at) VALUES ($chargeid,$seasonid,$parameterid,$userid,'$value','$created_at')";
    //$sql = "select * from login";
    if ($conn->query($user_sql)===TRUE) {
    

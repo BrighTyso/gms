@@ -53,10 +53,6 @@ if (!empty($_POST['image']) && isset($_POST['latitude']) && isset($_POST['longit
 
 
 
-
-
-
-
 		 if ($image_found==0 && $growerid>0) {
 
 

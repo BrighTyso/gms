@@ -31,6 +31,8 @@ $total_loan_amount=0;
   
 $loans_data=array();
 
+$product_items_data=array();
+
 //$sql11 = "Select growers.id from  growers join active_growers on growers.id=active_growers.growerid where active_growers.seasonid=$seasonid";
 
 if ($description==""){
@@ -73,8 +75,29 @@ $result1 = $conn->query($sql11);
         // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
 
+        $product_id=$row["productid"];
 
-        $loans=array("id"=>$row["id"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"amount"=>$row["amount"],"receipt_number"=>$row["receipt_number"],"product_amount"=>$row["product_amount"],"product_total_cost"=>$row["product_total_cost"]);
+        $product_items_data=array();
+
+
+
+        $sql123 = "Select distinct description,quantity,price from itemized_product join product_items on product_items.id=itemized_product.product_itemid where itemized_product.seasonid=$seasonid and itemized_product.productid=$product_id";
+
+          $result23 = $conn->query($sql123);
+           
+           if ($result23->num_rows > 0) {
+             // output data of each row
+             while($row3 = $result23->fetch_assoc()) {
+
+              $product_items=array("description"=>$row3["description"],"quantity"=>$row3["quantity"],"price"=>$row3["price"]);
+              array_push($product_items_data,$product_items);
+             
+             }
+           }
+
+
+
+        $loans=array("id"=>$row["id"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"amount"=>$row["amount"],"receipt_number"=>$row["receipt_number"],"product_amount"=>$row["product_amount"],"product_total_cost"=>$row["product_total_cost"],"product_items"=>$product_items_data);
 
         array_push($loans_data,$loans);
         

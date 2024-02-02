@@ -1,8 +1,4 @@
-<?php
 
-
-echo "bright kaponda";
-?>
 
 <!DOCTYPE html>
 <html>
