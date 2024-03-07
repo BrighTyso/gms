@@ -1055,6 +1055,10 @@ foreign key(seasonid) references seasons(id)
 );
 
 
+
+
+
+
 create table if not exists bale_collector_delivery_note(
 id integer primary key autoIncrement,
 userid integer not null,
@@ -1192,6 +1196,35 @@ foreign key(growerid) references growers(id)
 
 
 
+create table if not exists bales_collected_total(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+bale_collector_delivery_noteid integer not null,
+growerid integer not null,
+tags_total integer not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(bale_collector_delivery_noteid) references bale_collector_delivery_note(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+create table if not exists received_bales(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+bale_tag varchar(100) not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
 
 
 
@@ -1201,10 +1234,8 @@ public static final String TABLE_COLLECTOR_SIGNATURE="collector_signature";
 public static final String TABLE_COLLECTOR_ID_NUM="collector_id_num";
 public static final String TABLE_BALE_COLLECTOR_DELIVERY_NOTE="bale_collector_delivery_note";
 public static final String TABLE_BALE_COLLECTOR="bale_collector";
+public static final String TABLE_BALES_COLLECTED_TOTAL="bales_collected_total";
 public static final String TABLE_ASSIGN_BALE_TAGS="assign_bale_tags";
-
-
-
 public static final String TABLE_TASK_GROWER_DATA="task_grower_data";
 
- 
+public static final String TABLE_RECEIVED_BALES="received_bales";

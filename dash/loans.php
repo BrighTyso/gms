@@ -230,6 +230,7 @@
                                           </tr>
                                           </thead>
                                           <tbody id="tbody">
+
                                           <?php
 require_once("../api/conn.php");
 
@@ -415,7 +416,7 @@ $loan_balance=0;
              
              }
 
-             $percantage+=($loan_payment/$loan_balance)*100;
+            // $percantage+=($loan_payment/$loan_balance)*100;
            }
               
         
@@ -490,6 +491,7 @@ $loan_balance=0;
  }
 
 ?>
+                                          
                                           </tbody>
                                       </table>
                                   </div>
@@ -691,7 +693,7 @@ function performanceResult(str) {
   //   return;
   // }
   var xmlhttp=new XMLHttpRequest();
-  xmlhttp.onreadystatechange=function() {
+  xmlhttp.onload =function() {
     if (this.readyState==4 && this.status==200) {
       document.getElementById("tbody").innerHTML=this.responseText;
     
@@ -711,7 +713,7 @@ function performanceResult(str) {
 showResult("bright");
 showResult1("bright");
 recoveredResult("bright");
-//performanceResult("bright")
+performanceResult("bright")
 recoveryP()
 
 

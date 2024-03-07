@@ -96,6 +96,9 @@ $result1 = $conn->query($sql11);
            }
 
 
+           
+
+
 
         $loans=array("id"=>$row["id"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"amount"=>$row["amount"],"receipt_number"=>$row["receipt_number"],"product_amount"=>$row["product_amount"],"product_total_cost"=>$row["product_total_cost"],"product_items"=>$product_items_data);
 

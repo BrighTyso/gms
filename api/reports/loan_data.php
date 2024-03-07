@@ -16,6 +16,7 @@ $seasonid=$data->seasonid;
 $description=$data->description;
 
 $data1=array();
+$product_items_data=array();
 // get grower locations
 
 if ($userid!="") {
@@ -55,7 +56,7 @@ $result1 = $conn->query($sql11);
    // output data of each row
    while($row1 = $result1->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
-
+    $loans_data=array();
 
 
     $input_total=0;
@@ -81,6 +82,25 @@ $result1 = $conn->query($sql11);
 
         $input_total+=$row2["amount"];
        
+       }
+     }
+
+
+
+
+      $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and processed=1 and loans.growerid=$growerid order by product_amount ";
+      $result = $conn->query($sql);
+
+ 
+     if ($result->num_rows > 0) {
+       // output data of each row
+       while($row = $result->fetch_assoc()) {
+        // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+        $loans=array("id"=>$row["id"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"amount"=>$row["amount"],"receipt_number"=>$row["receipt_number"],"product_amount"=>$row["product_amount"],"product_total_cost"=>$row["product_total_cost"],"product_items"=>$product_items_data);
+
+          array_push($loans_data,$loans);
+        
        }
      }
 
@@ -172,7 +192,7 @@ $result1 = $conn->query($sql11);
     $balance=$loan_balance-$loan_payment;
 
 
-  $temp=array("balance"=>$balance,"loan_total_amount"=>$loan_balance,"working_capital"=>$working_capital,"roll_over"=>$roll_over,"input_total"=>$input_total,"interest"=>$loan_interest,"payment"=>$loan_payment,"name"=>$grower_name,"surname"=>$grower_surname,"grower_num"=>$grower_num);
+  $temp=array("balance"=>$balance,"loan_total_amount"=>$loan_balance,"working_capital"=>$working_capital,"roll_over"=>$roll_over,"input_total"=>$input_total,"interest"=>$loan_interest,"payment"=>$loan_payment,"name"=>$grower_name,"surname"=>$grower_surname,"grower_num"=>$grower_num,"inputs"=>$loans_data);
     array_push($data1,$temp);
 
    
@@ -218,6 +238,27 @@ $result1 = $conn->query($sql11);
 
         $input_total+=$row2["amount"];
        
+       }
+     }
+
+
+
+
+
+
+      $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and processed=1 and loans.growerid=$growerid order by product_amount ";
+      $result = $conn->query($sql);
+
+ 
+     if ($result->num_rows > 0) {
+       // output data of each row
+       while($row = $result->fetch_assoc()) {
+        // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+        $loans=array("id"=>$row["id"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"amount"=>$row["amount"],"receipt_number"=>$row["receipt_number"],"product_amount"=>$row["product_amount"],"product_total_cost"=>$row["product_total_cost"],"product_items"=>$product_items_data);
+
+          array_push($loans_data,$loans);
+        
        }
      }
 
@@ -312,7 +353,8 @@ $result1 = $conn->query($sql11);
 
 
 
-     $temp=array("balance"=>$balance,"loan_total_amount"=>$loan_balance,"working_capital"=>$working_capital,"roll_over"=>$roll_over,"input_total"=>$input_total,"interest"=>$loan_interest,"payment"=>$loan_payment,"name"=>$grower_name,"surname"=>$grower_surname,"grower_num"=>$grower_num);
+     $temp=array("balance"=>$balance,"loan_total_amount"=>$loan_balance,"working_capital"=>$working_capital,"roll_over"=>$roll_over,"input_total"=>$input_total,"interest"=>$loan_interest,"payment"=>$loan_payment,"name"=>$grower_name,"surname"=>$grower_surname,"grower_num"=>$grower_num,"inputs"=>$loans_data);
+
     array_push($data1,$temp);
 
    

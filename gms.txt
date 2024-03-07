@@ -396,7 +396,7 @@ create table if not exists prices(
 id integer primary key auto_increment,
 userid integer not null,
 productid integer not null,
-amount double(100,2) not null default 0,
+amount double(100,3) not null default 0,
 seasonid integer not null,
 sync integer not null default 0,
 created_at varchar(100) not null,
@@ -3483,6 +3483,23 @@ foreign key(bale_collector_delivery_noteid) references bale_collector_delivery_n
 foreign key(growerid) references growers(id)
 );
 
+
+
+
+create table if not exists bales_collected_total(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+bale_collector_delivery_noteid integer not null,
+growerid integer not null,
+tags_total integer not null,
+sync integer not null default 0,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(bale_collector_delivery_noteid) references bale_collector_delivery_note(id),
+foreign key(growerid) references growers(id)
+);
 
 
 

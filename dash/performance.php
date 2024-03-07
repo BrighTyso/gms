@@ -1,3 +1,7 @@
+<?php
+require_once("../api/conn.php");
+?>
+
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
   <head>
@@ -129,7 +133,18 @@
                                     <div class="row">
                                         <div class="col-md-8 col-12">
                                             <p><strong>Number of Field Officers</strong></p>
-                                            <h1 id="fieldOfficers">25</h1>
+                                            <?php 
+
+                                                $sql11 = "Select distinct users.id,surname,name from  users where active=1 and (rightsid=7 or rightsid=8 or rightsid=9)";
+
+                                                $result = $conn->query($sql11);
+
+
+                                                 
+                                                echo "<h1 id='fieldOfficers'>".$result->num_rows."  </h1>";
+                                                
+
+                                            ?>
                                             <!--<p class="mb-0">Welcome bonus <strong>+30%</strong> expires in 21 days.</p>-->
                                         </div>
                                         <!--<div class="col-md-4 col-12 text-center text-md-right">
@@ -183,6 +198,36 @@
                                     <div class="col-md-3 col-12">
                                         <fieldset class="form-label-group mb-0">
                                             <select id='selectfieldOfficers' type="text" class="form-control" id="ico-token" value="5000" required="" autofocus="">
+
+                                                <?php 
+
+
+
+
+                                                        echo "<option value=0>Select Field-Officer</option>";
+
+
+                                                        $sql2 = "Select  * from  users  where active=1 and (rightsid=7 or rightsid=8 or rightsid=9)";
+
+                                                        $result1 = $conn->query($sql2);
+
+                                                         if ($result1->num_rows > 0) {
+                                                           // output data of each row
+                                                           while($row = $result1->fetch_assoc()) {
+                                                            // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+                                                            $name=$row["name"];
+                                                            $surname=$row["surname"];
+                                                            $id=$row["id"];
+
+                                                            echo "<option value=$id>".$name." ".$surname."</option>";
+
+                                                           
+                                                           }
+                                                         }
+
+
+                                                ?>
                                                 
                                             </select>
                                             <!--                                            <label for="ico-token">Field Officer</label>-->
@@ -240,7 +285,7 @@
                                         </thead>
                                         <tbody id="tbody">
                                         <?php
-require_once("../api/conn.php");
+
 
 $seasonid=0;
 
@@ -291,7 +336,8 @@ $result = $conn->query($sql11);
  $sql11 = "Select distinct users.id,surname,name from  users where active=1 and (rightsid=7 or rightsid=8 or rightsid=9)";
 
 $result = $conn->query($sql11);
- 
+
+
  if ($result->num_rows > 0) {
    // output data of each row
    while($row = $result->fetch_assoc()) {
@@ -313,9 +359,7 @@ $result = $conn->query($sql11);
             $total_visits=0;
 
 
-
-
-             $sql132 = "Select distinct growerid from  visits where userid=$userid and seasonid=$seasonid";
+        $sql132 = "Select distinct growerid from  visits where userid=$userid and seasonid=$seasonid";
 
                 $result32 = $conn->query($sql132);
                  
@@ -323,7 +367,8 @@ $result = $conn->query($sql11);
                    // output data of each row
                    while($row32 = $result32->fetch_assoc()) {
 
-                          $input_total=0;
+
+               $input_total=0;
                                     $working_capital=0;
                                     $roll_over=0;
                                     $total_loan_amount=0;
@@ -365,8 +410,7 @@ $result = $conn->query($sql11);
                                      }
 
 
-
-                                      $sql13 = "Select * from working_capital_total join growers on growers.id=working_capital_total.growerid join active_growers on active_growers.growerid=growers.id where working_capital_total.seasonid=$seasonid and working_capital_total.growerid=$growerid";
+                      $sql13 = "Select * from working_capital_total join growers on growers.id=working_capital_total.growerid join active_growers on active_growers.growerid=growers.id where working_capital_total.seasonid=$seasonid and working_capital_total.growerid=$growerid";
 
                                     $result3 = $conn->query($sql13);
                                      
@@ -418,7 +462,7 @@ $result = $conn->query($sql11);
                                        }
                                      }
 
-                                     $loan_balance+=$total_loan_amount+$loan_interest;
+                      $loan_balance+=$total_loan_amount+$loan_interest;
 
 
 
@@ -453,24 +497,23 @@ $result = $conn->query($sql11);
                                         $total_visits+=$visits;
 
 
-                                    
+             }
 
-                   }
+            //  $risk=100-(($total_visits/(20*$result32->num_rows))*100);
 
-                   $risk=100-(($total_visits/(20*$result32->num_rows))*100);
+                  //  $percantage+=($loan_payment/$loan_balance)*100;
 
-                   $percantage+=($loan_payment/$loan_balance)*100;
-                 }else{
+           }else{
 
 
                     $risk=100;
 
                  }
-                        
-            
+                      
 
-    
-            $sql2 = "Select distinct growerid,created_at from  visits where  userid=".$row['id']." and seasonid=$seasonid";
+
+
+           $sql2 = "Select distinct growerid,created_at from  visits where  userid=$userid and seasonid=$seasonid";
 
             $result1 = $conn->query($sql2);
 
@@ -518,6 +561,11 @@ $result = $conn->query($sql11);
         
        }
      }
+
+
+
+
+             
 
 
 
@@ -702,13 +750,18 @@ function visitedGrowers() {
 // showResult("bright");
 // showResult1("bright");
 // recoveredResult("bright");
-getFieldOfficers()
-//performanceResult("bright")
 
 
-numberOfFieldOfficers();
-visitedP();
-visitedGrowers();
+
+// ------------------------from this part------------------------------
+
+// getFieldOfficers()
+// performanceResult("bright")
+
+
+// numberOfFieldOfficers();
+// visitedP();
+// visitedGrowers();
 
     </script>
   </body>
