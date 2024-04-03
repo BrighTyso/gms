@@ -10,17 +10,36 @@ require "validate.php";
 
 $data = json_decode(file_get_contents("php://input"));
 
-$userid=$data->userid;
-$seasonid=$data->seasonid;
-$growerid=$data->growerid;
-$amount=$data->amount;
-$created_at=$data->created_at;
-$mass=$data->mass;
-$loan_found=0;
-$loan_payment_found=0;
-$response=array();
 
-if (isset($data->seasonid) && isset($data->userid) && isset($data->growerid) && isset($data->amount) && isset($data->created_at)){
+$response=array();
+$growerid=0;
+if (isset($data->seasonid) && isset($data->userid)  && isset($data->amount) && isset($data->mass) && isset($data->grower_num) && isset($data->created_at)){
+
+
+  $userid=$data->userid;
+  $seasonid=$data->seasonid;
+  $amount=$data->amount;
+  $created_at=$data->created_at;
+  $grower_num=$data->grower_num;
+  $mass=$data->mass;
+  $loan_found=0;
+  $growerid=0;
+  $loan_payment_found=0;
+
+
+  $sql = "Select * from growers where grower_num='$grower_num' or grower_num like '%$growerid'";
+  $result = $conn->query($sql);
+   
+   if ($result->num_rows > 0) {
+     // output data of each row
+     while($row = $result->fetch_assoc()) {
+      // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+      $growerid=$row["id"];
+      
+     }
+
+   }
 
 
   $sql = "Select * from loan_payments where growerid=$growerid and seasonid=$seasonid and created_at='$created_at' and mass='$mass' limit 1";
@@ -87,7 +106,7 @@ if (isset($data->seasonid) && isset($data->userid) && isset($data->growerid) && 
              }else{
 
               //$last_id = $conn->insert_id;
-               $temp=array("response"=>"Failed To Update");
+               $temp=array("response"=>$conn->error);
                array_push($response,$temp);
 
              }
@@ -97,7 +116,7 @@ if (isset($data->seasonid) && isset($data->userid) && isset($data->growerid) && 
 
          }else{
 
-           $temp=array("response"=>"Failed To Update");
+           $temp=array("response"=>$conn->error);
                array_push($response,$temp);
 
          }

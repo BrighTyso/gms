@@ -29,7 +29,7 @@ $found_rollover=0;
 $found_working_capital=0;
 
 
-  $sql = "Select distinct loans.id as loanid,products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified,amount from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and  prices.seasonid=$seasonid and growers.grower_num='$grower_num' and processed=1 and verified=1 order by growers.grower_num limit 5000";
+  $sql = "Select distinct loans.id as loanid,products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified,amount from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and  prices.seasonid=$seasonid and (growers.grower_num='$grower_num' or grower_num like '%$grower_num%') and processed=1 and verified=1 order by growers.grower_num limit 5000";
 
   $result = $conn->query($sql);
  
