@@ -250,6 +250,49 @@ foreign key(productid) references products(id)
 
 
 
+
+
+
+
+create table if not exists product_split(
+id integer primary key auto_increment,
+userid integer not null,
+storeid integer not null,
+fromproductid integer not null,
+toproductid integer not null,
+quantity integer not null ,
+divide_by integer not null default 1,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(storeid) references store(id),
+foreign key(fromproductid) references products(id),
+foreign key(toproductid) references products(id)
+);
+
+
+
+
+
+
+
+create table if not exists product_barcodes(
+id integer primary key auto_increment,
+userid integer not null,
+productid integer not null,
+barcode varchar(100) not null,
+active integer not null default 1,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(productid) references products(id)
+);
+
+
+
+
+
+
 create table if not exists arc_products(
 id integer primary key auto_increment,
 userid integer not null,
