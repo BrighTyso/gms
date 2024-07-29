@@ -114,15 +114,19 @@ require_once("../api/conn.php");
                     <div class="row breadcrumbs-top d-inline-block">
                         <div class="breadcrumb-wrapper col-12">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index.html">Dashboard</a>
+                                <li class="breadcrumb-item"><a href="index.php">Dashboard</a>
                                 </li>
                             </ol>
                         </div>
                     </div>
+
+                   
+
                 </div>
+
             </div>
 
-
+                    
 
             <div class="row">
                 <div class="col-md-8 col-12">
@@ -275,12 +279,14 @@ require_once("../api/conn.php");
                                         <tr>
                                             <th class="border-top-0">Field Officer</th>
                                             <th class="border-top-0">Total Ha</th>
-                                            <th class="border-top-0">Total Growers</th>
+                                            <th class="border-top-0">Allocated Ha</th>
+                                            <th class="border-top-0">Allocated Growers</th>
+                                            <th class="border-top-0">Visited Growers</th>
                                             <th class="border-top-0">Visited Ha(YTD)</th>
-                                            <th class="border-top-0">Number Of Visits(YTD)</th>
+                                            <th class="border-top-0">Visits(YTD)</th>
                                             <th class="border-top-0">Risk %</th>
                                             <th class="border-top-0">Recovery %</th>
-                                            <th class="border-top-0">Visits Report</th>
+                                            <th class="border-top-0">Report</th>
                                         </tr>
                                         </thead>
                                         <tbody id="tbody">
@@ -309,6 +315,12 @@ $risk=0;
 
 $startDate="";
 $endDate="";
+
+$visit_coverage=0;
+$farmer_coverage=0;
+
+$allocated_growers=0;
+$allocated_hectares=0;
 
 
 // $id=$_GET['id'];
@@ -352,11 +364,14 @@ $result = $conn->query($sql11);
             $userid=$row['id'];
 
             
-
+            $visit_coverage=0;
+            $farmer_coverage=0;
             
             $percantage=0;
             $risk=0;
             $total_visits=0;
+            $allocated_growers=0;
+            $allocated_hectares=0;
 
 
         $sql132 = "Select distinct growerid from  visits where userid=$userid and seasonid=$seasonid";
@@ -368,7 +383,7 @@ $result = $conn->query($sql11);
                    while($row32 = $result32->fetch_assoc()) {
 
 
-               $input_total=0;
+                                    $input_total=0;
                                     $working_capital=0;
                                     $roll_over=0;
                                     $total_loan_amount=0;
@@ -377,8 +392,9 @@ $result = $conn->query($sql11);
                                     $loan_balance=0;
                                     $total_visits=0;
 
-                            $growerid=$row32["growerid"];
-                         
+                                    $growerid=$row32["growerid"];
+
+ 
 
 
                                     $sql12 = "Select * from inputs_total join growers on growers.id=inputs_total.growerid join active_growers on active_growers.growerid=growers.id where inputs_total.seasonid=$seasonid and inputs_total.growerid=$growerid";
@@ -410,7 +426,7 @@ $result = $conn->query($sql11);
                                      }
 
 
-                      $sql13 = "Select * from working_capital_total join growers on growers.id=working_capital_total.growerid join active_growers on active_growers.growerid=growers.id where working_capital_total.seasonid=$seasonid and working_capital_total.growerid=$growerid";
+                                 $sql13 = "Select * from working_capital_total join growers on growers.id=working_capital_total.growerid join active_growers on active_growers.growerid=growers.id where working_capital_total.seasonid=$seasonid and working_capital_total.growerid=$growerid";
 
                                     $result3 = $conn->query($sql13);
                                      
@@ -506,7 +522,7 @@ $result = $conn->query($sql11);
            }else{
 
 
-                    $risk=100;
+                   // $risk=100;
 
                  }
                       
@@ -563,10 +579,40 @@ $result = $conn->query($sql11);
      }
 
 
+        $allocated_hectares=0;
+
+        $sql2 = "Select * from  grower_field_officer join scheme_hectares_growers on scheme_hectares_growers.growerid=grower_field_officer.growerid join scheme_hectares on scheme_hectares.id=scheme_hectares_growers.scheme_hectaresid  where  scheme_hectares.seasonid=$seasonid and grower_field_officer.seasonid=$seasonid and grower_field_officer.userid=$userid";
+
+            $result2 = $conn->query($sql2);
+
+            if ($result2->num_rows > 0) {
+           // output data of each row
+           while($row2 = $result2->fetch_assoc()) {
+
+            $allocated_hectares+=$row2["quantity"];
+        
+           }
+         }
+
+
+          $sql14 = "Select * from grower_field_officer where seasonid=$seasonid and grower_field_officer.userid=$userid";
+          $result4 = $conn->query($sql2);
+          $allocated_growers=$result4->num_rows;
+
 
 
              
+            if ($contracted_ha>0) {
+               $visit_coverage=$visited_ha/$contracted_ha;
+            }
+                 
+             if ($grower_visits>0) {
+                 // code...
+                 $farmer_coverage=$total_growers/$grower_visits;
+             }
+            
 
+             $risk=(1-($visit_coverage+$farmer_coverage)/2)*100;
 
 
 
@@ -575,14 +621,16 @@ $result = $conn->query($sql11);
                     echo "<tr>";
             echo    "<td class='text-truncate'><i class='la la-dot-circle-o success font-medium-1 mr-1'></i> ".$name." ".$surname."</td>";
              echo   "<td class='text-truncate'><a href='#'>".$contracted_ha."</a></td>";
+             echo "<td class='text-truncate p-1'>".$allocated_hectares."</td>";
+                echo "<td class='text-truncate p-1'>".$allocated_growers."</td>";
              echo "<td class='text-truncate p-1'>".$total_growers."</td>";
             echo    "<td class='text-truncate'>".$visited_ha."</td>";
              echo   "<td class='text-truncate'>".$grower_visits."</td>";
              echo  " <td class='text-truncate'>";
-             echo       "<a href='#' class='mb-0 btn-sm btn btn-outline-danger round'>".$risk."%</a>";
+             echo       "<a href='#' class='mb-0 btn-sm btn btn-outline-danger round'>".round($risk)."%</a>";
               echo  "</td>";
              echo   "<td class='text-truncate'>";
-              echo      "<a href='#' class='mb-0 btn-sm btn btn-outline-primary round'>".$percantage."%</a>";
+              echo      "<a href='#' class='mb-0 btn-sm btn btn-outline-primary round'>".round($percantage)."%</a>";
              echo  " </td>";
              echo   "<td class='text-truncate'>";
                 echo    "<a href='#' class='mb-0 btn-sm btn btn-outline-primary round'>Download</a>";

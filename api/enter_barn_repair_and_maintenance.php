@@ -76,6 +76,12 @@ $result = $conn->query($sql);
 
        }
 
+   }else{
+
+// $temp=array("id"=>$conn->error);
+// array_push($data,$temp);
+
+
    }
 
 

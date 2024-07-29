@@ -68,7 +68,7 @@ $result = $conn->query($sql);
 
 
 
-$sql = "Select * from task_grower_data where task_url='$task_url' and userid=$userid";
+$sql = "Select * from task_grower_data where task_url='$task_url' and userid=$userid and growerid=$growerid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -99,9 +99,26 @@ $result = $conn->query($sql);
          $temp=array("id"=>$sqliteid);
           array_push($data,$temp);
 
+      }else{
+
+        // $temp=array("id"=>$conn->error);
+        //   array_push($data,$temp);
       }
 
 
+   }else{
+
+    // if ($growerid==0) {
+    //   $temp=array("growerid"=>$sqliteid);
+    //   array_push($data,$temp);
+    // }else if ($task_found==0) {
+    //   $temp=array("task_found"=>$sqliteid);
+    //   array_push($data,$temp);
+    // }elseif($taskid>0){
+    //   $temp=array("taskid"=>$sqliteid);
+    //   array_push($data,$temp);
+    // }
+   
    }
 
 

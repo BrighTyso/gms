@@ -3601,6 +3601,7 @@ seasonid integer not null,
 task_url varchar(100) not null,
 description varchar(100) not null,
 duration_days integer not null,
+task_min_growers integer not null default 20,
 created_at varchar(100) not null,
 end_at varchar(100) not null,
 sync integer not null default 0,
@@ -3624,6 +3625,7 @@ seasonid integer not null,
 task_url varchar(100) not null,
 duration_days integer not null,
 created_by_id integer not null,
+task_min_growers integer not null default 20,
 created_at varchar(100) not null,
 sync integer not null default 0,
 datetime TIMESTAMP not null,
@@ -3631,9 +3633,6 @@ foreign key(userid) references users(id),
 foreign key(created_by_id) references users(id),
 foreign key(seasonid) references seasons(id)
 );
-
-
-
 
 
 
@@ -3653,6 +3652,201 @@ foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id),
 foreign key(growerid) references growers(id)
 );
+
+
+
+create table if not exists live_location_status(
+id integer primary key auto_increment,
+active integer not null default 0
+);
+
+
+create table if not exists live_location_userid(
+id integer primary key auto_increment,
+userid integer not null,
+firebaseid varchar(200) not null,
+active integer not null default 1,
+created_at varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id)
+);
+
+
+
+create table if not exists scheme(
+id integer primary key auto_increment,
+userid integer not null,
+description varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id)
+);
+
+create table if not exists scheme_hectares(
+id integer primary key auto_increment,
+userid integer not null,
+schemeid integer not null,
+seasonid integer not null,
+quantity varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(schemeid) references scheme(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists scheme_hectares_products(
+id integer primary key auto_increment,
+userid integer not null,
+scheme_hectaresid integer not null,
+productid integer not null,
+quantity varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(scheme_hectaresid) references scheme_hectares(id),
+foreign key(productid) references products(id)
+);
+
+
+create table if not exists scheme_hectares_growers(
+id integer primary key auto_increment,
+userid integer not null,
+scheme_hectaresid integer not null,
+growerid integer not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(scheme_hectaresid) references scheme_hectares(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+create table if not exists otp (
+  id integer primary key auto_increment,
+  userid integer not null,
+  otp varchar(255) NOT NULL unique,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  foreign key(userid) references users(id)
+);
+
+
+
+create table if not exists disbursement_otp (
+  id integer primary key auto_increment,
+  storeid integer not null,
+  productid integer not null,
+  userid integer not null,
+  quantity integer not null,
+  used integer not null default 0,
+  otp varchar(255) NOT NULL unique,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  foreign key(userid) references users(id),
+  foreign key(storeid) references store(id),
+  foreign key(productid) references products(id)
+);
+
+
+
+
+create table if not exists grower_inputs_distribution_otp (
+  id integer primary key auto_increment,
+  userid integer not null,
+  blocked integer not null default 0,
+  used integer not null default 0,
+  otp varchar(255) NOT NULL unique,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  foreign key(userid) references users(id)
+);
+
+
+
+
+create table if not exists growers_otp (
+  id integer primary key auto_increment,
+  userid integer not null,
+  seasonid integer not null,
+  growerid integer not null,
+  used integer not null default 0,
+  sent integer not null default 0,
+  otp varchar(255) NOT NULL unique,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  foreign key(userid) references users(id),
+  foreign key(seasonid) references seasons(id),
+  foreign key(growerid) references growers(id)
+);
+
+
+
+create table if not exists operations_contacts (
+  id integer primary key auto_increment,
+  email varchar(255) not null,
+  phone varchar(255) not null,
+  active integer not null default 1
+);
+
+
+
+create table if not exists battery_level_report(
+  id integer primary key auto_increment,
+  userid integer not null,
+  seasonid integer not null,
+  battery_level varchar(255) NOT NULL,
+  time_created varchar(100) not null,
+  created_at varchar(100) not null,
+  datetime TIMESTAMP not null,
+  foreign key(userid) references users(id),
+  foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+
+
+create table if not exists start_battery_level(
+  id integer primary key auto_increment,
+  userid integer not null,
+  seasonid integer not null,
+  battery_level varchar(255) NOT NULL,
+  time_created varchar(100) not null,
+  created_at varchar(100) not null,
+  datetime TIMESTAMP not null,
+  foreign key(userid) references users(id),
+  foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists end_battery_level(
+  id integer primary key auto_increment,
+  userid integer not null,
+  seasonid integer not null,
+  battery_level varchar(255) NOT NULL,
+  time_created varchar(100) not null,
+  created_at varchar(100) not null,
+  datetime TIMESTAMP not null,
+  foreign key(userid) references users(id),
+  foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+create table if not exists leave_form(
+  id integer primary key auto_increment,
+  userid integer not null,
+  seasonid integer not null,
+  leave_type varchar(100) not null,
+  description varchar(255) not null,
+  days integer not null default 1,
+  state integer not null default 0,
+  leave_date varchar(100) not null,
+  created_at varchar(100) not null,
+  datetime TIMESTAMP not null,
+  foreign key(userid) references users(id),
+  foreign key(seasonid) references seasons(id)
+);
+
 
 
 
@@ -3813,4 +4007,7 @@ insert into sub_accounts(description,main_accountid) value("Depreciation expense
 insert into sub_accounts(description,main_accountid) value("Commission Payable",6);
 insert into sub_accounts(description,main_accountid) value("Interest Expense",6);
 insert into sub_accounts(description,main_accountid) value("Other",6);
+
+
+insert into live_location_status(active) value(0);
 

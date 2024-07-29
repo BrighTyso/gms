@@ -23,6 +23,11 @@ $quantity_Enough=0;
 $product_disbursed=0;
 $old_quantity=0;
 
+$otp_quantity=0;
+$otp_productid=0;
+$otp_storeid=0;
+$otp_id=0;
+
 $response=array();
 
 if (isset($data->productid) && isset($data->userid) && isset($data->storeid) && isset($data->quantity) && isset($data->created_at)){
@@ -34,6 +39,29 @@ $storeid=$data->storeid;
 $quantity=$data->quantity;
 $created_at=$data->created_at;
 $userid=$data->userid;
+$otp=$data->otp;
+
+
+
+
+$sql = "Select * from disbursement_otp WHERE otp ='$otp'
+  AND created_at > NOW() - INTERVAL 10 MINUTE; ";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+    $otp_quantity=$row["quantity"];
+    $otp_productid=$row["productid"];
+    $otp_storeid=$row["storeid"];
+    $otp_id=$row["id"];
+   
+    
+   }
+ }
 
 
 
@@ -77,7 +105,7 @@ $result = $conn->query($sql);
 
 
 
- $sql1 = "Select * from disbursement where disbursement_trucksid=$disbursement_trucksid and  productid=$productid ";
+$sql1 = "Select * from disbursement where disbursement_trucksid=$disbursement_trucksid and  productid=$productid ";
 $result = $conn->query($sql1);
  
  if ($result->num_rows > 0) {
@@ -94,7 +122,7 @@ $result = $conn->query($sql1);
 
 
 
-if ($product_disbursed==0) {
+if ($product_disbursed==0  && $otp_storeid==$storeid && $otp_productid==$productid && $otp_quantity<=$quantity) {
 
       if ($found>0) {
 
@@ -104,7 +132,7 @@ if ($product_disbursed==0) {
            //$sql = "select * from login";
                if ($conn->query($user_sql)===TRUE) {
 
-                $disbursemnt_last_id=$conn->insert_id;
+                       $disbursemnt_last_id=$conn->insert_id;
 
 
                        $user_sql1 = "update store_items set quantity=quantity-$quantity  where storeid = $storeid and productid=$productid";
@@ -183,8 +211,27 @@ if ($product_disbursed==0) {
 
 }else{
 
-$temp=array("response"=>"Product Already Disbursed");
-array_push($response,$temp);
+
+//&&  && $otp_productid==$productid && $otp_quantity<=$quantity
+
+    if ($otp_storeid!=$storeid) {
+        $temp=array("response"=>"Confirmed store is not matching");
+        array_push($response,$temp);
+    }else if ($otp_productid!=$productid) {
+        $temp=array("response"=>"Confirmed product is not matching");
+        array_push($response,$temp);
+    }else if ($quantity>$otp_quantity) { 
+
+     $temp=array("response"=>"Confirmed quantity is not matching");
+    array_push($response,$temp);
+
+    }else if ($product_disbursed>0) {
+        
+        $temp=array("response"=>"Product Already Disbursed");
+        array_push($response,$temp);
+    }
+
+
 
 }
 

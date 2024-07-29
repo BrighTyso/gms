@@ -551,12 +551,14 @@ echo "<span class='float-right text-right'>Total Loan  <br> <strong id='totalLoa
                             <tr>
                                 <th class="border-top-0">Field Officer</th>
                                 <th class="border-top-0">Total Ha</th>
+                                 <th class="border-top-0">Allocated Ha</th>
+                                <th class="border-top-0">Allocated Growers</th>
                                 <th class="border-top-0">Total Growers</th>
                                 <th class="border-top-0">Visited Ha(YTD)</th>
-                                <th class="border-top-0">Number Of Visits(YTD)</th>
+                                <th class="border-top-0">Visits(YTD)</th>
                                 <th class="border-top-0">Risk %</th>
                                 <th class="border-top-0">Recovery %</th>
-                                <th class="border-top-0">Visits Report</th>
+                                <th class="border-top-0">Report</th>
                             </tr>
                             </thead>
                             <tbody id="tbody">
@@ -586,6 +588,8 @@ $risk=0;
 $startDate="";
 $endDate="";
 
+$visit_coverage=0;
+$farmer_coverage=0;
 
 // $id=$_GET['id'];
 // $startDate=date_format(date_create($_GET['start']),"Y-m-d");
@@ -625,7 +629,8 @@ $result = $conn->query($sql11);
             $name=$row["name"];
             $surname=$row["surname"];
             $userid=$row['id'];
-
+            $visit_coverage=0;
+            $farmer_coverage=0;
             
 
             
@@ -784,7 +789,7 @@ $result = $conn->query($sql11);
                  }else{
 
 
-                    $risk=100;
+                    //$risk=100;
 
                  }
                         
@@ -821,8 +826,8 @@ $result = $conn->query($sql11);
         $visited_ha+=$row2["hectares"];
 
        
-       }
-     }
+           }
+         }
 
 
      $sql2 = "Select * from  contracted_hectares  where  seasonid=$seasonid ";
@@ -843,19 +848,55 @@ $result = $conn->query($sql11);
 
 
 
+            $allocated_hectares=0;
+
+        $sql2 = "Select * from  grower_field_officer join scheme_hectares_growers on scheme_hectares_growers.growerid=grower_field_officer.growerid join scheme_hectares on scheme_hectares.id=scheme_hectares_growers.scheme_hectaresid  where  scheme_hectares.seasonid=$seasonid and grower_field_officer.seasonid=$seasonid and grower_field_officer.userid=$userid";
+
+            $result2 = $conn->query($sql2);
+
+            if ($result2->num_rows > 0) {
+           // output data of each row
+           while($row2 = $result2->fetch_assoc()) {
+
+            $allocated_hectares+=$row2["quantity"];
+        
+           }
+         }
+
+
+          $sql14 = "Select * from grower_field_officer where seasonid=$seasonid and grower_field_officer.userid=$userid";
+          $result4 = $conn->query($sql2);
+          $allocated_growers=$result4->num_rows;
+
+
+
+            if ($contracted_ha>0) {
+               $visit_coverage=$visited_ha/$contracted_ha;
+            }
+                 
+             if ($grower_visits>0) {
+                 $farmer_coverage=$total_growers/$grower_visits;
+             }
+            
+
+             $risk=(1-($visit_coverage+$farmer_coverage)/2)*100;
+
+
 
 
                     echo "<tr>";
             echo    "<td class='text-truncate'><i class='la la-dot-circle-o success font-medium-1 mr-1'></i> ".$name." ".$surname."</td>";
              echo   "<td class='text-truncate'><a href='#'>".$contracted_ha."</a></td>";
+             echo "<td class='text-truncate p-1'>".$allocated_hectares."</td>";
+             echo "<td class='text-truncate p-1'>".$allocated_growers."</td>";
              echo "<td class='text-truncate p-1'>".$total_growers."</td>";
             echo    "<td class='text-truncate'>".$visited_ha."</td>";
              echo   "<td class='text-truncate'>".$grower_visits."</td>";
              echo  " <td class='text-truncate'>";
-             echo       "<a href='#' class='mb-0 btn-sm btn btn-outline-danger round'>".$risk."%</a>";
+             echo       "<a href='#' class='mb-0 btn-sm btn btn-outline-danger round'>".round($risk)."%</a>";
               echo  "</td>";
              echo   "<td class='text-truncate'>";
-              echo      "<a href='#' class='mb-0 btn-sm btn btn-outline-primary round'>".$percantage."%</a>";
+              echo      "<a href='#' class='mb-0 btn-sm btn btn-outline-primary round'>".round($percantage)."%</a>";
              echo  " </td>";
              echo   "<td class='text-truncate'>";
                 echo    "<a href='#' class='mb-0 btn-sm btn btn-outline-primary round'>Download</a>";

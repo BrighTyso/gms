@@ -220,6 +220,9 @@ require_once("../api/conn.php");
                                       <th class="border-top-0">From-Date</th>
                                       <th class="border-top-0">To-Date</th>
                                       <th class="border-top-0">Growers Visited</th>
+                                      <th class="border-top-0">Start BT</th>
+                                      <th class="border-top-0">End BT</th>
+                                      <th class="border-top-0">Report BT</th>
                                       <th class="border-top-0">Distance Covered(kms)</th>
                                       <th class="border-top-0">Hrs Done</th>
                                       <th class="border-top-0">Report</th>
@@ -236,6 +239,9 @@ $startDate="";
 $endDate="";
 $hours_worked=0;
 $id=0;
+$start_battery_level=0;
+$end_battery_level=0;
+$battery_level_report=0;
 
 
 
@@ -286,6 +292,10 @@ $result = $conn->query($sql);
         $distance=0;
         $hours_worked=0;
 
+        $start_battery_level=0;
+        $end_battery_level=0;
+        $battery_level_report=0;
+
 
 
 
@@ -332,6 +342,57 @@ $result = $conn->query($sql);
 
 
 
+
+
+
+ $sql2 = "Select distinct * from start_battery_level where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $start_battery_level+=$row2['battery_level'];
+
+         }
+      }
+
+
+
+      $sql2 = "Select distinct * from end_battery_level where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $end_battery_level+=$row2['battery_level'];
+
+         }
+      }
+
+
+      $sql2 = "Select distinct * from battery_level_report where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $battery_level_report+=$row2['battery_level'];
+
+         }
+      }
+
+
+
+
       $kms=$distance/1000;
 
 
@@ -341,6 +402,9 @@ $result = $conn->query($sql);
              echo   "<td class='text-truncate'><a href='#'>".$row["created_at"]."</a></td>";
              echo "<td class='text-truncate p-1'>".$row["time"]."</td>";
             echo    "<td class='text-truncate'>".$visited_growers."</td>";
+            echo    "<td class='text-truncate'>".$start_battery_level."%</td>";
+            echo    "<td class='text-truncate'>".$end_battery_level."%</td>";
+             echo    "<td class='text-truncate'>".$battery_level_report."%</td>";
              echo   "<td class='text-truncate'>".$kms." Kms</td>";
              echo  " <td class='text-truncate'>";
              echo       "<a href='#' class='mb-0 btn-sm btn btn-outline-primary round'>".$hours_worked." hrs</a>";
@@ -382,6 +446,11 @@ $result = $conn->query($sql);
         $created_at=$row['created_at'];
         $distance=0;
 
+        $start_battery_level=0;
+        $end_battery_level=0;
+        $battery_level_report=0;
+
+
 
 
 
@@ -426,6 +495,56 @@ $result = $conn->query($sql);
 
 
 
+$sql2 = "Select distinct * from start_battery_level where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $start_battery_level+=$row2['battery_level'];
+
+         }
+      }
+
+
+
+      $sql2 = "Select distinct * from end_battery_level where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $end_battery_level+=$row2['battery_level'];
+
+         }
+      }
+
+
+
+      $sql2 = "Select distinct * from battery_level_report where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $battery_level_report+=$row2['battery_level'];
+
+         }
+      }
+
+
+    
+
+
 
       $kms=$distance/1000;
 
@@ -436,6 +555,8 @@ $result = $conn->query($sql);
              echo   "<td class='text-truncate'><a href='#'>".$row["created_at"]."</a></td>";
              echo "<td class='text-truncate p-1'>".$row["time"]."</td>";
             echo    "<td class='text-truncate'>".$visited_growers."</td>";
+             echo    "<td class='text-truncate'>".$start_battery_level."%</td>";
+            echo    "<td class='text-truncate'>".$battery_level_report."%</td>";
              echo   "<td class='text-truncate'>".$kms." Kms</td>";
              echo  " <td class='text-truncate'>";
              echo       "<a href='#' class='mb-0 btn-sm btn btn-outline-primary round'>".$hours_worked." hrs</a>";
@@ -476,6 +597,11 @@ $result = $conn->query($sql);
         $created_at=$row['created_at'];
         $distance=0;
 
+        $start_battery_level=0;
+        $end_battery_level=0;
+        $battery_level_report=0;
+
+
 
 
 
@@ -519,6 +645,50 @@ $result = $conn->query($sql);
       }
 
 
+ $sql2 = "Select distinct * from start_battery_level where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $start_battery_level+=$row2['battery_level'];
+
+         }
+      }
+
+
+
+      $sql2 = "Select distinct * from end_battery_level where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $end_battery_level+=$row2['battery_level'];
+
+         }
+      }
+
+
+$sql2 = "Select distinct * from battery_level_report where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $battery_level_report+=$row2['battery_level'];
+
+         }
+      }
 
 
       $kms=$distance/1000;
@@ -530,6 +700,9 @@ $result = $conn->query($sql);
              echo   "<td class='text-truncate'><a href='#'>".$row["created_at"]."</a></td>";
              echo "<td class='text-truncate p-1'>".$row["time"]."</td>";
             echo    "<td class='text-truncate'>".$visited_growers."</td>";
+             echo    "<td class='text-truncate'>".$start_battery_level."%</td>";
+            echo    "<td class='text-truncate'>".$end_battery_level."%</td>";
+            echo    "<td class='text-truncate'>".$battery_level_report."%</td>";
              echo   "<td class='text-truncate'>".$kms." Kms</td>";
              echo  " <td class='text-truncate'>";
              echo       "<a href='#' class='mb-0 btn-sm btn btn-outline-primary round'>".$hours_worked." hrs</a>";

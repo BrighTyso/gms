@@ -21,7 +21,7 @@ $data=array();
 
 //http://192.168.1.190/gms/api/enter_hail_strike.php?userid=1&grower_num=V123456&latitude=13.2222&longitude=3.33376&created_at=23-09-2022&percentage_strike=12333&strike_date=12333&seasonid=1&sqliteid=1
 
-if (isset($_GET['seasonid']) && isset($_GET['userid'])  && isset($_GET['task_url'])  && isset($_GET['duration_days'])    && isset($_GET['created_at']) && isset($_GET['sqliteid']) && isset($_GET['created_by_id'])){
+if (isset($_GET['seasonid']) && isset($_GET['userid'])  && isset($_GET['task_url'])  && isset($_GET['duration_days'])    && isset($_GET['created_at']) && isset($_GET['sqliteid']) && isset($_GET['created_by_id']) && isset($_GET['task_min_growers'])){
 
 
 $userid=validate($_GET['userid']);
@@ -31,6 +31,7 @@ $duration_days=validate($_GET['duration_days']);
 $created_by_id=validate($_GET['created_by_id']);
 $created_at=validate($_GET['created_at']);
 $sqliteid=validate($_GET['sqliteid']);
+$task_min_growers=validate($_GET['task_min_growers']);
 
 
 
@@ -72,7 +73,7 @@ $result = $conn->query($sql);
 
   if ($taskid==0 &&  $task_found>0) {
 
-   $insert_sql = "INSERT INTO task_viewer(userid,seasonid,task_url,duration_days,created_by_id,created_at) VALUES ($userid,$seasonid,'$task_url',$duration_days,$created_by_id,'$created_at')";
+   $insert_sql = "INSERT INTO task_viewer(userid,seasonid,task_url,duration_days,created_by_id,created_at,task_min_growers) VALUES ($userid,$seasonid,'$task_url',$duration_days,$created_by_id,'$created_at',$task_min_growers)";
    //$gr = "select * from login";
    if ($conn->query($insert_sql)===TRUE) {
    

@@ -37,6 +37,9 @@ $quantity_Enough=0;
 $previous_growerid=0;
 $active_grower=0;
 $active_grower_found=0;
+$scheme_captured_quantity=0;
+$product_captured_quantity=0;
+$quantity_to_be_captured=0;
 
 
 
@@ -78,6 +81,14 @@ if (isset($userid) && isset($description)  && isset($lat)  && isset($long)  && i
            }
 
          }
+
+
+
+
+
+
+
+
 
 // deduction_point 0 means we are deducting all the loans from the warehouse alse from the truck
 
@@ -210,8 +221,46 @@ if ($deduction_point==0) {
 
 
 
+                           $sql = "Select * from loans where  (loans.seasonid=$seasonid  and loans.productid=$productid and loans.growerid=$growerid) ";
+                            $result = $conn->query($sql);
+                             
+                             if ($result->num_rows > 0) {
+                               // output data of each row
+                               while($row = $result->fetch_assoc()) {
+                                // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-  if (($productid>0  && $growerid>0 && $verifyLoan==0) && ($previous_growerid==$growerid || $previous_growerid==0)  &&  ($quantity_Enough>0)) {
+                               #$verifyLoan=1;
+                                $product_captured_quantity+=$row["quantity"];
+
+
+                               }
+                             }
+
+
+
+
+
+                             $sql = "Select scheme_hectares_products.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id join scheme_hectares_products on scheme_hectares_products.scheme_hectaresid=scheme_hectares.id where scheme_hectares.seasonid=$seasonid and scheme_hectares_products.productid=$productid";
+                              $result = $conn->query($sql);
+                               
+                               if ($result->num_rows > 0) {
+                                 // output data of each row
+                                 while($row = $result->fetch_assoc()) {
+                                  // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+                                  $scheme_captured_quantity+=$row["quantity"];
+                                  
+                                 }
+                               }
+
+
+                               $quantity_to_be_captured=$scheme_captured_quantity-$product_captured_quantity;
+
+
+
+
+
+  if (($productid>0  && $growerid>0 && $verifyLoan==0) && ($previous_growerid==$growerid || $previous_growerid==0)  &&  ($quantity_Enough>0) && $quantity_to_be_captured>=$quantity) {
 
 
     
@@ -410,6 +459,10 @@ if ($deduction_point==0) {
           $temp=array("response"=>"Out Of Stock");
             array_push($data1,$temp);
 
+        }else if($quantity_to_be_captured<$quantity){
+
+            $temp=array("response"=>"Exceeding Scheme($scheme_captured_quantity) quantity.Captured Quantity($product_captured_quantity)");
+        array_push($data1,$temp);
         }
 
   }
@@ -545,10 +598,51 @@ $result = $conn->query($sql1);
 
 
 
+
+
+$sql = "Select * from loans where  (loans.seasonid=$seasonid  and loans.productid=$productid and loans.growerid=$growerid) ";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+   #$verifyLoan=1;
+    $product_captured_quantity+=$row["quantity"];
+
+
+   }
+ }
+
+
+
+
+
+$sql = "Select scheme_hectares_products.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id join scheme_hectares_products on scheme_hectares_products.scheme_hectaresid=scheme_hectares.id where scheme_hectares.seasonid=$seasonid and scheme_hectares_products.productid=$productid";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+    $scheme_captured_quantity+=$row["quantity"];
+    
+   }
+ }
+
+
+ $quantity_to_be_captured=$scheme_captured_quantity-$product_captured_quantity;
+
+
+
+
+
 // then insert loan
 
 
-  if (($productid>0  && $growerid>0 && $verifyLoan==0) && ($previous_growerid==$growerid || $previous_growerid==0)) {
+  if (($productid>0  && $growerid>0 && $verifyLoan==0) && ($previous_growerid==$growerid || $previous_growerid==0) && $quantity_to_be_captured>=$quantity) {
 
     if ($disbursementid>0 && $disbursement_trucksid>0 ) {
 
@@ -705,14 +799,20 @@ if ($disbursement_trucksid==0 && $disbursementid==0) {
          $temp=array("response"=>"Product Not Found");
         array_push($data1,$temp);
 
-    }elseif ($growerid==0) {
-       $temp=array("response"=>"Grower Not Found");
-      array_push($data1,$temp);
+      }elseif ($growerid==0) {
+         $temp=array("response"=>"Grower Not Found");
+        array_push($data1,$temp);
 
-    }elseif($verifyLoan==1){
-      $temp=array("response"=>"Input Already Captured For Grower");
-      array_push($data1,$temp);
-    }
+      }elseif($verifyLoan==1){
+        $temp=array("response"=>"Input Already Captured For Grower");
+        array_push($data1,$temp);
+      }else if($quantity_to_be_captured<$quantity){
+
+        $temp=array("response"=>"Exceeding Scheme($scheme_captured_quantity) quantity \n Captured Quantity($product_captured_quantity)");
+        array_push($data1,$temp);
+      }
+
+
 
 
    }

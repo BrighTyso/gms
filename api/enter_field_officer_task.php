@@ -21,7 +21,7 @@ $data=array();
 
 //http://192.168.1.190/gms/api/enter_hail_strike.php?userid=1&grower_num=V123456&latitude=13.2222&longitude=3.33376&created_at=23-09-2022&percentage_strike=12333&strike_date=12333&seasonid=1&sqliteid=1
 
-if (isset($_GET['userid'])  && isset($_GET['task_url'])  && isset($_GET['duration_days'])  && isset($_GET['description']) && isset($_GET['end_at'])  && isset($_GET['created_at']) && isset($_GET['sqliteid'])  && isset($_GET['seasonid'])){
+if (isset($_GET['userid'])  && isset($_GET['task_url'])  && isset($_GET['duration_days'])  && isset($_GET['description']) && isset($_GET['end_at'])  && isset($_GET['created_at']) && isset($_GET['sqliteid'])  && isset($_GET['seasonid']) && isset($_GET['task_min_growers'])){
 
 
 $userid=validate($_GET['userid']);
@@ -32,6 +32,7 @@ $description=validate($_GET['description']);
 $end_at=validate($_GET['end_at']);
 $created_at=validate($_GET['created_at']);
 $sqliteid=validate($_GET['sqliteid']);
+$task_min_growers=validate($_GET['task_min_growers']);
 
 
 
@@ -55,7 +56,7 @@ $result = $conn->query($sql);
 
   if ($taskid==0) {
 
-   $insert_sql = "INSERT INTO field_officer_task(userid,seasonid ,task_url ,description ,duration_days ,created_at,end_at) VALUES ($userid,$seasonid,'$task_url','$description',$duration_days,'$created_at','$end_at')";
+   $insert_sql = "INSERT INTO field_officer_task(userid,seasonid ,task_url ,description ,duration_days ,created_at,end_at,task_min_growers) VALUES ($userid,$seasonid,'$task_url','$description',$duration_days,'$created_at','$end_at',$task_min_growers)";
    //$gr = "select * from login";
    if ($conn->query($insert_sql)===TRUE) {
    
