@@ -30,10 +30,27 @@ $total_loan_amount=0;
 
   
 $loans_data=array();
-
+$company_details_data=array();
 $product_items_data=array();
 
 //$sql11 = "Select growers.id from  growers join active_growers on growers.id=active_growers.growerid where active_growers.seasonid=$seasonid";
+
+
+ $sql13 = "Select * from company_details_and_contact limit 1";
+
+    $result3 = $conn->query($sql13);
+     
+     if ($result3->num_rows > 0) {
+       // output data of each row
+       while($row3 = $result3->fetch_assoc()) {
+
+        $loans=array("name"=>$row3["company_name"],"address"=>$row3["address"],"phone_1"=>$row3["phone_1"],"phone_2"=>$row3["phone_2"],"phone_3"=>$row3["phone_3"],"email"=>$row3["email"]);
+
+          array_push($company_details_data,$loans);
+       
+   }
+ }
+
 
 if ($description==""){
 
@@ -63,9 +80,75 @@ $result1 = $conn->query($sql11);
     $grower_area=$row1["area"];
     $grower_id_num=$row1["id_num"];
 
+    $min_code_found=0;
+    $min_code="";
 
 
-    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and processed=1 and loans.growerid=$growerid order by product_amount ";
+    $field_officer_username="";
+
+
+    $sql2 = "Select * from grower_field_officer join users on users.id=grower_field_officer.field_officerid where growerid=$growerid and seasonid=$seasonid limit 1";
+  $result2 = $conn->query($sql2);
+   
+   if ($result2->num_rows > 0) {
+     // output data of each row
+     while($row2 = $result2->fetch_assoc()) {
+      // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+      $field_officer_username=$row2["username"];
+      
+     }
+
+   }
+
+
+
+  $sql12 = "Select  * from grower_to_ministry_of_agricalture_numbers join ministry_of_agricalture_numbers on ministry_of_agricalture_numbers.id=grower_to_ministry_of_agricalture_numbers.ministry_of_agricalture_numbersid  where seasonid=$seasonid and growerid=$growerid limit 1";
+
+  $result2 = $conn->query($sql12);
+   
+   if ($result2->num_rows > 0) {
+     // output data of each row
+     while($row2 = $result2->fetch_assoc()) {
+
+        $min_code=$row2["description"];
+
+     }
+   }
+
+
+
+   if ($min_code=="") {
+     
+       $sql12 = "Select  * from  ministry_of_agricalture_numbers  where seasonid=$seasonid and used=0 limit 1";
+        $result2 = $conn->query($sql12);
+         
+         if ($result2->num_rows > 0) {
+           // output data of each row
+           while($row2 = $result2->fetch_assoc()) {
+              $minid=$row2['id'];
+              $user_sql = "INSERT INTO grower_to_ministry_of_agricalture_numbers(userid,growerid,ministry_of_agricalture_numbersid) VALUES ($userid,$growerid,$minid)";
+               //$sql = "select * from login";
+               if ($conn->query($user_sql)===TRUE) {
+               
+               
+               $user_sql131 = "update ministry_of_agricalture_numbers set used=1 where id=$minid";
+                 //$sql = "select * from login";
+                 if ($conn->query($user_sql131)===TRUE) {
+
+                    $min_code=$row2["description"];
+
+                   
+                  }
+                 
+               }
+
+           }
+         }
+   }
+
+
+
+    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and processed=1 and loans.growerid=$growerid order by product_amount ";
     $result = $conn->query($sql);
 
  
@@ -100,7 +183,7 @@ $result1 = $conn->query($sql11);
 
 
 
-        $loans=array("id"=>$row["id"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"amount"=>$row["amount"],"receipt_number"=>$row["receipt_number"],"product_amount"=>$row["product_amount"],"product_total_cost"=>$row["product_total_cost"],"product_items"=>$product_items_data);
+        $loans=array("id"=>$row["id"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"package_units"=>$row["package_units"],"created_at"=>$row["created_at"],"amount"=>$row["amount"],"receipt_number"=>$row["receipt_number"],"product_amount"=>$row["product_amount"],"product_total_cost"=>$row["product_total_cost"],"product_items"=>$product_items_data);
 
         array_push($loans_data,$loans);
         
@@ -163,6 +246,24 @@ $result1 = $conn->query($sql11);
    $loan_balance=0;
 
 
+ $interest_amount=0;
+
+
+
+
+   $sql15 = "Select parameters.name,value from charges_amount join parameters on parameters.id=charges_amount.parameterid where charges_amount.seasonid=$seasonid and chargeid=1 limit 1 ";
+
+    $result5 = $conn->query($sql15);
+     
+     if ($result5->num_rows > 0) {
+       // output data of each row
+       while($row5 = $result5->fetch_assoc()) {
+
+        $interest_amount=$row5["value"];
+       
+       }
+     }
+
 
    $sql15 = "Select parameters.name,value from charges_amount join parameters on parameters.id=charges_amount.parameterid where charges_amount.seasonid=$seasonid ";
 
@@ -189,7 +290,7 @@ $result1 = $conn->query($sql11);
      $loan_balance=$total_loan_amount+$loan_interest;
 
 
-   $temp=array("grower_area"=>$grower_area,"grower_id_num"=>$grower_id_num,"grower_name"=>$grower_name,"grower_surname"=>$grower_surname,"grower_num"=>$grower_num,"loan_total_amount"=>$loan_balance,"working_capital"=>$working_capital,"roll_over"=>$roll_over,"input_total"=>$input_total,"interest"=>$loan_interest,"inputs"=>$loans_data);
+   $temp=array("grower_area"=>$grower_area,"grower_id_num"=>$grower_id_num,"grower_name"=>$grower_name,"grower_surname"=>$grower_surname,"grower_num"=>$grower_num,"loan_total_amount"=>$loan_balance,"working_capital"=>$working_capital,"roll_over"=>$roll_over,"input_total"=>$input_total,"interest"=>$loan_interest,"inputs"=>$loans_data,"company_data"=>$company_details_data,"min_code"=>$min_code,"interest_value"=>$interest_amount,"field_officer"=>$field_officer_username);
     array_push($data1,$temp);
 
    
@@ -218,7 +319,78 @@ $result1 = $conn->query($sql11);
     $grower_area=$row1["area"];
     $grower_id_num=$row1["id_num"];
 
-    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and processed=1 and loans.growerid=$growerid order by product_amount ";
+
+
+
+    $min_code_found=0;
+    $min_code="";
+
+    $field_officer_username="";
+
+
+    $sql2 = "Select * from grower_field_officer join users on users.id=grower_field_officer.field_officerid where growerid=$growerid and seasonid=$seasonid limit 1";
+  $result2 = $conn->query($sql2);
+   
+   if ($result2->num_rows > 0) {
+     // output data of each row
+     while($row2 = $result2->fetch_assoc()) {
+      // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+      $field_officer_username=$row2["username"];
+      
+     }
+
+   }
+
+
+  $sql12 = "Select  * from grower_to_ministry_of_agricalture_numbers join ministry_of_agricalture_numbers on ministry_of_agricalture_numbers.id=grower_to_ministry_of_agricalture_numbers.ministry_of_agricalture_numbersid  where seasonid=$seasonid and growerid=$growerid and used=1 limit 1";
+
+  $result2 = $conn->query($sql12);
+   
+   if ($result2->num_rows > 0) {
+     // output data of each row
+     while($row2 = $result2->fetch_assoc()) {
+
+        $min_code=$row2["description"];
+
+     }
+   }
+
+
+
+   if ($min_code=="") {
+     
+       $sql12 = "Select  * from  ministry_of_agricalture_numbers  where seasonid=$seasonid and used=0 limit 1";
+        $result2 = $conn->query($sql12);
+         
+         if ($result2->num_rows > 0) {
+           // output data of each row
+           while($row2 = $result2->fetch_assoc()) {
+
+          $minid=$row2['id'];
+          $user_sql = "INSERT INTO grower_to_ministry_of_agricalture_numbers(userid,growerid,ministry_of_agricalture_numbersid) VALUES ($userid,$growerid,$minid)";
+             //$sql = "select * from login";
+             if ($conn->query($user_sql)===TRUE) {
+             
+             $user_sql131 = "update ministry_of_agricalture_numbers set used=1 where id=$minid";
+               //$sql = "select * from login";
+               if ($conn->query($user_sql131)===TRUE) {
+
+                  $min_code=$row2["description"];
+
+                 
+                }
+               
+             }
+
+           }
+
+         }
+   }
+
+
+
+
+    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and processed=1 and loans.growerid=$growerid order by product_amount ";
     $result = $conn->query($sql);
 
  
@@ -229,7 +401,7 @@ $result1 = $conn->query($sql11);
 
 
 
-        $loans=array("id"=>$row["id"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"amount"=>$row["amount"],"receipt_number"=>$row["receipt_number"],"product_amount"=>$row["product_amount"],"product_total_cost"=>$row["product_total_cost"]);
+        $loans=array("id"=>$row["id"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"package_units"=>$row["package_units"],"created_at"=>$row["created_at"],"amount"=>$row["amount"],"receipt_number"=>$row["receipt_number"],"product_amount"=>$row["product_amount"],"product_total_cost"=>$row["product_total_cost"]);
 
         array_push($loans_data,$loans);
         
@@ -291,6 +463,23 @@ $result1 = $conn->query($sql11);
 
    $loan_balance=0;
 
+   $interest_amount=0;
+
+
+
+
+   $sql15 = "Select parameters.name,value from charges_amount join parameters on parameters.id=charges_amount.parameterid where charges_amount.seasonid=$seasonid and chargeid=1 limit 1 ";
+
+    $result5 = $conn->query($sql15);
+     
+     if ($result5->num_rows > 0) {
+       // output data of each row
+       while($row5 = $result5->fetch_assoc()) {
+
+        $interest_amount=$row5["value"];
+       
+       }
+     }
 
 
    $sql15 = "Select parameters.name,value from charges_amount join parameters on parameters.id=charges_amount.parameterid where charges_amount.seasonid=$seasonid ";
@@ -315,10 +504,12 @@ $result1 = $conn->query($sql11);
        }
      }
 
+
+
      $loan_balance=$total_loan_amount+$loan_interest;
 
 
-    $temp=array("grower_area"=>$grower_area,"grower_id_num"=>$grower_id_num,"grower_name"=>$grower_name,"grower_surname"=>$grower_surname,"grower_num"=>$grower_num,"loan_total_amount"=>$loan_balance,"working_capital"=>$working_capital,"roll_over"=>$roll_over,"input_total"=>$input_total,"interest"=>$loan_interest,"inputs"=>$loans_data);
+    $temp=array("grower_area"=>$grower_area,"grower_id_num"=>$grower_id_num,"grower_name"=>$grower_name,"grower_surname"=>$grower_surname,"grower_num"=>$grower_num,"loan_total_amount"=>$loan_balance,"working_capital"=>$working_capital,"roll_over"=>$roll_over,"input_total"=>$input_total,"interest"=>$loan_interest,"inputs"=>$loans_data,"company_data"=>$company_details_data,"min_code"=>$min_code,"interest_value"=>$interest_amount,"field_officer"=>$field_officer_username);
     array_push($data1,$temp);
 
    

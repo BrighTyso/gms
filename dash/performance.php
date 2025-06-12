@@ -29,6 +29,15 @@ require_once("../api/conn.php");
     <!-- BEGIN Custom CSS-->
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <!-- END Custom CSS-->
+    <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"> -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.2/css/dataTables.dataTables.css">
+  
   </head>
   <body class="vertical-layout vertical-compact-menu content-detached-right-sidebar   menu-expanded fixed-navbar" data-open="click" data-menu="vertical-compact-menu" data-col="content-detached-right-sidebar">
 
@@ -60,7 +69,7 @@ require_once("../api/conn.php");
               <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">             <span class="avatar avatar-online"><img src="app-assets/images/portrait/small/avatar-s-1.png" alt="avatar"></span><span class="mr-1"><span class="user-name text-bold-700"></span></span></a>
                 <div class="dropdown-menu dropdown-menu-right">             <!--<a class="dropdown-item" href="account-profile.html"><i class="ft-award"></i>John Doe</a>
                   <div class="dropdown-divider"></div><a class="dropdown-item" href="account-profile.html"><i class="ft-user"></i> Profile</a><a class="dropdown-item" href="loans.html"><i class="icon-wallet"></i> My Wallet</a><a class="dropdown-item" href="start_off_days.html"><i class="ft-check-square"></i> Transactions              </a>-->
-                  <div class="dropdown-divider"></div><a class="dropdown-item" href="login.html"><i class="ft-power"></i> Logout</a>
+                  <div class="dropdown-divider"></div><a class="dropdown-item" href="login.php"><i class="ft-power"></i> Logout</a>
                 </div>
               </li>
             </ul>
@@ -82,6 +91,10 @@ require_once("../api/conn.php");
           <li class=" nav-item"><a href="loans.php"><i class="icon-wallet"></i><span class="menu-title" data-i18n="">Loans</span></a>
           </li>
           <li class=" nav-item"><a href="start_off_days.php"><i class="icon-shuffle"></i><span class="menu-title" data-i18n="">Start-Off-Days</span></a>
+          </li>
+           <li class=" nav-item"><a href="schemes.php"><i class="fa fa-cloud"></i><span class="menu-title" data-i18n="">Schemes</span></a>
+          </li>
+          <li class=" active"><a href="backup.php"><i class="fa fa-refresh"></i><span class="menu-title" data-i18n="">Backup</span></a>
           </li>
 <!--          <li class=" nav-item"><a href="faq.html"><i class="icon-support"></i><span class="menu-title" data-i18n="">FAQ</span></a>-->
 <!--          </li>-->
@@ -581,7 +594,7 @@ $result = $conn->query($sql11);
 
         $allocated_hectares=0;
 
-        $sql2 = "Select * from  grower_field_officer join scheme_hectares_growers on scheme_hectares_growers.growerid=grower_field_officer.growerid join scheme_hectares on scheme_hectares.id=scheme_hectares_growers.scheme_hectaresid  where  scheme_hectares.seasonid=$seasonid and grower_field_officer.seasonid=$seasonid and grower_field_officer.userid=$userid";
+        $sql2 = "Select * from  grower_field_officer join scheme_hectares_growers on scheme_hectares_growers.growerid=grower_field_officer.growerid join scheme_hectares on scheme_hectares.id=scheme_hectares_growers.scheme_hectaresid  where  scheme_hectares.seasonid=$seasonid and grower_field_officer.seasonid=$seasonid and grower_field_officer.field_officerid=$userid";
 
             $result2 = $conn->query($sql2);
 
@@ -595,8 +608,8 @@ $result = $conn->query($sql11);
          }
 
 
-          $sql14 = "Select * from grower_field_officer where seasonid=$seasonid and grower_field_officer.userid=$userid";
-          $result4 = $conn->query($sql2);
+          $sql14 = "Select * from grower_field_officer where seasonid=$seasonid and grower_field_officer.field_officerid=$userid";
+          $result4 = $conn->query($sql14);
           $allocated_growers=$result4->num_rows;
 
 

@@ -20,7 +20,7 @@ if (isset($data->userid)) {
 $userid=$data->userid;
 
 
-$sql = "Select * from users";
+$sql = "Select * from users where active=1";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

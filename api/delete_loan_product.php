@@ -14,18 +14,41 @@ $data = json_decode(file_get_contents("php://input"));
 
 $response=array();
 
-if (isset($data->loanid) && isset($data->quantity) && isset($data->userid) && isset($data->productid)){
+if (isset($data->loanid) && isset($data->quantity) && isset($data->otp) && isset($data->userid) && isset($data->productid)){
 
   $userid=$data->userid;
   $loanid=$data->loanid;
   $quantity=$data->quantity;
   $productid=$data->productid;
+  $otp=$data->otp;
   $disbursement_trucksid=0;
   $truck_to_growerid=0;
   $loan_payment_found=0;
   $loan_found=0;
   $processed=0;
   $created_at=date("Y-m-d");
+
+
+  $security_otp_found=0;
+
+
+
+$sql = "Select * from grower_edit_otp WHERE otp ='$otp' and growerid=$growerid
+  AND created_at > NOW() - INTERVAL 30 MINUTE; ";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    $security_otp_found=$row["id"];   
+    
+   }
+ }
+
+
+if ($security_otp_found>0) {
 
 
  $sql = "Select truck_to_grower.id,disbursement_trucksid,processed from truck_to_grower join loans on loans.id=truck_to_grower.loanid where loanid=$loanid limit 1";
@@ -262,6 +285,15 @@ $user_sql = "delete from loan_adjustments where loanid=$loanid";
 
 
 
+}else{
+    $temp=array("response"=>"OTP Expired(Not Found)");
+        array_push($response,$temp);
+}
+
+}else{
+
+$temp=array("response"=>"Field Empty");
+        array_push($response,$temp);
 }
 
 

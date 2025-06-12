@@ -104,10 +104,14 @@ $result = $conn->query($sql1);
 
 	   }else{
 
-	   
+	   $temp=array("response"=>$conn->error);
+     array_push($data1,$temp);
 
 	   }
 
+}else{
+  $temp=array("response"=>"Not Found Or Created Already");
+     array_push($data1,$temp);
 }
 
 }
@@ -123,7 +127,8 @@ $result = $conn->query($sql1);
 
 }else{
 
-	
+	$temp=array("response"=>"Field Empty");
+     array_push($data1,$temp);
 }
 
 

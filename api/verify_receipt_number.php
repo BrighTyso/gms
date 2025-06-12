@@ -26,12 +26,31 @@ if (isset($data->userid) && isset($data->receiptnumber) && isset($data->seasonid
  $receiptnumber=validate($data->receiptnumber);
  $created_at=$data->created_at;
  $growerid=$data->growerid;
+ $loanid=0;
+
+
+
+$sql = "Select * from loans where receipt_number='$receiptnumber' and seasonid=$seasonid and growerid=$growerid and verified=0";
+
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+      $loanid=$row["id"];
+
+   }
+ }
+
+
+
 
  $user_sql1 = "update loans set verified=1,verified_by=$userid,verified_at='$created_at' where receipt_number='$receiptnumber' and seasonid=$seasonid and growerid=$growerid and verified=0";
    //$sql = "select * from login";
    if ($conn->query($user_sql1)===TRUE) {
 
-    $temp=array("response"=>"success");
+    $temp=array("response"=>"success","loanid"=>$loanid,"growerid"=>$growerid);
     array_push($data1,$temp);
 
      

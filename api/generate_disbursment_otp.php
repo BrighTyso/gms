@@ -17,7 +17,7 @@ $quantity_in_store=0;
 $product="";
 $store="";
 $location="";
-
+$contact_email="";
 $data1=array();
 $storeData=array();
 $contact_data=array();
@@ -84,22 +84,7 @@ $result = $conn->query($sql);
  }
 
 
- $sql = "Select * from operations_contacts where  active=1 limit 1";
-$result = $conn->query($sql);
  
- if ($result->num_rows > 0) {
-   // output data of each row
-   while($row = $result->fetch_assoc()) {
-
-
-    $phone=$row["phone"];
-    
-    $temp=array("to"=>$phone);
-     array_push($contact_data,$temp);
-   
-   }
-
- }
 
 
  if ($found==0) {
@@ -107,9 +92,45 @@ $result = $conn->query($sql);
    $user_sql = "INSERT INTO disbursement_otp(userid,storeid,productid,quantity,otp) VALUES ($userid,$storeid,$productid,$quantity,'$otp')";
    //$sql = "select * from login";
    if ($conn->query($user_sql)===TRUE) {
+       
+       $subject = "";
+            $txt="";
+            $subject="";
+            $contacts=array();
+       $sql = "Select * from operations_contacts where  active=1";
+      $result = $conn->query($sql);
+       
+       if ($result->num_rows > 0) {
+         // output data of each row
+         while($row = $result->fetch_assoc()) {
+
+          $temp1=array("phone"=>$row["phone"]);
+                  array_push($contacts,$temp1);
+
+          $phone=$row["phone"];
+          $contact_email=$row["email"];
+
+          $to = $contact_email;
+          $subject = "Disbursement OTP";
+          $txt = "Disbursement Product Details\n\n\n"."Store:".$store."\nProduct:".$product."\n"."Quantity:".$quantity."\nOTP:".$otp;
+          $headers = "From: gmsotp@coreafricagrp.com";
+
+          mail($to,$subject,$txt,$headers);
+
+          
+          // $temp=array("to"=>$phone);
+          //  array_push($contact_data,$temp);
+         
+         }
+
+       }
+      
+      
+
+    
    
-     $temp=array("response"=>"success","otp"=>$otp,"store_description"=>$storeData,"contacts"=>$contact_data);
-     array_push($data1,$temp);
+    $temp=array("response"=>"success","message"=>$txt,"otp"=>$otp_production,"contacts"=>$contacts,"subject"=>$subject);
+           array_push($data1,$temp);
 
    }else{
 

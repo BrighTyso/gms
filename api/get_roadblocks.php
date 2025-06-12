@@ -23,7 +23,7 @@ $data1=array();
 if ($userid!="" && $seasonid!="") {
 	
 
-$sql = "Select road_blocks.created_at,latitude,longitude,time,username from road_blocks join users on users.id=road_blocks.userid where  users.id=$userid and road_blocks.created_at='$created_at' ORDER BY road_blocks.created_at,road_blocks.id,road_blocks.time";
+$sql = "Select visits.created_at,latitude,longitude,visits.datetime,username from visits join users on users.id=visits.userid where  users.id=$userid and visits.created_at='$created_at' ORDER BY visits.datetime desc";
 
 $result = $conn->query($sql);
  
@@ -32,7 +32,7 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-     $temp=array("created_at"=>$row["created_at"],"latitude"=>$row["latitude"] ,"longitude"=>$row["longitude"],"time"=>$row["time"],"username"=>$row["username"]);
+     $temp=array("created_at"=>$row["created_at"],"latitude"=>$row["latitude"] ,"longitude"=>$row["longitude"],"time"=>$row["datetime"],"username"=>$row["username"]);
     array_push($data1,$temp);
     
    }

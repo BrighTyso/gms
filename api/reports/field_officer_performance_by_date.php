@@ -24,6 +24,7 @@ $grower_visits=0;
 $userid=0;
 $working_days=0;
 $fuel_allocation=0;
+$total_start_of_days=0;
 
   $sql = "Select distinct sod.userid,users.username from sod join users on users.id=sod.userid where sod.seasonid=$seasonid order by sod.created_at desc";
 $result = $conn->query($sql);
@@ -40,7 +41,7 @@ $result = $conn->query($sql);
         $grower_visits=0;
         $working_days=0;
         $fuel_allocation=0;
-
+        $total_start_of_days=0;
 
 
 
@@ -75,12 +76,28 @@ $result = $conn->query($sql);
 
 
 
+        $sql501 = "Select distinct sod.userid,users.username,sod.created_at from sod join users on users.id=sod.userid  where sod.seasonid=$seasonid and sod.userid=$userid and (sod.created_at between '$start' and '$end') order by sod.created_at desc";
+      $result501 = $conn->query($sql501);
+       
+       $total_start_of_days=$result501->num_rows;
+
+
+
 
        $sql2 = "Select distinct growerid from  visits where userid=$userid and seasonid=$seasonid and (created_at between '$start' and '$end')";
 
       $result2 = $conn->query($sql2);
 
       $total_growers=$result2->num_rows;
+
+
+
+      $sql2 = "Select distinct created_at from  visits where userid=$userid and seasonid=$seasonid and (created_at between '$start' and '$end')";
+
+      $result2 = $conn->query($sql2);
+
+      $working_days=$result2->num_rows;
+
 
 
 
@@ -138,7 +155,7 @@ $result = $conn->query($sql);
 
 
      $temp=array("userid"=>$row["userid"],"username"=>$row["username"]
-,"distance"=>$kms,"hours"=>$hours_worked,"visits"=>$visited_growers,"total_growers"=>$total_growers,"total_visits"=>$grower_visits,"working_days"=>$working_days,"fuel_allocation"=>$fuel_allocation);
+,"distance"=>$kms,"hours"=>$hours_worked,"visits"=>$visited_growers,"total_growers"=>$total_growers,"total_visits"=>$grower_visits,"working_days"=>$working_days,"fuel_allocation"=>$fuel_allocation,"start_of_days"=>$total_start_of_days);
     array_push($data1,$temp);
    
     

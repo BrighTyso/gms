@@ -19,20 +19,24 @@ $hours_worked=0;
 $total_growers=0;
 $grower_visits=0;
 
+$start_battery_level=0;
+$end_battery_level=0;
+$battery_level_report=0;
+
 if ($description=="") {
-  $sql = "Select userid,latitude,longitude,sod.seasonid,time,eod,sod.created_at,eod_created_at,username from sod join users on users.id=sod.userid where sod.seasonid=$seasonid order by created_at desc";
+  $sql = "Select userid,latitude,longitude,sod.seasonid,time,eod,sod.created_at,eod_created_at,username from sod join users on users.id=sod.userid where sod.seasonid=$seasonid order by created_at desc limit 20";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
-
-
    // output data of each row
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
 
 
-
+        $start_battery_level=0;
+        $end_battery_level=0;
+        $battery_level_report=0;
         $userid=$row['userid'];
         $created_at=$row['created_at'];
         $distance=0;
@@ -103,13 +107,62 @@ $result = $conn->query($sql);
 
 
 
+
+$sql2 = "Select distinct * from start_battery_level where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $start_battery_level+=$row2['battery_level'];
+
+         }
+      }
+
+
+
+      $sql2 = "Select distinct * from end_battery_level where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $end_battery_level+=$row2['battery_level'];
+
+         }
+      }
+
+
+      $sql2 = "Select distinct * from battery_level_report where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $battery_level_report+=$row2['battery_level'];
+
+         }
+      }
+
+
+
+
       $kms=$distance/1000;
 
 
 
 
      $temp=array("longitude"=>$row["longitude"],"latitude"=>$row["latitude"],"userid"=>$row["userid"],"seasonid"=>$row["seasonid"],"time"=>$row["time"],"eod"=>$row["eod"],"created_at"=>$row["created_at"],"eod_created_at"=>$row["eod_created_at"],"username"=>$row["username"],"time"=>$row["time"]
-,"distance"=>$kms,"hours"=>$hours_worked,"visits"=>$visited_growers,"total_growers"=>$total_growers,"total_visits"=>$grower_visits);
+,"distance"=>$kms,"hours"=>$hours_worked,"visits"=>$visited_growers,"total_growers"=>$total_growers,"total_visits"=>$grower_visits,"battery_level_report"=>$battery_level_report,"end_battery_level"=>$end_battery_level,"start_battery_level"=>$start_battery_level);
     array_push($data1,$temp);
    
     
@@ -120,16 +173,20 @@ $result = $conn->query($sql);
 
 }else{
 
-$sql = "Select userid,latitude,longitude,sod.seasonid,time,eod,sod.created_at,eod_created_at,username from sod join users on users.id=sod.userid where sod.seasonid=$seasonid and username='$description' order by created_at desc" ;
+$sql = "Select userid,latitude,longitude,sod.seasonid,time,eod,sod.created_at,eod_created_at,username from sod join users on users.id=sod.userid where sod.seasonid=$seasonid and username='$description' order by created_at desc limit 20" ;
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
 
+   
 
    // output data of each row
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
+        $start_battery_level=0;
+        $end_battery_level=0;
+        $battery_level_report=0;
         $userid=$row['userid'];
         $created_at=$row['created_at'];
         $distance=0;
@@ -198,14 +255,57 @@ $result = $conn->query($sql);
       }
 
 
+$sql2 = "Select distinct * from start_battery_level where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $start_battery_level+=$row2['battery_level'];
+
+         }
+      }
+
+
+      $sql2 = "Select distinct * from end_battery_level where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $end_battery_level+=$row2['battery_level'];
+
+         }
+      }
+
+
+      $sql2 = "Select distinct * from battery_level_report where created_at='$created_at' and userid=$userid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $battery_level_report+=$row2['battery_level'];
+
+         }
+      }
 
       $kms=$distance/1000;
 
 
 
 
-     $temp=array("longitude"=>$row["longitude"],"latitude"=>$row["latitude"],"userid"=>$row["userid"],"seasonid"=>$row["seasonid"],"time"=>$row["time"],"eod"=>$row["eod"],"created_at"=>$row["created_at"],"eod_created_at"=>$row["eod_created_at"],"username"=>$row["username"],"time"=>$row["time"]
-,"distance"=>$kms,"hours"=>$hours_worked,"visits"=>$visited_growers,"total_growers"=>$total_growers,"total_visits"=>$grower_visits);
+      $temp=array("longitude"=>$row["longitude"],"latitude"=>$row["latitude"],"userid"=>$row["userid"],"seasonid"=>$row["seasonid"],"time"=>$row["time"],"eod"=>$row["eod"],"created_at"=>$row["created_at"],"eod_created_at"=>$row["eod_created_at"],"username"=>$row["username"],"time"=>$row["time"]
+,"distance"=>$kms,"hours"=>$hours_worked,"visits"=>$visited_growers,"total_growers"=>$total_growers,"total_visits"=>$grower_visits,"battery_level_report"=>$battery_level_report,"end_battery_level"=>$end_battery_level,"start_battery_level"=>$start_battery_level);
     array_push($data1,$temp);
    
    

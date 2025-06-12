@@ -59,19 +59,7 @@ $android_captureid=validate($_GET['capture_userid']);
 
 
 
-$sql = "Select * from active_growers where growerid=$growerid and seasonid=$seasonid";
-    $result = $conn->query($sql);
-     
-     if ($result->num_rows > 0) {
-       // output data of each row
-       while($row = $result->fetch_assoc()) {
-       
-       $active_grower_found=$row["id"];
-      
-        
-       }
 
-    }
 
 
 $sql = "Select * from truck_destination where (truck_destination.trucknumber='$trucknumber' or truck_destination.id=$trucknumber) and close_open=1";
@@ -124,6 +112,25 @@ $result = $conn->query($sql);
    }
 
  }
+
+
+
+
+
+$sql = "Select * from active_growers where growerid=$growerid and seasonid=$seasonid";
+    $result = $conn->query($sql);
+     
+     if ($result->num_rows > 0) {
+       // output data of each row
+       while($row = $result->fetch_assoc()) {
+       
+       $active_grower_found=$row["id"];
+      
+        
+       }
+
+    }
+
 
  // get selected  products id
 
@@ -204,7 +211,7 @@ $result = $conn->query($sql1);
    //$gr = "select * from login";
    if ($conn->query($insert_sql)===TRUE) {
    
-    // $last_id = $conn->insert_id;
+     $loanid_android = $conn->insert_id;
 
    if ($verifyHectares==0) {
 
@@ -218,7 +225,7 @@ $result = $conn->query($sql1);
    //$sql = "select * from login";
    if ($conn->query($user_sql1)===TRUE) {
    
-       $insert_sql = "INSERT INTO truck_to_grower(userid,growerid,disbursement_trucksid,quantity,productid,created_at) VALUES ($userid,$growerid,$disbursement_trucksid,$quantity,$productid,'$created_at')";
+       $insert_sql = "INSERT INTO truck_to_grower(userid,growerid,disbursement_trucksid,quantity,productid,created_at,loanid) VALUES ($userid,$growerid,$disbursement_trucksid,$quantity,$productid,'$created_at',loanid_android)";
              //$sql = "select * from login";
              if ($conn->query($insert_sql)===TRUE) {
              
@@ -265,7 +272,7 @@ $result = $conn->query($sql1);
    //$sql = "select * from login";
    if ($conn->query($user_sql1)===TRUE) {
    
-           $insert_sql = "INSERT INTO truck_to_grower(userid,growerid,disbursement_trucksid,quantity,productid,created_at) VALUES ($userid,$growerid,$disbursement_trucksid,$quantity,$productid,'$created_at')";
+           $insert_sql = "INSERT INTO truck_to_grower(userid,growerid,disbursement_trucksid,quantity,productid,created_at,loanid) VALUES ($userid,$growerid,$disbursement_trucksid,$quantity,$productid,'$created_at',$loanid_android)";
          //$sql = "select * from login";
          if ($conn->query($insert_sql)===TRUE) {
          

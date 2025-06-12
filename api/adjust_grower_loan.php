@@ -39,7 +39,10 @@ $newquantity=$data->newquantity;
 $seasonid=$data->seasonid;
 $loanid=$data->loanid;
 $created_at=$data->created_at;
+$security_otp_found=0;
 
+
+    // code...
 
 $sql = "Select truck_to_grower.id,truck_to_grower.disbursement_trucksid,disbursement.quantity from truck_to_grower join truck_disbursment_sync_active on truck_disbursment_sync_active.disbursement_trucksid=truck_to_grower.disbursement_trucksid join disbursement on disbursement.disbursement_trucksid=truck_disbursment_sync_active.disbursement_trucksid where truck_to_grower.growerid=$growerid and truck_to_grower.productid=$productid  and truck_to_grower.quantity=$quantity and seasonid=$seasonid and truck_to_grower.loanid=$loanid  limit 1";
   $result = $conn->query($sql);
@@ -487,10 +490,12 @@ $sql = "Select truck_to_grower.id,truck_to_grower.disbursement_trucksid,disburse
  //    }
 
 
+}else{
+        $temp=array("response"=>"Field Empty");
+        array_push($data1,$temp);
+}
 
 
-
-  }
 
 
 

@@ -18,7 +18,7 @@ if (isset($data->userid)) {
 $seasonid=$data->seasonid;
  
 
-$sql = "Select * from scheme ";
+$sql = "Select distinct * from scheme ";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

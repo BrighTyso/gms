@@ -19,6 +19,7 @@ $amount=$data->amount;
 $created_at=$data->created_at;
 $mass=$data->mass;
 $loan_payment_found=0;
+ $ref=$data->ref;
 
 $response=array();
 
@@ -76,7 +77,7 @@ if (isset($data->seasonid) && isset($data->userid) && isset($data->grower_num) &
 
 if ($growerid>0 && $loan_found==0) {
 
-      $user_sql = "INSERT INTO loan_payments(userid,seasonid,growerid,amount,mass,description,receipt_number,created_at) VALUES ($userid,$seasonid,$growerid,'$amount','$mass','Recovery','R1111','$created_at')";
+      $user_sql = "INSERT INTO loan_payments(userid,seasonid,growerid,amount,mass,description,receipt_number,created_at,reference_num) VALUES ($userid,$seasonid,$growerid,'$amount','$mass','Recovery','R1111','$created_at','$ref')";
          //$sql = "select * from login";
          if ($conn->query($user_sql)===TRUE) {
          

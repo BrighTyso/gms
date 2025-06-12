@@ -60,7 +60,7 @@ $found_working_capital=0;
      $growerid=$row["id"];
 
 
-    $sql1 = "Select * from inputs_total where seasonid=$seasonid and growerid=$growerid";
+    $sql1 = "Select * from inputs_total where seasonid=$seasonid and growerid=$growerid limit 1";
     $result1 = $conn->query($sql1);
      
      if ($result1->num_rows > 0) {

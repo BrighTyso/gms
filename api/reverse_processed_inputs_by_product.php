@@ -27,6 +27,24 @@ $fetched_records=0;
 $inserted_records=0;
 $found_rollover=0;
 $found_working_capital=0;
+$otp=$data->otp;
+$otp_found=0;
+
+
+$sql = "Select * from reverse_loan_by_product_otp where  otp='$otp' and productid=$productid  AND created_at > NOW() - INTERVAL 30 MINUTE limit 1";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // product id
+   $otp_found=$row["id"];
+   
+   }
+
+ }
+
+ if ($otp_found>0) {
 
 
   $sql = "Select distinct loans.id as loanid,products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified,amount from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and  prices.seasonid=$seasonid and loans.productid=$productid and processed=1 and verified=1 order by growers.grower_num limit 5000";
@@ -119,7 +137,10 @@ if ($found>0) {
 
 
  
+}else{
 
+
+}
 
 
 }

@@ -10,6 +10,4 @@ header('Location:../gms/dash/login.php');
 
 }
 
-?>
-
 

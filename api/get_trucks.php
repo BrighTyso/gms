@@ -19,14 +19,14 @@ $data1=array();
 
 
   
-$sql = "Select id,trucknumber from truck_destination where close_open=0 order by id desc";
+$sql = "Select id,trucknumber,destination from truck_destination where close_open=0 order by id desc";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
    // output data of each row
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
-    $temp=array("id"=>$row["id"],"trucknumber"=>$row["trucknumber"]);
+    $temp=array("id"=>$row["id"],"trucknumber"=>$row["trucknumber"],"destination"=>$row["destination"]);
     array_push($data1,$temp);
     
    }

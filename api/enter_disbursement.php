@@ -45,7 +45,7 @@ $otp=$data->otp;
 
 
 $sql = "Select * from disbursement_otp WHERE otp ='$otp'
-  AND created_at > NOW() - INTERVAL 10 MINUTE; ";
+  AND created_at > NOW() - INTERVAL 30 MINUTE; ";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -95,7 +95,8 @@ $result = $conn->query($sql);
 
     $found=$row["id"];
     $disbursement_trucksid=$row["id"];
-    
+
+
    }
  }
 
@@ -124,7 +125,9 @@ $result = $conn->query($sql1);
 
 if ($product_disbursed==0  && $otp_storeid==$storeid && $otp_productid==$productid && $otp_quantity<=$quantity) {
 
+
       if ($found>0) {
+
 
           if ($quantity_Enough>0) {
 
@@ -170,11 +173,20 @@ if ($product_disbursed==0  && $otp_storeid==$storeid && $otp_productid==$product
 
                                                }
 
+                                          }else{
+                                            $temp=array("response"=>$conn->error);
+                                                   array_push($response,$temp);
                                           }
                                           
 
+                                       }else{
+                                        $temp=array("response"=>$conn->error);
+                                                   array_push($response,$temp);
                                        }
 
+                             }else{
+                                $temp=array("response"=>$conn->error);
+                                                   array_push($response,$temp);
                              }
                           
 

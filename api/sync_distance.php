@@ -76,6 +76,21 @@ $result = $conn->query($sql1);
 
 	   }
 
+}else{
+	$user_sql1 = "update distance set distance=distance+$distance where userid=$userid and created_at='$created_at'";
+   //$sql = "select * from login";
+   if ($conn->query($user_sql1)===TRUE) {
+
+    $temp=array("response"=>"success","sqliteid"=>$sqliteid);
+    array_push($data,$temp);
+
+     
+    }else{
+
+      $temp=array("response"=>$conn->error,"sqliteid"=>$sqliteid);
+        array_push($data,$temp);
+
+    }
 }
 
 

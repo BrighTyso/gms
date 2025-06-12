@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
   <head>
@@ -26,8 +30,205 @@
     <link rel="stylesheet" type="text/css" href="app-assets/css/pages/dashboard-ico.css">
     <!-- END Page Level CSS-->
     <!-- BEGIN Custom CSS-->
+    <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"> -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.2/css/dataTables.dataTables.css">
+  
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
       <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.0.2/papaparse.min.js"></script>
+
+
+<script type="text/javascript">
+    
+let userid=<?php echo $_SESSION['userid']; ?>;
+let seasonid=<?php echo $_SESSION['seasonid']; ?>;
+
+
+const selectImportFieldOfficers=()=>{
+
+            let rowsArray = [];
+            let valuesArray = [];
+
+        Papa.parse(document.getElementById("field_officer").files[0], {
+            header: true,
+            skipEmptyLines: true,
+            complete: function (results) {
+              console.log(results.data)
+                results.data.map((d) => {
+                    rowsArray.push(Object.keys(d));
+                    valuesArray.push(Object.values(d));
+                });
+
+                console.log(valuesArray)
+
+                valuesArray.map(i=>{
+               
+
+                let username=i[1]
+                let grower_num=i[0]
+
+                const requestOptions = {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        username:username,
+                        userid: userid,
+                        grower_num:grower_num,
+                        seasonid:seasonid,
+                        created_at:new Date()
+                    })
+                };
+
+
+                fetch('http://'+window.location.host+'/gms/api/importGrowerToFieldOfficer.php', requestOptions)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data,"Success")
+                    });
+            })
+            },
+        });
+
+
+
+
+
+
+    }
+
+
+ const selectImportGrowers=()=>{
+
+            let rowsArray = [];
+            let valuesArray = [];
+            console.log(window.location.host)
+            console.log(userid)
+             
+
+        Papa.parse(document.getElementById("growers").files[0], {
+            header: true,
+            skipEmptyLines: true,
+            complete: function (results) {
+              console.log(results.data)
+                results.data.map((d) => {
+                    rowsArray.push(Object.keys(d));
+                    valuesArray.push(Object.values(d));
+                });
+
+
+         valuesArray.map((i)=>{
+                
+                let grower_num=i[0]
+                let name=i[1]
+                let surname=i[2]
+                let area=i[3]
+                let province=i[4]
+                let phone=i[5]
+                let id_num=i[6]
+
+                console.log(grower_num)
+
+
+
+                const requestOptions = {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        grower_num,
+                        name,
+                        surname,
+                        area,
+                        province,
+                        phone,
+                        id_num,
+                        userid: userid,
+                        seasonid,
+                        created_at: new Date()
+                    })
+                };
+
+
+                fetch('http://'+window.location.host+'/gms/api/import_growers.php', requestOptions)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data,"Success")
+                    });
+            })
+            },
+        });
+
+
+    }
+
+
+
+
+
+
+
+        const selectImportSchemes=()=>{
+
+            let rowsArray = [];
+            let valuesArray = [];
+
+        Papa.parse(document.getElementById("scheme").files[0], {
+            header: true,
+            skipEmptyLines: true,
+            complete: function (results) {
+              console.log(results.data)
+                results.data.map((d) => {
+                    rowsArray.push(Object.keys(d));
+                    valuesArray.push(Object.values(d));
+                });
+
+
+                console.log(valuesArray)
+
+         valuesArray.map(i=>{
+                description=i[0]
+
+                let grower_num=i[0]
+                let hectares=i[1]
+
+                const requestOptions = {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        grower_num:grower_num,
+                        userid: userid,
+                        hectares:hectares,
+                        created_at:new Date()
+                    })
+                };
+
+
+                fetch('http://'+window.location.host+'/gms/api/create_scheme_growers.php', requestOptions)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data[0].response,"Success")
+                    });
+            })
+
+            },
+        });
+
+
+
+
+
+
+    }
+
+</script>
+      
+
     <!-- END Custom CSS-->
   </head>
   <body class="vertical-layout vertical-compact-menu 2-columns   menu-expanded fixed-navbar" data-open="click" data-menu="vertical-compact-menu" data-col="2-columns">
@@ -60,7 +261,7 @@
               <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">             <span class="avatar avatar-online"><img src="app-assets/images/portrait/small/avatar-s-1.png" alt="avatar"></span><span class="mr-1"><span class="user-name text-bold-700"></span></span></a>
                 <div class="dropdown-menu dropdown-menu-right">             <!--<a class="dropdown-item" href="account-profile.html"><i class="ft-award"></i>John Doe</a>
                   <div class="dropdown-divider"></div><a class="dropdown-item" href="account-profile.html"><i class="ft-user"></i> Profile</a><a class="dropdown-item" href="loans.html"><i class="icon-wallet"></i> My Wallet</a><a class="dropdown-item" href="start_off_days.html"><i class="ft-check-square"></i> Transactions              </a>-->
-                  <div class="dropdown-divider"></div><a class="dropdown-item" href="login.html"><i class="ft-power"></i> Logout</a>
+                  <div class="dropdown-divider"></div><a class="dropdown-item" href="login.php"><i class="ft-power"></i> Logout</a>
                 </div>
               </li>
             </ul>
@@ -83,6 +284,11 @@
           </li>
           <li class=" nav-item"><a href="start_off_days.php"><i class="icon-shuffle"></i><span class="menu-title" data-i18n="">Start-Off-Days</span></a>
           </li>
+
+           <li class=" nav-item"><a href="schemes.php"><i class="fa fa-cloud"></i><span class="menu-title" data-i18n="">Schemes</span></a>
+          </li>
+          <li class=" active"><a href="backup.php"><i class="fa fa-refresh"></i><span class="menu-title" data-i18n="">Backup</span></a>
+          </li>
         </ul>
       </div>
     </div>
@@ -94,6 +300,8 @@
         <div class="content-body"><!-- ICO Token &  Distribution-->
             <div class="btn-group">
                 <h3>DashBoard</h3>
+
+                
             </div>
 <div class="row match-height">
     <div class="col-xl-8 col-12">
@@ -122,6 +330,42 @@
 </div>
 <!--/ ICO Token &  Distribution-->
 <!-- Purchase token -->
+
+<div class="row">
+    <div class="col-lg-12 col-12">
+        <h6 class="my-2">File Imports</h6>
+        <div class="card pull-up">
+            <div class="card-content">
+                <div class="card-body">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col">
+                                <p><strong>Import Growers</strong></p>
+                                <input type="file" id="growers" name="growers" class="form-control" accept=".csv">
+                                <br>
+                                <button class="btn-gradient-primary" onclick="selectImportGrowers()">Submit</button>
+                            </div>
+                            <div class="col">
+                                <p><strong>Import Contract Schemes</strong></p>
+                                <input type="file" id="scheme" name="growersScheme" class="form-control" accept=".csv">
+                                <br>
+                                <button class="btn-gradient-primary" onclick="selectImportSchemes()">Submit</button>
+                            </div>
+                            <div class="col">
+                                <p><strong>Grower Field-Officers</strong></p>
+                                <input type="file" id="field_officer" name="growersFieldOfficer" class="form-control" accept=".csv">
+                                <br>
+                                <button class="btn-gradient-primary" onclick="selectImportFieldOfficers()">Submit</button>
+                            </div>
+                          
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!--/ Purchase token -->
 <!-- ICO Token balance & sale progress -->
@@ -850,7 +1094,7 @@ $result = $conn->query($sql11);
 
             $allocated_hectares=0;
 
-        $sql2 = "Select * from  grower_field_officer join scheme_hectares_growers on scheme_hectares_growers.growerid=grower_field_officer.growerid join scheme_hectares on scheme_hectares.id=scheme_hectares_growers.scheme_hectaresid  where  scheme_hectares.seasonid=$seasonid and grower_field_officer.seasonid=$seasonid and grower_field_officer.userid=$userid";
+        $sql2 = "Select * from  grower_field_officer join scheme_hectares_growers on scheme_hectares_growers.growerid=grower_field_officer.growerid join scheme_hectares on scheme_hectares.id=scheme_hectares_growers.scheme_hectaresid  where  scheme_hectares.seasonid=$seasonid and grower_field_officer.seasonid=$seasonid and grower_field_officer.field_officerid=$userid";
 
             $result2 = $conn->query($sql2);
 
@@ -864,8 +1108,8 @@ $result = $conn->query($sql11);
          }
 
 
-          $sql14 = "Select * from grower_field_officer where seasonid=$seasonid and grower_field_officer.userid=$userid";
-          $result4 = $conn->query($sql2);
+          $sql14 = "Select * from grower_field_officer where seasonid=$seasonid and grower_field_officer.field_officerid=$userid";
+          $result4 = $conn->query($sql14);
           $allocated_growers=$result4->num_rows;
 
 
@@ -945,6 +1189,13 @@ $result = $conn->query($sql11);
     <script src="app-assets/js/scripts/pages/dashboard-ico.js" type="text/javascript"></script>
     <!-- END PAGE LEVEL JS-->
     <script>
+
+        
+
+
+
+
+        
 
         function getProvinceGrowersHectaresResult(str) {
 
@@ -1181,11 +1432,17 @@ $result = $conn->query($sql11);
         }
 
 
+
+ 
+
+
         // showResult("bright");
         // showResult1("bright");
         // recoveredResult("bright");
         // performanceResult("bright")
          recoveryP()
+
+
 
 </script>
 

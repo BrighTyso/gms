@@ -16,7 +16,7 @@ $hash=md5($_POST['password']);
 if ($username!="" && $hash!="") {
     
 
-$sql = "Select * from users where hash='$hash' and  username='$username' and  active=1";
+$sql = "Select * from users where hash='$hash' and  username='$username' and  active=1 limit 1";
 
 $result = $conn->query($sql);
  
@@ -24,6 +24,24 @@ $result = $conn->query($sql);
    // output data of each row
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+
+        $sql1 = "Select * from seasons where active=1";
+        $result1 = $conn->query($sql1);
+     
+         if ($result1->num_rows > 0) {
+           // output data of each row
+           while($row1 = $result1->fetch_assoc()) {
+            // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+            $_SESSION["seasonid"]=$row1["id"];
+
+            
+            
+           }
+         }
+
+
 
     $_SESSION['userid']=$row["id"];
     $_SESSION['rights']=$row["rightsid"];

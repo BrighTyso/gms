@@ -22,7 +22,7 @@ $created_at=$data->created_at;
 $description=$data->grower;
 $productid=$data->productid;
 $seasonid=$data->seasonid;
-$receipt_number=validate($data->receiptnumber);
+//$receipt_number=validate($data->receiptnumber);
 $sqliteid=0;
 $verifyLoan=0;
 $verifyHectares=0;
@@ -42,6 +42,74 @@ $product_captured_quantity=0;
 $quantity_to_be_captured=0;
 
 
+ $sql = "Select * from growers where grower_num='$description' limit 1";
+  $result = $conn->query($sql);
+   
+   if ($result->num_rows > 0) {
+     // output data of each row
+     while($row = $result->fetch_assoc()) { 
+     
+     $growerid=$row["id"];
+   
+       
+     }
+
+   }
+
+
+
+    $receipt_number=0;
+
+     $sql2 = "Select distinct * from system_receipt_number where growerid=$growerid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+        
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $receipt_number=$row2['receipt_number'];
+
+         }
+      }
+
+
+    if ($receipt_number==0) {
+        $sql2 = "Select distinct * from system_receipt_number order by id desc limit 1";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $receipt_number=$row2['receipt_number']+1;
+
+          $insert_sql = "INSERT INTO system_receipt_number(userid,growerid,seasonid,receipt_number,created_at) VALUES ($userid,$growerid,$seasonid,$receipt_number,'$created_at')";
+         //$gr = "select * from login";
+         if ($conn->query($insert_sql)===TRUE) {
+
+
+          }else{
+            
+          }
+ 
+
+
+         }
+      }else{
+
+        $receipt_number=1702;
+        $insert_sql = "INSERT INTO system_receipt_number(userid,growerid,seasonid,receipt_number,created_at) VALUES ($userid,$growerid,$seasonid,$receipt_number,'$created_at')";
+         //$gr = "select * from login";
+         if ($conn->query($insert_sql)===TRUE) {
+
+
+         }else{
+            
+         }
+
+      }
+    }
 
 
 
@@ -86,10 +154,6 @@ if (isset($userid) && isset($description)  && isset($lat)  && isset($long)  && i
 
 
 
-
-
-
-
 // deduction_point 0 means we are deducting all the loans from the warehouse alse from the truck
 
 if ($deduction_point==0) {
@@ -114,7 +178,7 @@ if ($deduction_point==0) {
 
 
 
-                          $sql = "Select * from growers where grower_num='$description' or grower_num like '%$description%' limit 1";
+                          $sql = "Select * from growers where grower_num='$description' limit 1";
                           $result = $conn->query($sql);
                            
                            if ($result->num_rows > 0) {
@@ -127,6 +191,14 @@ if ($deduction_point==0) {
                              }
 
                            }
+
+
+
+   
+
+
+
+
 
                            // get selected  products id
 
@@ -238,9 +310,23 @@ if ($deduction_point==0) {
 
 
 
+                            $sql = "Select scheme_hectares.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id  join scheme_hectares_growers on scheme_hectares_growers.scheme_hectaresid=scheme_hectares.id where scheme_hectares.seasonid=$seasonid  and scheme_hectares_growers.growerid=$growerid";
+                            $result = $conn->query($sql);
+                             
+                             if ($result->num_rows > 0) {
+                               // output data of each row
+                               while($row = $result->fetch_assoc()) {
+                                // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+                                $hectares=$row["quantity"];
+                                
+                               }
+                             }
 
 
-                             $sql = "Select scheme_hectares_products.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id join scheme_hectares_products on scheme_hectares_products.scheme_hectaresid=scheme_hectares.id where scheme_hectares.seasonid=$seasonid and scheme_hectares_products.productid=$productid";
+
+
+                             $sql = "Select scheme_hectares_products.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id join scheme_hectares_products on scheme_hectares_products.scheme_hectaresid=scheme_hectares.id join scheme_hectares_growers on scheme_hectares_growers.scheme_hectaresid=scheme_hectares.id where scheme_hectares.seasonid=$seasonid and scheme_hectares_products.productid=$productid and scheme_hectares_growers.growerid=$growerid";
                               $result = $conn->query($sql);
                                
                                if ($result->num_rows > 0) {
@@ -461,7 +547,7 @@ if ($deduction_point==0) {
 
         }else if($quantity_to_be_captured<$quantity){
 
-            $temp=array("response"=>"Exceeding Scheme($scheme_captured_quantity) quantity.Captured Quantity($product_captured_quantity)");
+            $temp=array("response"=>"Exceeding Scheme quantity($scheme_captured_quantity)\nCaptured Quantity($product_captured_quantity)");
         array_push($data1,$temp);
         }
 
@@ -514,7 +600,7 @@ $result = $conn->query($sql);
 
 
 
-$sql = "Select * from growers where grower_num='$description' or grower_num like '%$description' limit 1";
+$sql = "Select * from growers where grower_num='$description' limit 1";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -526,6 +612,16 @@ $result = $conn->query($sql);
    }
 
  }
+
+
+
+
+
+
+
+
+
+
 
  // get selected  products id
 
@@ -608,7 +704,6 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-   #$verifyLoan=1;
     $product_captured_quantity+=$row["quantity"];
 
 
@@ -617,9 +712,23 @@ $result = $conn->query($sql);
 
 
 
+$sql = "Select scheme_hectares.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id  join scheme_hectares_growers on scheme_hectares_growers.scheme_hectaresid=scheme_hectares.id where scheme_hectares.seasonid=$seasonid  and scheme_hectares_growers.growerid=$growerid";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+    $hectares=$row["quantity"];
+    
+   }
+ }
 
 
-$sql = "Select scheme_hectares_products.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id join scheme_hectares_products on scheme_hectares_products.scheme_hectaresid=scheme_hectares.id where scheme_hectares.seasonid=$seasonid and scheme_hectares_products.productid=$productid";
+
+
+$sql = "Select scheme_hectares_products.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id join scheme_hectares_products on scheme_hectares_products.scheme_hectaresid=scheme_hectares.id join scheme_hectares_growers on scheme_hectares_growers.scheme_hectaresid=scheme_hectares.id where scheme_hectares.seasonid=$seasonid and scheme_hectares_products.productid=$productid and scheme_hectares_growers.growerid=$growerid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -808,14 +917,12 @@ if ($disbursement_trucksid==0 && $disbursementid==0) {
         array_push($data1,$temp);
       }else if($quantity_to_be_captured<$quantity){
 
-        $temp=array("response"=>"Exceeding Scheme($scheme_captured_quantity) quantity \n Captured Quantity($product_captured_quantity)");
+        $temp=array("response"=>"Exceeding Scheme quantity($scheme_captured_quantity)\nCaptured Quantity($product_captured_quantity)");
         array_push($data1,$temp);
       }
 
 
-
-
-   }
+     }
 
 
    }

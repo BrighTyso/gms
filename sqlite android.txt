@@ -4,7 +4,7 @@ id integer not null,
 name varchar(100) not null,
 active integer not null default 1,
 created_at varchar(100) not null
-);
+); 
 
 
 create table province(
@@ -826,28 +826,37 @@ foreign key(growerid) references growers(id)
 
 
 
-
-
-
-
-create table if not exists truck_destination(
+create table if not exists truck_destination_2(
 id integer not null,
 userid integer not null,
 trucknumber varchar(100) not null,
 driver_name varchar(100) not null,
 driver_surname varchar(100) not null,
 destination varchar(100) not null,
+password varchar(100) not null,
+distance double(100,4) not null,
+username varchar(100) not null,
 close_open integer not null default 0,
+sync integer not null default 0,
 created_at varchar(100) not null,
+end_at varchar(100) not null,
 foreign key(userid) references users(id)
 );
 
 
 
-
-
-
-
+create table if not exists truck_products(
+id integer primary key autoIncrement,
+disbursement_trucksid integer not null,
+userid integer not null,
+productid integer not null,
+quantity double(100,4) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(productid) references products(id),
+foreign key(disbursement_trucksid) references truck_destination(id)
+);
 
 
 
@@ -864,8 +873,6 @@ foreign key(productid) references products(id),
 foreign key(storeid) references store(id),
 foreign key(disbursement_trucksid) references truck_destination(id)
 );
-
-
 
 
 
@@ -1422,6 +1429,820 @@ create table if not exists leave_form(
 
 
 
+create table if not exists grower_finger_print(
+  id integer primary key autoIncrement,
+  userid integer not null,
+  seasonid integer not null,
+  growerid integer not null,
+  pin text not null,
+  feature text not null,
+  created_at varchar(100) not null,
+  sync integer not null default 0,
+  foreign key(userid) references users(id),
+  foreign key(seasonid) references seasons(id),
+  foreign key(growerid) references growers(id)
+
+);
+
+
+
+
+create table if not exists grower_bale_booking(
+  id integer primary key autoIncrement,
+  userid integer not null,
+  booking_username varchar(100) not null,
+  seasonid integer not null,
+  growerid integer not null,
+  bales integer not null,
+  booking_date varchar(100) not null,
+  created_time varchar(100) not null,
+  created_at varchar(100) not null,
+  sync integer not null default 0,
+  foreign key(userid) references users(id),
+  foreign key(seasonid) references seasons(id),
+  foreign key(growerid) references growers(id)
+);
+
+
+
+
+
+create table if not exists grower_visit_schedule(
+  id integer primary key autoIncrement,
+  userid integer not null,
+  growerid integer not null,
+  seasonid integer not null,
+  sync integer not null default 0,
+  created_at varchar(100) not null,
+  end_at varchar(100) not null,
+  foreign key(userid) references users(id),
+  foreign key(seasonid) references seasons(id),
+  foreign key(growerid) references growers(id)
+);
+
+
+create table if not exists grower_groups(
+id integer primary key autoIncrement,
+description varchar(100) not null
+);
+
+
+
+
+
+create table if not exists grower_field_officer_groups(
+id integer primary key autoIncrement,
+userid integer not null,
+growerid integer not null,
+field_officerid integer not null,
+grower_groupid integer not null,
+seasonid integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(field_officerid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id),
+foreign key(grower_groupid) references grower_groups(id)
+);
+
+
+
+create table if not exists seedbed_location(
+id integer primary key autoIncrement,
+userid integer not null ,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+
+
+
+create table if not exists home_location_update(
+id integer primary key autoIncrement,
+growerid integer not null,
+seasonid integer not null,
+sync integer not null default 0,
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists barn_location_update(
+id integer primary key autoIncrement,
+growerid integer not null,
+seasonid integer not null,
+sync integer not null default 0,
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists farm_location_update(
+id integer primary key autoIncrement,
+growerid integer not null,
+seasonid integer not null,
+sync integer not null default 0,
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists seedbed_location_update(
+id integer primary key autoIncrement,
+growerid integer not null,
+seasonid integer not null,
+sync integer not null default 0,
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists grower_training(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+number_of_growers integer not null,
+system_count_growers integer not null,
+description varchar(100) not null,
+image varchar(100) not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists bike_assessments(
+id integer primary key autoIncrement,
+userid integer not null,
+start_end_day integer not null,
+seasonid integer not null,
+bike_part varchar(100) not null,
+description varchar(100) not null,
+image varchar(100) not null,
+time varchar(100) not null,
+created_at varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+create table if not exists visits(
+id integer primary key autoIncrement,
+userid integer not null,
+growerid integer not null,
+seasonid integer not null,
+description varchar(100) not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+created_at varchar(100) not null,
+datetime varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+create table if not exists daily_fieldofficer_report(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+username varchar(100) not null,
+numberOfVisits integer not null,
+created_at varchar(100) not null,
+datetime varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists daily_saved_visits(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+username varchar(100) not null,
+grower_num varchar(100) not null,
+description varchar(100) not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+created_at varchar(100) not null,
+datetime varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists field_officer_daily_encrypted(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+username varchar(100) not null,
+description varchar(300) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists questionnaires(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+question varchar(100) not null,
+type varchar(100) not null,
+access_point varchar(100) not null,
+created_at varchar(100) not null,
+datetime varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists questionnaires_answers_general(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+question varchar(100) not null,
+answer varchar(100) not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+question_created_at varchar(100) not null,
+created_at varchar(100) not null,
+datetime varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists questionnaires_answers_by_grower(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+question varchar(100) not null,
+answer varchar(100) not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+question_created_at varchar(100) not null,
+created_at varchar(100) not null,
+datetime varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+
+
+create table if not exists weekly_plan(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+start_date varchar(100) not null,
+end_date varchar(100) not null,
+system_generated_weekly_visits integer not null,
+weekly_visits integer not null,
+daily_visits integer not null,
+no_of_visits_per_grower integer not null,
+created_at varchar(100) not null,
+datetime varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+create table if not exists gift_card(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+start_date varchar(100) not null,
+end_date varchar(100) not null,
+total_visits integer not null default 0,
+visits_per_day integer not null default 0,
+growers_to_visit integer not null default 0,
+reward_percentage double(100,2) not null default 0,
+reward varchar(100) not null,
+created_at varchar(100) not null,
+datetime varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists weekly_points_earned(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+start_date varchar(100) not null,
+end_date varchar(100) not null,
+points integer not null default 0,
+target_points integer not null default 0,
+created_at varchar(100) not null,
+datetime varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists monthly_payroll_dates(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+start_date varchar(100) not null,
+end_date varchar(100) not null,
+month varchar(100) not null,
+created_at varchar(100) not null,
+datetimes varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+create table if not exists time_based_task(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+weekly_planid integer not null,
+start_time varchar(100) not null,
+end_time varchar(100) not null,
+task_hours integer not null,
+target_growers integer not null default 0,
+created_at varchar(100) not null,
+end_at varchar(100) not null,
+datetime varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(weekly_planid) references weekly_plan(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+create table if not exists salary_variables(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+salary double(200,4) not null default 0,
+hectares double(200,4) not null default 0,
+daily_reports double(200,4) not null default 0,
+grower_visits double(200,4) not null default 0,
+system_based_tasks double(200,4) not null default 0,
+bike_maintenance double(200,4) not null default 0,
+ctl_related double(200,4) not null default 0,
+training_and_demo double(200,4) not null default 0,
+created_at varchar(100) not null,
+datetime varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists monthly_salary_variables(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+start_date varchar(100) not null,
+end_date varchar(100) not null,
+month varchar(100) not null,
+salary double(200,4) not null default 0,
+hectares double(200,4) not null default 0,
+daily_reports double(200,4) not null default 0,
+grower_visits double(200,4) not null default 0,
+system_based_tasks double(200,4) not null default 0,
+bike_maintenance double(200,4) not null default 0,
+ctl_related double(200,4) not null default 0,
+training_and_demo double(200,4) not null default 0,
+created_at varchar(100) not null,
+datetime varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists questionnaire_bale_answers_by_grower(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+question varchar(100) not null,
+bales integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+question_created_at varchar(100) not null,
+created_at varchar(100) not null,
+datetimes varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+create table if not exists questionnaire_image(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+question varchar(100) not null,
+answer varchar(100) not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+image_location varchar(100) not null,
+sync integer not null default 0,
+question_created_at varchar(100) not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists training_grower_attendance_list(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetimes varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists bike_maintenance(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+bike_part varchar(100) not null,
+part_state varchar(100) not null,
+created_at varchar(100) not null,
+datetimes varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists bike_image(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+image_location varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetimes varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists ctl_related_end_date(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+end_at varchar(100) not null,
+datetimes varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists ctl_related_growers(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+created_at varchar(100) not null,
+end_at varchar(100) not null,
+sync integer not null default 0,
+datetimes varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists floor_dispatched_bales(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+barcode varchar(100) not null,
+created_at varchar(100) not null,
+datetimes varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+create table if not exists warehousing_storage_received_bales(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+barcode varchar(100) not null,
+created_at varchar(100) not null,
+datetimes varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists verify_sold_bales(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+barcode varchar(100) not null,
+created_at varchar(100) not null,
+datetimes varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists bale_verification_mass(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+barcode varchar(100) not null,
+mass double(100,4) not null default 0,
+description varchar(100) not null ,
+created_at varchar(100) not null,
+datetimes varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists live_location_data(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null ,
+created_at varchar(100) not null,
+datetimes varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists resting_point(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null ,
+created_at varchar(100) not null,
+datetimes varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+
+create table if not exists zero_bale_comment(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+comment varchar(100) not null,
+next_sale_date varchar(100) not null ,
+question varchar(100) not null,
+question_date varchar(100) not null ,
+created_at varchar(100) not null,
+datetimes varchar(100) not null,
+sync integer not null default 0,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+create table if not exists loans_3_0(
+id integer primary key autoIncrement,
+userid integer not null,
+growerid integer not null,
+productid integer not null,
+quantity double not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+hectares varchar(100) not null,
+android_captureid integer not null default 0,
+comment varchar(100) not null,
+adjustment_quantity double not null,
+adjust integer not null default 0,
+sync integer not null default 0,
+surrogate integer not null default 0,
+created_at varchar(100) not null,
+datetime varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id),
+foreign key(productid) references products(id)
+);
+
+
+
+
+create table if not exists disbursed_products_grower_truck(
+id integer primary key autoIncrement,
+userid integer not null,
+disbursement_trucksid integer not null,
+growerid integer not null,
+productid integer not null,
+quantity double not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+seasonid integer not null,
+comment varchar(100) not null,
+adjustment_quantity double not null,
+adjust integer not null default 0,
+sync integer not null default 0,
+surrogate integer not null default 0,
+created_at varchar(100) not null,
+datetime varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id),
+foreign key(productid) references products(id),
+foreign key(disbursement_trucksid) references truck_destination_2(id)
+);
+
+
+create table if not exists file_manager(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+location_url varchar(200) not null,
+description varchar(100) not null,
+file_type varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetime varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists daily_movements(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+latitude varchar(200) not null,
+longitude varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetime varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists target_monthly_hectare_visits(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+min_hectares double(100,4) not null,
+max_hectares double(100,4) not null,
+created_at varchar(100) not null,
+expire_at varchar(100) not null,
+datetime varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+public static final String TABLE_TARGET_MONTHLY_HECTARE_VISITS="target_monthly_hectare_visits";
+
+
+public static final String TABLE_FILE_MANAGER="file_manager";
+public static final String TABLE_DAILY_MOVEMENT="daily_movements";
+
+public static final String TABLE_DISBURSED_PRODUCTS_GROWER_TRUCK="disbursed_products_grower_truck";
+public static final String TABLE_DESTINATION="truck_destination";
+public static final String TABLE_TRUCK_PRODUCTS="truck_products";
+public static final String TABLE_ZERO_BALE_COMMENT="zero_bale_comment";
+
+public static final String TABLE_RESTING_POINT="resting_point";
+
+public static final String TABLE_VERIFICATION_MASS="bale_verification_mass";
+
+public static final String TABLE_VERIFY_SOLD_BALES="verify_sold_bales";
+
+public static final String TABLE_FLOOR_DISPATCHED_BALES="floor_dispatched_bales";
+
+public static final String TABLE_WAREHOUSING_STORAGE_RECEIVED_BALES="warehousing_storage_received_bales";
+
+public static final String TABLE_CTL_RELATED_GROWERS="ctl_related_growers";
+
+public static final String TABLE_CTL_RELATED_END_DATE="ctl_related_end_date";
+
+public static final String TABLE_BIKE_MAINTENANCE="bike_maintenance";
+
+public static final String TABLE_BIKE_IMAGE="bike_image";
+
+public static final String TABLE_QUESTIONNAIRE_IMAGE="questionnaire_image";
+
+public static final String TABLE_QUESTIONNAIRES_BALES_ANSWERS_BY_GROWER="questionnaires_bales_answers_by_grower";
+
+public static final String TABLE_MONTHLY_SALARY_VARIABLES="monthly_salary_variables";
+
+public static final String TABLE_SALARY_VARIABLES="salary_variables";
+
+public static final String TABLE_WEEKLY_POINTS_EARNED="weekly_points_earned";
+
+public static final String TABLE_GIFT_CARD="gift_card";
+
+public static final String TABLE_WEEKLY_PLAN="weekly_plan";
+
+public static final String TABLE_QUESTIONNAIRES="questionnaires";
+
+public static final String TABLE_QUESTIONNAIRES_ANSWERS_GENERAL="questionnaires_answers_general";
+
+public static final String TABLE_QUESTIONNAIRES_ANSWERS_BY_GROWER="questionnaires_answers_by_grower";
+
+public static final String TABLE_DAILY_FIELD_OFFICER_REPORT="daily_fieldofficer_report";
+
+public static final String DAILY_SAVED_VISITS="daily_saved_visits";
+
+public static final String TABLE_GROWER_BIKE_ASSESSMENTS="bike_assessments";
+
+public static final String TABLE_GROWER_VISITS="visits";
+
+public static final String TABLE_GROWER_TRAINING="grower_training";
+
+public static final String TABLE_HOME_LOCATION_UPDATE="home_location_update";
+
+public static final String TABLE_BARN_LOCATION_UPDATE="barn_location_update";
+
+public static final String TABLE_FARM_LOCATION_UPDATE="farm_location_update";
+
+public static final String TABLE_SEEDBED_LOCATION_UPDATE="seedbed_location_update";
+
+public static final String TABLE_GROWER_GROUPS="grower_groups";
+
+public static final String TABLE_GROWER_FIELD_OFFICER_GROUPS="grower_field_officer_groups";
+
+public static final String TABLE_GROWER_VISIT_SCHEDULE="grower_visit_schedule";
+
+public static final String TABLE_GROWER_BALE_BOOKING="grower_bale_booking";
 
 public static final String TABLE_BALES_COLLECTED="bales_collected";
 public static final String TABLE_GROWER_BALE_SIGNATURE="grower_bale_signature";
@@ -1449,4 +2270,6 @@ public static final String TABLE_BATTERY_LEVEL_REPORT="battery_level_report";
 
 
 public static final String TABLE_LEAVE_FORM="leave_form";
+
+public static final String TABLE_GROWER_FINGER_PRINT="grower_finger_print";
 
