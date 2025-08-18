@@ -64,6 +64,7 @@ $hectare_penalty=0;
 
 
 
+
 $bales_bonus_amount=0;
 $bales_bonus_structureid=0;
 $bales_reward=0;
@@ -75,6 +76,7 @@ $bales_penalty_amount=0;
 $bales_penalty=0;
 
 $recovery_reward=0;
+$no_of_wrong_positions=0;
 
 
 $sql = "Select id from salary_dates_and_months  where start_date='$start_date' and end_date='$end_date' order by id desc limit 1";
@@ -122,16 +124,33 @@ $sql451 = "select  visits.created_at  from visits  where  visits.seasonid=$seaso
 $result451 = $conn->query($sql451);
 $no_of_days_worked=$result451->num_rows;
 
+
+
+
+$sql451 = "select distinct  created_at,growerid  from wrong_grower_capture_position  where  seasonid=$seasonid and userid=$claimyid and  created_at between '$start_date' and '$end_date'  order by created_at desc ";
+$result451 = $conn->query($sql451);
+$no_of_wrong_positions=$result451->num_rows;
+
+
+
 $target_days=0;
 $days_penalty_structureid=0;
-$days_worked_penalty_amount=0;
 $days_worked_penalty=0;
+$days_worked_penalty_amount=0;
+
+
+$target_wrong_position=0;
+$wrong_position_penalty_structureid=0;
+$wrong_position_penalty=0;
+$wrong_position_penalty_amount=0;
+$wrong_position_reward=0;
 
 
 $allocated_hectares=0;
 $target_bales=0;
 $days_worked_penalty_amount=0;
 $days_penalty_structureid=0;
+
 
 $sql451 = "select  days from target_working_days  where seasonid=$seasonid limit 1";
   $result451 = $conn->query($sql451);
@@ -143,6 +162,21 @@ $sql451 = "select  days from target_working_days  where seasonid=$seasonid limit
        
     }
 }
+
+
+
+$sql451 = "select positions from target_wrong_position  where seasonid=$seasonid limit 1";
+  $result451 = $conn->query($sql451);
+     if ($result451->num_rows > 0) {
+     // output data of each row
+     while($result45 = $result451->fetch_assoc()) {
+
+        $target_wrong_position=$result45["positions"];
+       
+    }
+}
+
+
 
 
 $sql451 = "select  amount,bonus_structureid from days_worked_penalty_structures_values  where seasonid=$seasonid limit 1";
@@ -161,21 +195,59 @@ $sql451 = "select  amount,bonus_structureid from days_worked_penalty_structures_
 if ($days_penalty_structureid==1) {
 
   if ($no_of_days_worked<$target_days) {
-    $days_worked_penalty=$days_worked_penalty_amount;
-  }
+     $days_worked_penalty=$days_worked_penalty_amount;
+   }
 
 }else{
 
   if ($no_of_days_worked<$target_days) {
 
-
       $my_less_days=$target_days-$no_of_days_worked;
 
-      $days_worked_penalty=$my_less_days*$hectare_bonus_amount;
-
+      $days_worked_penalty=$my_less_days*$days_worked_penalty_amount;
     
   }
 }
+
+
+// $wrong_position_penalty_structureid=0;
+// $wrong_position_penalty=0;
+// $wrong_position_penalty_amount=0;
+
+
+$sql451 = "select  amount,bonus_structureid from wrong_grower_capture_position_penalty_structures_values  where seasonid=$seasonid limit 1";
+  $result451 = $conn->query($sql451);
+     if ($result451->num_rows > 0) {
+     // output data of each row
+     while($result45 = $result451->fetch_assoc()) {
+
+        $wrong_position_penalty_structureid=$result45["bonus_structureid"];
+        $wrong_position_penalty_amount=$result45["amount"];
+       
+    }
+}
+
+if ($wrong_position_penalty_structureid==1) {
+
+    if ($no_of_wrong_positions>=$target_wrong_position) {
+      $wrong_position_penalty=$wrong_position_penalty_amount;
+    }else{
+    $wrong_position_reward=$wrong_position_penalty_amount;
+    }
+    
+  
+}else{
+
+  if ($no_of_wrong_positions>=$target_wrong_position) {
+    $wrong_position_penalty=$no_of_wrong_positions*$wrong_position_penalty_amount;
+  }else{
+ $wrong_position_reward=$wrong_position_penalty_amount;
+  }
+
+}
+
+
+
 
 
 
@@ -433,7 +505,7 @@ $result = $conn->query($sql1);
 
 if ($farm_response==0) {
 
-   $insert_sql = "INSERT INTO monthly_salary_claims(userid,claimyid,seasonid,month,start_date,end_date,salary,hectares,daily_reports,grower_visits,system_based_tasks,bike_maintenance,ctl_related,training_and_demo,created_at,datetimes,bales,recovery) VALUES ($userid,$claimyid,$seasonid,'$month','$start_date','$end_date',$field_officer_basic_salary,$hectare_reward,$daily_reports,$grower_visits,$system_based_tasks,$bike_maintenance,$ctl_related,$training_and_demo,'$created_at','$datetimes',$bales_reward,$recovery_reward)";
+   $insert_sql = "INSERT INTO monthly_salary_claims(userid,claimyid,seasonid,month,start_date,end_date,salary,hectares,daily_reports,grower_visits,system_based_tasks,bike_maintenance,ctl_related,training_and_demo,created_at,datetimes,bales,recovery,positions) VALUES ($userid,$claimyid,$seasonid,'$month','$start_date','$end_date',$field_officer_basic_salary,$hectare_reward,$daily_reports,$grower_visits,$system_based_tasks,$bike_maintenance,$ctl_related,$training_and_demo,'$created_at','$datetimes',$bales_reward,$recovery_reward,$wrong_position_reward)";
  //$gr = "select * from login";
  if ($conn->query($insert_sql)===TRUE) {
  
@@ -441,7 +513,7 @@ if ($farm_response==0) {
    //  array_push($data,$temp);
 
 
-         $insert_sql = "INSERT INTO monthly_salary_claims_penalty(userid,claimyid,seasonid,month,start_date,end_date,days,hectares,bales,created_at,datetimes) VALUES ($userid,$claimyid,$seasonid,'$month','$start_date','$end_date',$days_worked_penalty,$hectare_penalty,$bales_penalty,'$created_at','$datetimes')";
+         $insert_sql = "INSERT INTO monthly_salary_claims_penalty(userid,claimyid,seasonid,month,start_date,end_date,days,hectares,bales,created_at,datetimes,positions) VALUES ($userid,$claimyid,$seasonid,'$month','$start_date','$end_date',$days_worked_penalty,$hectare_penalty,$bales_penalty,'$created_at','$datetimes',$wrong_position_penalty)";
  //$gr = "select * from login";
            if ($conn->query($insert_sql)===TRUE) {
            
@@ -463,14 +535,14 @@ if ($farm_response==0) {
 
 }else{
 
-$user_sql1 = "update monthly_salary_claims set salary=$field_officer_basic_salary,hectares=$hectare_reward,daily_reports=$daily_reports,grower_visits=$grower_visits,system_based_tasks=$system_based_tasks,bike_maintenance=$bike_maintenance,ctl_related=$ctl_related,training_and_demo=$training_and_demo,bales=$bales_reward,recovery=$recovery_reward where start_date='$start_date' and end_date='$end_date' and  claimyid=$claimyid and sync=0";
+$user_sql1 = "update monthly_salary_claims set salary=$field_officer_basic_salary,hectares=$hectare_reward,daily_reports=$daily_reports,grower_visits=$grower_visits,system_based_tasks=$system_based_tasks,bike_maintenance=$bike_maintenance,ctl_related=$ctl_related,training_and_demo=$training_and_demo,bales=$bales_reward,recovery=$recovery_reward,positions=$wrong_position_reward where start_date='$start_date' and end_date='$end_date' and  claimyid=$claimyid and sync=0";
    //$sql = "select * from login";
    if ($conn->query($user_sql1)===TRUE) {
 
     // $temp=array("response"=>"Amount Updated");
     // array_push($data,$temp);
 
-      $user_sql1 = "update monthly_salary_claims_penalty set days=$days_worked_penalty,hectares=$hectare_penalty,bales=$bales_penalty where start_date='$start_date' and end_date='$end_date' and  claimyid=$claimyid and sync=0";
+      $user_sql1 = "update monthly_salary_claims_penalty set days=$days_worked_penalty,hectares=$hectare_penalty,bales=$bales_penalty,positions=$wrong_position_penalty where start_date='$start_date' and end_date='$end_date' and  claimyid=$claimyid and sync=0";
      //$sql = "select * from login";
      if ($conn->query($user_sql1)===TRUE) {
 

@@ -28,6 +28,9 @@ $company_details_data=array();
 $product_items_data=array();
 $location_data=array();
 $season_data=array();
+$truck_grower_data=array();
+
+$grower_hectares="";
 $receipt_number="";
 $field_officer_username="";
 $truck_number="";
@@ -84,11 +87,13 @@ $sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower
   $id_num=$row1["id_num"];
   $area=$row1["area"];
 
+  $grower_hectares="";
+
   $loans_data=array();
   $product_items_data=array();
   $location_data=array();
   $season_data=array();
-
+    $truck_grower_data=array();
 
   $field_officer_username="";
 
@@ -105,6 +110,71 @@ $sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower
      }
 
    }
+
+
+
+
+$receipt_number=0;
+
+     $sql2 = "Select distinct * from system_receipt_number where growerid=$growerid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+        
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $receipt_number=$row2['receipt_number'];
+
+         }
+      }
+
+
+    if ($receipt_number==0) {
+        $sql2 = "Select distinct * from system_receipt_number order by id desc limit 1";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $receipt_number=$row2['receipt_number']+1;
+
+          $insert_sql = "INSERT INTO system_receipt_number(userid,growerid,seasonid,receipt_number,created_at) VALUES ($userid,$growerid,$seasonid,$receipt_number,'$created_at')";
+         //$gr = "select * from login";
+         if ($conn->query($insert_sql)===TRUE) {
+
+
+          }else{
+            
+          }
+ 
+
+
+         }
+      }else{
+
+        $receipt_number=1702;
+        $insert_sql = "INSERT INTO system_receipt_number(userid,growerid,seasonid,receipt_number,created_at) VALUES ($userid,$growerid,$seasonid,$receipt_number,'$created_at')";
+         //$gr = "select * from login";
+         if ($conn->query($insert_sql)===TRUE) {
+
+
+         }else{
+            
+         }
+
+      }
+    }
+
+
+
+
+
+
+$receipt_number=0;
 
 
 
@@ -129,8 +199,8 @@ $sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower
 // join growers on growers.id=scheme_hectares_growers.growerid join products on scheme_hectares_products.productid=products.id join users on users.id=scheme_hectares_growers.userid join total_disbursement on total_disbursement.productid=products.id where scheme_hectares.seasonid=$seasonid and scheme_hectares_growers.growerid=$growerid and total_disbursement.disbursement_trucksid=$disbursement_truckid order by grower_num";
 
 
-  $sql = "Select scheme_hectares_growers.id as loanid, products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,scheme_hectares_products.quantity,units,package_units,total_disbursement.created_at, users.username,scheme_hectares.quantity as hectares, scheme_hectares_products.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id join scheme_hectares_products on scheme_hectares_products.scheme_hectaresid=scheme_hectares.id join scheme_hectares_growers on scheme_hectares_growers.scheme_hectaresid=scheme_hectares.id 
-join growers on growers.id=scheme_hectares_growers.growerid join products on scheme_hectares_products.productid=products.id join users on users.id=scheme_hectares_growers.userid join total_disbursement on total_disbursement.productid=products.id where scheme_hectares.seasonid=$seasonid and scheme_hectares_growers.growerid=$growerid and total_disbursement.disbursement_trucksid=$disbursement_truckid order by grower_num";
+  $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,scheme_hectares_products.quantity,units,package_units,total_disbursement.created_at, users.username,scheme_hectares.quantity as hectares, scheme_hectares_products.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id join scheme_hectares_products on scheme_hectares_products.scheme_hectaresid=scheme_hectares.id join scheme_hectares_growers on scheme_hectares_growers.scheme_hectaresid=scheme_hectares.id 
+join growers on growers.id=scheme_hectares_growers.growerid join products on scheme_hectares_products.productid=products.id join users on users.id=scheme_hectares_growers.userid join total_disbursement on total_disbursement.productid=products.id where scheme_hectares.seasonid=$seasonid and scheme_hectares_growers.growerid=$growerid and total_disbursement.disbursement_trucksid=$disbursement_truckid and (scheme_hectares_products.productid) not in (Select loans.productid from loans where loans.productid=scheme_hectares_products.productid and loans.growerid=growers.id and loans.seasonid=$seasonid) order by grower_num";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -138,7 +208,10 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-     $temp=array("package_units"=>$row["package_units"],"productid"=>$row["productid"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"username"=>$row["username"],"receipt_number"=>$receipt_number,"loanid"=>$row["loanid"],"farmer_comment"=>"","adjustment_quantity"=>"0","hectares"=>$row["hectares"],"adjust"=>"0");
+
+$grower_hectares=$row["hectares"];
+
+     $temp=array("package_units"=>$row["package_units"],"productid"=>$row["productid"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"username"=>$row["username"],"receipt_number"=>$receipt_number,"loanid"=>"0","farmer_comment"=>"","adjustment_quantity"=>"0","hectares"=>$row["hectares"],"adjust"=>"0");
     array_push($loans_data,$temp);
     
    }
@@ -161,7 +234,20 @@ $result = $conn->query($sql);
  }
 
 
- $temp=array("truck_number"=>$truck_number,"grower_area"=>$row1["area"],"grower_id_num"=>$row1["id_num"],"grower_name"=>$row1["name"],"grower_surname"=>$row1["surname"],"grower_num"=>$row1["grower_num"],"created_at"=>$created_at,"inputs"=>$loans_data,"locations"=>$location_data,"company_data"=>$company_details_data,"field_officer"=>$field_officer_username);
+$grower_sql = "INSERT INTO truck_grower_qrcode_disbursed(userid,seasonid,disbursement_trucksid,growerid,created_at) VALUES ($userid,$seasonid,$disbursement_truckid,$growerid,'$created_at')";
+   //$sql = "select * from login";
+ if ($conn->query($grower_sql)===TRUE) {
+
+ }
+
+
+$temp1=array("truck_number"=>$truck_number,"grower_area"=>$row1["area"],"grower_id_num"=>$row1["id_num"],"grower_name"=>$row1["name"],"grower_surname"=>$row1["surname"],"grower_num"=>$row1["grower_num"],"created_at"=>$created_at,"locations"=>$location_data,"field_officer"=>$field_officer_username,"grower_hectares"=>$grower_hectares,"receipt_number"=>$receipt_number);
+  array_push($truck_grower_data,$temp1);
+
+
+
+
+ $temp=array("truck_number"=>$truck_number,"grower_area"=>$row1["area"],"grower_id_num"=>$row1["id_num"],"grower_name"=>$row1["name"],"grower_surname"=>$row1["surname"],"grower_num"=>$row1["grower_num"],"created_at"=>$created_at,"inputs"=>$loans_data,"locations"=>$location_data,"company_data"=>$company_details_data,"field_officer"=>$field_officer_username,"truck_grower"=>$truck_grower_data);
   array_push($data1,$temp);
 
   }
@@ -186,11 +272,13 @@ $result = $conn->query($sql);
   $id_num=$row1["id_num"];
   $area=$row1["area"];
 
+  $grower_hectares="";
+
   $loans_data=array();
   $product_items_data=array();
   $location_data=array();
   $season_data=array();
-
+$truck_grower_data=array();
 
 
   $field_officer_username="";
@@ -210,6 +298,65 @@ $result = $conn->query($sql);
    }
 
 
+$receipt_number=0;
+
+     $sql2 = "Select distinct * from system_receipt_number where growerid=$growerid and seasonid=$seasonid";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+        
+
+
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $receipt_number=$row2['receipt_number'];
+
+         }
+      }
+
+
+    if ($receipt_number==0) {
+        $sql2 = "Select distinct * from system_receipt_number order by id desc limit 1";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $receipt_number=$row2['receipt_number']+1;
+
+          $insert_sql = "INSERT INTO system_receipt_number(userid,growerid,seasonid,receipt_number,created_at) VALUES ($userid,$growerid,$seasonid,$receipt_number,'$created_at')";
+         //$gr = "select * from login";
+         if ($conn->query($insert_sql)===TRUE) {
+
+
+          }else{
+            
+          }
+ 
+
+
+         }
+      }else{
+
+        $receipt_number=1702;
+        $insert_sql = "INSERT INTO system_receipt_number(userid,growerid,seasonid,receipt_number,created_at) VALUES ($userid,$growerid,$seasonid,$receipt_number,'$created_at')";
+         //$gr = "select * from login";
+         if ($conn->query($insert_sql)===TRUE) {
+
+
+         }else{
+            
+         }
+
+      }
+    }
+
+
+
+$receipt_number=0;
+
   $sql2 = "Select distinct * from system_receipt_number where growerid=$growerid and seasonid=$seasonid";
       $result2 = $conn->query($sql2);
        
@@ -228,7 +375,7 @@ $result = $conn->query($sql);
 // join growers on growers.id=scheme_hectares_growers.growerid join products on scheme_hectares_products.productid=products.id join users on users.id=scheme_hectares_growers.userid join total_disbursement on total_disbursement.productid=products.id where scheme_hectares.seasonid=$seasonid and scheme_hectares_growers.growerid=$growerid and total_disbursement.disbursement_trucksid=$disbursement_truckid order by grower_num";
 
 
-$sql = "Select scheme_hectares_growers.id as loanid, products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,scheme_hectares_products.quantity,units,package_units,total_disbursement.created_at, users.username,scheme_hectares.quantity as hectares, scheme_hectares_products.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id join scheme_hectares_products on scheme_hectares_products.scheme_hectaresid=scheme_hectares.id join scheme_hectares_growers on scheme_hectares_growers.scheme_hectaresid=scheme_hectares.id 
+$sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,scheme_hectares_products.quantity,units,package_units,total_disbursement.created_at, users.username,scheme_hectares.quantity as hectares, scheme_hectares_products.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id join scheme_hectares_products on scheme_hectares_products.scheme_hectaresid=scheme_hectares.id join scheme_hectares_growers on scheme_hectares_growers.scheme_hectaresid=scheme_hectares.id 
 join growers on growers.id=scheme_hectares_growers.growerid join products on scheme_hectares_products.productid=products.id join users on users.id=scheme_hectares_growers.userid join total_disbursement on total_disbursement.productid=products.id where scheme_hectares.seasonid=$seasonid and scheme_hectares_growers.growerid=$growerid and total_disbursement.disbursement_trucksid=$disbursement_truckid order by grower_num";
 $result = $conn->query($sql);
  
@@ -237,7 +384,10 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-     $temp=array("package_units"=>$row["package_units"],"productid"=>$row["productid"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"username"=>$row["username"],"receipt_number"=>$receipt_number,"loanid"=>$row["loanid"],"farmer_comment"=>"","adjustment_quantity"=>"0","hectares"=>$row["hectares"],"adjust"=>"0");
+
+$grower_hectares=$row["hectares"];
+
+     $temp=array("package_units"=>$row["package_units"],"productid"=>$row["productid"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"username"=>$row["username"],"receipt_number"=>$receipt_number,"loanid"=>"0","farmer_comment"=>"","adjustment_quantity"=>"0","hectares"=>$row["hectares"],"adjust"=>"0");
     array_push($loans_data,$temp);
     
    }
@@ -260,7 +410,19 @@ $result = $conn->query($sql);
  }
 
 
- $temp=array("truck_number"=>$truck_number,"grower_area"=>$row1["area"],"grower_id_num"=>$row1["id_num"],"grower_name"=>$row1["name"],"grower_surname"=>$row1["surname"],"grower_num"=>$row1["grower_num"],"created_at"=>$created_at,"inputs"=>$loans_data,"locations"=>$location_data,"company_data"=>$company_details_data,"field_officer"=>$field_officer_username);
+
+$grower_sql = "INSERT INTO truck_grower_qrcode_disbursed(userid,seasonid,disbursement_trucksid,growerid,created_at) VALUES ($userid,$seasonid,$disbursement_truckid,$growerid,'$created_at')";
+   //$sql = "select * from login";
+ if ($conn->query($grower_sql)===TRUE) {
+
+ }
+
+
+$temp1=array("truck_number"=>$truck_number,"grower_area"=>$row1["area"],"grower_id_num"=>$row1["id_num"],"grower_name"=>$row1["name"],"grower_surname"=>$row1["surname"],"grower_num"=>$row1["grower_num"],"created_at"=>$created_at,"locations"=>$location_data,"field_officer"=>$field_officer_username,"grower_hectares"=>$grower_hectares,"receipt_number"=>$receipt_number);
+  array_push($truck_grower_data,$temp1);
+
+
+ $temp=array("truck_number"=>$truck_number,"grower_area"=>$row1["area"],"grower_id_num"=>$row1["id_num"],"grower_name"=>$row1["name"],"grower_surname"=>$row1["surname"],"grower_num"=>$row1["grower_num"],"created_at"=>$created_at,"inputs"=>$loans_data,"locations"=>$location_data,"company_data"=>$company_details_data,"field_officer"=>$field_officer_username,"truck_grower"=>$truck_grower_data);
   array_push($data1,$temp);
 
 

@@ -27,7 +27,11 @@ $datetimes=$date->format('H:i:s');
 
 //processing_dispatch_truck_grades
 
-$sql = "Select warehousing_sold_bales_reclassification.id,warehousing_sold_bales_reclassification.buyer_grade from warehousing_sold_bales_reclassification join warehousing_sold_bales on warehousing_sold_bales.id=warehousing_sold_bales_reclassification.warehousing_sold_balesid where barcode='$barcode' limit 1";
+$bale_price=0;
+$bale_mass=0;
+$total_truck_bales=0;
+
+$sql = "Select warehousing_sold_bales_reclassification.id,warehousing_sold_bales_reclassification.buyer_grade,warehousing_sold_bales.price,warehousing_sold_bales.mass from warehousing_sold_bales_reclassification join warehousing_sold_bales on warehousing_sold_bales.id=warehousing_sold_bales_reclassification.warehousing_sold_balesid where barcode='$barcode' limit 1";
 $result = $conn->query($sql);
  
  if ($result->num_rows==0) {
@@ -38,7 +42,8 @@ $result = $conn->query($sql);
      
      $warehousing_sold_bales_reclassificationid=$row["id"];
      $bale_grade=$row["buyer_grade"];
-    
+      $bale_price=$row["price"];
+      $bale_mass=$row["mass"];
     
     }
   
@@ -46,14 +51,12 @@ $result = $conn->query($sql);
 
 
 
-$sql11 = "Select * from processing_dispatch_truck_grades where grade=$bale_grade and processing_dispatch_truckid=$processing_dispatch_truckid";
+$sql11 = "Select * from processing_dispatch_truck_grades where grade='$bale_grade' and processing_dispatch_truckid=$processing_dispatch_truckid";
 $result11 = $conn->query($sql11);
  if ($result11->num_rows>0) {
    while($row = $result11->fetch_assoc()) {
 
     $grades_match=$row['id'];
-
-   
 
     
 
@@ -62,6 +65,7 @@ $result11 = $conn->query($sql11);
  }
 
 
+$warehousing_reclassificationid=0;
 
 
 $sql11 = "Select * from truck_to_processing_bales where warehousing_sold_bales_reclassificationid=$warehousing_sold_bales_reclassificationid  limit 1";
@@ -70,10 +74,18 @@ $result11 = $conn->query($sql11);
    while($row = $result11->fetch_assoc()) {
 
     $already_dispatched=$row['id']; 
-    
+    $warehousing_reclassificationid=$row['warehousing_sold_bales_reclassificationid'];
   }      
  
  }
+
+
+
+$sql11 = "Select * from truck_to_processing_bales where processing_dispatch_truckid=$processing_dispatch_truckid";
+$result11 = $conn->query($sql11);
+$total_truck_bales=$result11->num_rows;
+
+ 
 
 
 
@@ -94,6 +106,11 @@ if ($already_dispatched==0 ) {
              }
            
          }
+
+
+
+
+
 }else{
 
    $found=1;
@@ -106,18 +123,19 @@ if ($found>0 || $warehousing_sold_bales_reclassificationid==0 || $already_dispat
 
       if ($found>0) {
          
-       $temp=array("response"=>"Barcode Already Dispatched");
+       $temp=array("response"=>"Already Dispatched","warehousing_sold_bales_reclassificationid"=>$warehousing_sold_bales_reclassificationid,"bale_grade"=>$bale_grade,"bale_price"=>$bale_price,"bale_mass"=>$bale_mass,"total_truck_bales"=>$total_truck_bales);
         array_push($response,$temp);
       }else if($already_dispatched>0){
 
-       $temp=array("response"=>"Already Dispatched");
+       $temp=array("response"=>"Already Dispatched","warehousing_sold_bales_reclassificationid"=>$warehousing_sold_bales_reclassificationid,"bale_grade"=>$bale_grade,"bale_price"=>$bale_price,"bale_mass"=>$bale_mass,"total_truck_bales"=>$total_truck_bales);
         array_push($response,$temp);
+
       }else if($grades_match==0){
-         $temp=array("response"=>"Wrong Grade");
+         $temp=array("response"=>"Wrong Grade","warehousing_sold_bales_reclassificationid"=>$warehousing_sold_bales_reclassificationid);
          array_push($response,$temp);
       }else{
 
-         $temp=array("response"=>"Barcode Not Classified");
+         $temp=array("response"=>"Barcode Not Classified","warehousing_sold_bales_reclassificationid"=>$warehousing_sold_bales_reclassificationid);
          array_push($response,$temp);
       }
 
@@ -127,12 +145,12 @@ if ($found>0 || $warehousing_sold_bales_reclassificationid==0 || $already_dispat
      //$sql = "select * from login";
      if ($conn->query($user_sql)===TRUE) {
     
-         $temp=array("response"=>"success");
+         $temp=array("response"=>"success","warehousing_sold_bales_reclassificationid"=>$warehousing_sold_bales_reclassificationid,"bale_grade"=>$bale_grade,"bale_price"=>$bale_price,"bale_mass"=>$bale_mass,"total_truck_bales"=>$total_truck_bales);
           array_push($response,$temp);
          
      }else{
 
-     $temp=array("response"=>$conn->error);
+     $temp=array("response"=>$conn->error,"warehousing_sold_bales_reclassificationid"=>$warehousing_sold_bales_reclassificationid,"bale_grade"=>$bale_grade,"bale_price"=>$bale_price,"bale_mass"=>$bale_mass,"total_truck_bales"=>$total_truck_bales);
      array_push($response,$temp);
 
      }

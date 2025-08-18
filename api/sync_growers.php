@@ -46,6 +46,7 @@ $long=$_GET['long'];
 
 $response=0;
 $growerid=0;
+$grower_last_id=0;
 
 
 // checks if grower is already in database
@@ -75,10 +76,10 @@ if ($response==0) {
    //$sql = "select * from login";
    if ($conn->query($grower_sql)===TRUE) {
    
-     $last_id = $conn->insert_id;
+     $grower_last_id = $conn->insert_id;
      
 
-	$lat_long_sql = "INSERT INTO lat_long(userid,growerid,latitude,longitude,seasonid,hectares,created_at) VALUES ($userid,$last_id,'$lat','$long',$seasonid,'$hectares','$created_at')";
+	$lat_long_sql = "INSERT INTO lat_long(userid,growerid,latitude,longitude,seasonid,hectares,created_at) VALUES ($userid,$grower_last_id,'$lat','$long',$seasonid,'$hectares','$created_at')";
 	   //$sql = "select * from login";
 	   if ($conn->query($lat_long_sql)===TRUE) {
 	   
@@ -87,16 +88,20 @@ if ($response==0) {
 	     //$sqlitegrowerid=0;
 
 
-       $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$lat','$long','$created_at','Home Location');";
+       $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$grower_last_id,$seasonid,'$lat','$long','$created_at','Home Location');";
        //$gr = "select * from login";
        if ($conn->query($insert_sql)===TRUE) {
-       
+      
         // $last_id = $conn->insert_id;
-
             $temp=array("growerid"=>$sqlitegrowerid,"lat_longid"=>$lat_longid);
             array_push($data,$temp);
 
-       }// $last_id = $conn->insert_id;
+       }
+
+
+
+
+       // $last_id = $conn->insert_id;
 	     //echo $last_id;
 
 	   	    
@@ -150,8 +155,7 @@ if ($response==0) {
             $temp=array("growerid"=>$sqlitegrowerid,"lat_longid"=>$lat_longid);
             array_push($data,$temp);
 
-       }// $last_id = $conn->insert_id;
-	     //echo $last_id;
+       }
 
 	   }
 

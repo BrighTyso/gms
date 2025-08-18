@@ -12,6 +12,12 @@ $strike_date="";
 $seasonid=0;
 $sqliteid=0;
 
+$found=0;
+$already_in=0 ;
+$scheme_hectaresid=0;
+$grower_found=0;
+$product="";
+
 $data=array();
 //http://192.168.1.190/gms/api/enter_hail_strike.php?userid=1&grower_num=V123456&latitude=13.2222&longitude=3.33376&created_at=23-09-2022&percentage_strike=12333&strike_date=12333&seasonid=1&sqliteid=1
 
@@ -22,7 +28,14 @@ $seasonid=validate($_GET['seasonid']);
 $latitude=validate($_GET['latitude']);
 $longitude=validate($_GET['longitude']);
 $description=validate($_GET['description']);
-$product=validate($_GET['product']);
+
+if ($_GET['product']=="Seedpack" || $_GET['product']=="seedpack") {
+  $product="seed";
+ //$product= validate($_GET['product']);
+}else{
+  $product=validate($_GET['product']);
+}
+
 $quantity=validate($_GET['quantity']);
 $hectares=validate($_GET['hectares']);
 $created_at=validate($_GET['created_at']);
@@ -32,6 +45,17 @@ $comment=validate($_GET['comment']);
 $adjust=validate($_GET['adjust']);
 $adjustment_quantity=validate($_GET['adjustment_quantity']);
 $datetime=validate($_GET['datetime']);
+
+
+$name=$_GET['name'];
+$surname=$_GET['surname'];
+$phone=$_GET['phone'];
+$id_num=$_GET['id_num'];
+$area=$_GET['area'];
+$province=$_GET['province'];
+$created_at=$_GET['created_at'];
+
+
 
 $productid=0;
 
@@ -60,7 +84,33 @@ $quantity_to_be_captured=0;
        
      }
 
-   }
+   }else{
+
+        $grower_farm_sql = "INSERT INTO growers(userid,seasonid,grower_num,name,surname,phone,id_num,area,province,created_at) VALUES ($userid,$seasonid,'$description','$name','$surname','$phone','$id_num','$area','$province','$created_at')";
+         //$sql = "select * from login";
+         if ($conn->query($grower_farm_sql)===TRUE) {
+
+         }else{
+          $temp=array("response"=>$conn->error,"hh"=>"kkk");
+          array_push($data,$temp);
+         }
+
+     }
+
+
+
+  $sql = "Select growers.id from growers  where  grower_num='$description' limit 1";
+    $result = $conn->query($sql);
+        
+     if ($result->num_rows > 0) {
+       // output data of each row
+       while($row = $result->fetch_assoc()) {
+        // product id
+       $growerid=$row["id"];
+       
+       }
+     }
+
 
 
 
@@ -136,6 +186,109 @@ $quantity_to_be_captured=0;
 
 
 
+$sql = "Select * from scheme_hectares where  quantity='$hectares' and seasonid=$seasonid";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+   $scheme_hectaresid=$row["id"];
+   
+   }
+
+ }
+
+
+
+$sql = "Select scheme_hectares.id,scheme_hectares.quantity from scheme_hectares_growers  join scheme_hectares  on scheme_hectares.id=scheme_hectares_growers.scheme_hectaresid where scheme_hectares.seasonid=$seasonid and growerid=$growerid";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+   $already_in=$row["id"];
+   $scheme_hectares_to_verify=$row["quantity"];
+   
+   }
+
+ }
+
+
+
+
+$sql = "Select * from scheme_hectares_growers where  scheme_hectaresid=$scheme_hectaresid and growerid=$growerid";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+   $found=$row["id"];
+   
+   }
+
+ }
+
+
+
+
+if ($found==0 && $growerid>0 && $already_in==0 && $scheme_hectaresid>0 ) {
+  
+$user_sql = "INSERT INTO scheme_hectares_growers(userid,scheme_hectaresid,growerid) VALUES ($userid,$scheme_hectaresid,$growerid)";
+   //$sql = "select * from login";
+   if ($conn->query($user_sql)===TRUE) {
+   
+  
+   }else{
+
+ 
+   }
+
+}
+
+
+
+
+
+
+
+$sql = "Select * from grower_field_officer where growerid=$growerid and seasonid=$seasonid";
+  $result = $conn->query($sql);
+   
+   if ($result->num_rows > 0) {
+     // output data of each row
+     while($row = $result->fetch_assoc()) {
+      // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+      $grower_found=$row["id"];
+      
+     }
+
+  }
+
+
+   if ($grower_found==0 && $growerid>0) {
+
+     $user_sql = "INSERT INTO grower_field_officer(userid,seasonid,growerid,field_officerid,created_at) VALUES ($userid,$seasonid,$growerid,$userid,'$created_at')";
+                   //$sql = "select * from login";
+       if ($conn->query($user_sql)===TRUE) {
+
+       }else{
+          
+       }
+       
+   }
+
+
+
+
+
+
+
    $sql2 = "Select distinct * from grower_field_loans where growerid=$growerid and seasonid=$seasonid and productid=$productid limit 1";
     $result2 = $conn->query($sql2);
      
@@ -156,8 +309,12 @@ if ($growerid>0 && $grower_field_loansid==0 && $productid>0) {
  //$gr = "select * from login";
  if ($conn->query($insert_sql)===TRUE) {
  
+  $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$latitude','$longitude','$created_at','Grower Requirements Loan');";
+       //$gr = "select * from login";
+       if ($conn->query($insert_sql)===TRUE) {
     $temp=array("response"=>"success","id"=>$sqliteid);
       array_push($data,$temp);
+    }
            
  }else{
 

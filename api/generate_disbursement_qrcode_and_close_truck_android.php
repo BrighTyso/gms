@@ -1,15 +1,8 @@
 <?php
-
-header("Access-Control-Allow-Origin: *");
-header("Content-Type:application/json");
-header("Access-Control-Allow-Origin-Methods:POST");
-header("Access-Control-Allow-Headers:Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Origin-Methods,Authorization,X-Requested-With");
-
 require_once("conn.php");
 require "validate.php";
 
 
-$data = json_decode(file_get_contents("php://input"));
 
 $trucknumber="";
 
@@ -19,19 +12,15 @@ $truckData=array();
 $productData=array();
 $company_details_data=array();
 
-if (isset($data->trucknumber)){
+if (isset($_GET['trucknumber'])){
 
 
-$trucknumber=$data->trucknumber;
-$password=$data->password;
-$distance=$data->distance;
+$trucknumber=$_GET['trucknumber'];
+$password=$_GET['password'];
+$distance=$_GET['distance'];
 $found=0;
 
-
 $new_password=($password-8)+96;
-
-
-
 
 
 $sql13 = "Select * from company_details_and_contact limit 1";

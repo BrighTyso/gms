@@ -37,10 +37,10 @@ $result = $conn->query($sql);
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
 
-          $growerid=$row["id"];
+            $growerid=$row["id"];
 
-            $sql = "Select * from grower_managers  where  growerid=$growerid and seasonid=$seasonid limit 1";
-          $result1 = $conn->query($sql);
+            $sql1 = "Select * from grower_managers  where  growerid=$growerid and seasonid=$seasonid limit 1";
+          $result1 = $conn->query($sql1);
            
            if ($result1->num_rows > 0) {
              // output data of each row
@@ -48,13 +48,29 @@ $result = $conn->query($sql);
 
               // product id
                 $chairman=$row1["chairman"];
-                $fieldOfficer=$row1["fieldOfficer"];
+              //  $fieldOfficer=$row1["fieldOfficer"];
                 $area_manager=$row1["area_manager"];
              
-              
              }
 
            }
+
+
+
+           $sql1 = "Select * from grower_field_officer join users on users.id=grower_field_officer.field_officerid where growerid=$growerid and seasonid=$seasonid limit 1";
+            $result1 = $conn->query($sql1);
+             
+             if ($result1->num_rows > 0) {
+               // output data of each row
+               while($row1 = $result1->fetch_assoc()) {
+                // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+                $fieldOfficer=$row1["username"];
+                
+               }
+
+            }
+
+
 
 
    $temp=array("id_num"=>$row["id_num"],"phone"=>$row["phone"],"area"=>$row["area"],"chairman"=>$chairman,"fieldOfficer"=>$fieldOfficer,"area_manager"=>$area_manager,"productid"=>$row["productid"],"name"=>$row["name"],"id"=>$row["id"],"surname"=>$row["surname"],"grower_num"=>$row["grower_num"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"verified"=>$row["verified"],"username"=>$row["username"],"receipt_number"=>$row["receipt_number"],"product_amount"=>$row["product_amount"],"product_total_cost"=>$row["product_total_cost"]);

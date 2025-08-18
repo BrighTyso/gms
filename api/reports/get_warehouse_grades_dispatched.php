@@ -14,7 +14,6 @@ $data = json_decode(file_get_contents("php://input"));
 $userid=$data->userid;
 $seasonid=$data->seasonid;
 $grade_type="";
-
 $data1=array();
 // get grower locations
 $bale_prices=array();
@@ -31,9 +30,9 @@ $result = $conn->query($sql11);
    while($row = $result->fetch_assoc()) {
 
     $buyer_grade=$row["buyer_grade"];
-    $grade_type="";
     $mass=0;
     $bale_prices=array();
+    $grade_type="";
 
 
 
@@ -44,19 +43,18 @@ $result = $conn->query($sql11);
        while($row22 = $result22->fetch_assoc()) {
         // product id
         $grade_type=$row22["description"];
-
+        
        }
 
      }
 
 
-
-    $sql112 = "Select  id  from  warehousing_sold_bales_reclassification  where seasonid=$seasonid and buyer_grade='$buyer_grade'";
+    $sql112 = "Select  id  from  warehousing_sold_bales_reclassification  where seasonid=$seasonid and buyer_grade='$buyer_grade' and (warehousing_sold_bales_reclassification.id) in (Select truck_to_processing_bales.warehousing_sold_bales_reclassificationid from truck_to_processing_bales)";
     $result1 = $conn->query($sql112);
     $bales_count=$result1->num_rows;
 
 
-    $sql112 = "Select  warehousing_sold_bales_reclassification.id,mass  from  warehousing_sold_bales_reclassification join warehousing_sold_bales on warehousing_sold_bales_reclassification.warehousing_sold_balesid=warehousing_sold_bales.id  where warehousing_sold_bales_reclassification.seasonid=$seasonid and warehousing_sold_bales_reclassification.buyer_grade='$buyer_grade'";
+    $sql112 = "Select  warehousing_sold_bales_reclassification.id,mass  from  warehousing_sold_bales_reclassification join warehousing_sold_bales on warehousing_sold_bales_reclassification.warehousing_sold_balesid=warehousing_sold_bales.id  where warehousing_sold_bales_reclassification.seasonid=$seasonid and warehousing_sold_bales_reclassification.buyer_grade='$buyer_grade' and (warehousing_sold_bales_reclassification.id) in (Select truck_to_processing_bales.warehousing_sold_bales_reclassificationid from truck_to_processing_bales) ";
     $result1 = $conn->query($sql112);
     if ($result1->num_rows > 0) {
    // output data of each row
@@ -67,7 +65,7 @@ $result = $conn->query($sql11);
      }
       
 
-     $sql112 = "Select distinct  price  from  warehousing_sold_bales_reclassification join warehousing_sold_bales on warehousing_sold_bales_reclassification.warehousing_sold_balesid=warehousing_sold_bales.id  where warehousing_sold_bales_reclassification.seasonid=$seasonid and warehousing_sold_bales_reclassification.buyer_grade='$buyer_grade'";
+     $sql112 = "Select distinct  price  from  warehousing_sold_bales_reclassification join warehousing_sold_bales on warehousing_sold_bales_reclassification.warehousing_sold_balesid=warehousing_sold_bales.id  where warehousing_sold_bales_reclassification.seasonid=$seasonid and warehousing_sold_bales_reclassification.buyer_grade='$buyer_grade' and (warehousing_sold_bales_reclassification.id) in (Select truck_to_processing_bales.warehousing_sold_bales_reclassificationid from truck_to_processing_bales)";
     $result1 = $conn->query($sql112);
     if ($result1->num_rows > 0) {
    // output data of each row

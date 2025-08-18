@@ -11,6 +11,9 @@ $percentage_strike="";
 $strike_date="";
 $seasonid=0;
 $sqliteid=0;
+$disbursement_trucks_storeid=0;
+$disbursement_trucks_store_items_quantity=0;
+$disbursement_trucks_store_itemsid=0;
 
 $data=array();
 //http://192.168.1.190/gms/api/enter_hail_strike.php?userid=1&grower_num=V123456&latitude=13.2222&longitude=3.33376&created_at=23-09-2022&percentage_strike=12333&strike_date=12333&seasonid=1&sqliteid=1
@@ -85,12 +88,11 @@ $quantity_to_be_captured=0;
      
      $productid=$row["id"];
    
-      
      }
 
    }
 
-   $sql = "Select * from truck_destination where trucknumber='$trucknumber' limit 1";
+   $sql = "Select * from truck_destination  where trucknumber='$trucknumber' limit 1";
   $result = $conn->query($sql);
    
    if ($result->num_rows > 0) {
@@ -99,10 +101,33 @@ $quantity_to_be_captured=0;
      
      $disbursement_trucksid=$row["id"];
    
+
+     }
+
+   }
+
+
+
+   $sql = "Select store_items.id,store_items.storeid,store_items.quantity from disbursement join store_items on store_items.storeid=disbursement.storeid  where disbursement_trucksid=$disbursement_trucksid and  store_items.productid=$productid limit 1";
+  $result = $conn->query($sql);
+   
+   if ($result->num_rows > 0) {
+     // output data of each row
+     while($row = $result->fetch_assoc()) { 
+     
+
+     $disbursement_trucks_store_itemsid=$row["id"];
+     $disbursement_trucks_storeid=$row["storeid"];
+     $disbursement_trucks_store_items_quantity=$row["quantity"];
+   
       
      }
 
    }
+
+
+
+
 
 
      $receipt_number=0;
@@ -138,6 +163,7 @@ $quantity_to_be_captured=0;
 
           }else{
             
+
           }
  
 
@@ -245,7 +271,7 @@ $result = $conn->query($sql);
 
 
 //&& $quantity_to_be_captured>=$disbused_total_quantity
-if ($growerid>0 && $grower_field_loansid==0 && $productid>0 && $disbursement_trucksid>0) {
+if ($growerid>0 && $grower_field_loansid==0 && $productid>0 && $disbursement_trucksid>0 && $disbursement_trucks_storeid>0) {
 
    $insert_sql = "INSERT INTO disbursed_products_grower_truck(userid,seasonid,growerid,productid,quantity,latitude,longitude,disbursement_trucksid,farmer_comment,adjustment_quantity,adjust,created_at,datetimes) VALUES ($userid,$seasonid,$growerid,$productid,$quantity,'$latitude','$longitude',$disbursement_trucksid,'$comment',$adjustment_quantity,$adjust,'$created_at','$datetime')";
  //$gr = "select * from login";
@@ -255,20 +281,45 @@ if ($growerid>0 && $grower_field_loansid==0 && $productid>0 && $disbursement_tru
   $insert_sql = "INSERT INTO loans(userid,growerid,productid,seasonid,quantity,latitude,longitude,hectares,verified,created_at,receipt_number) VALUES ($userid,$growerid,$productid,$seasonid,$disbused_total_quantity,'$latitude','$longitude','$hectares',1,'$created_at','$receipt_number')";
          //$gr = "select * from login";
          if ($conn->query($insert_sql)===TRUE) {
+      
+             $loan_id = $conn->insert_id;
+            // $new_quantity=$old_quantity-$quantity;
 
-        
-            if ($active_grower_found==0) {
-            $user_sql = "INSERT INTO active_growers(userid,growerid,seasonid) VALUES ($userid,$growerid,$seasonid)";
-             //$sql = "select * from login";
-                 if ($conn->query($user_sql)===TRUE) {
-                  $temp=array("response"=>"success","id"=>$sqliteid);
-                  array_push($data,$temp);
-                 }
+            $user_sql2 = "INSERT INTO arc_products(userid,storeitemid,old_quantity,new_quantity,created_at) VALUES ($userid,$disbursement_trucks_store_itemsid,$disbursement_trucks_store_items_quantity,$disbursement_trucks_store_items_quantity,'$created_at')";
+           //$sql = "select * from login";
+               if ($conn->query($user_sql2)===TRUE) {
 
-              }else{
-                 $temp=array("response"=>"success","id"=>$sqliteid);
-                  array_push($data,$temp);
-              }
+               //$last_id = $conn->insert_id;
+               $arc_products_id = $conn->insert_id;
+
+                $user_sql2 = "INSERT INTO arc_product_grower(arc_productid,loanid) VALUES ($arc_products_id,$loan_id)";
+                  //$sql = "select * from login";
+                 if ($conn->query($user_sql2)===TRUE) {
+
+                 // $last_id = $conn->insert_id;
+                  
+                    $user_sql1 = "INSERT INTO arc_store_items(userid,storeid,productid,quantity,arc_productid,created_at,description,quantity_balance) VALUES ($userid,$disbursement_trucks_storeid,$productid,0,$arc_products_id,'$created_at','GROWER LOAN TRUCK',$disbursement_trucks_store_items_quantity)";
+              
+                    if ($conn->query($user_sql1)===TRUE) {
+
+
+
+                  if ($active_grower_found==0) {
+                  $user_sql = "INSERT INTO active_growers(userid,growerid,seasonid) VALUES ($userid,$growerid,$seasonid)";
+                   //$sql = "select * from login";
+                       if ($conn->query($user_sql)===TRUE) {
+                        $temp=array("response"=>"success","id"=>$sqliteid);
+                        array_push($data,$temp);
+                       }
+
+                    }else{
+                       $temp=array("response"=>"success","id"=>$sqliteid);
+                        array_push($data,$temp);
+                    }
+
+            }
+          }
+        }
 
 
         }

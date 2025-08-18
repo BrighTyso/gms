@@ -78,8 +78,7 @@ if (isset($data->userid) &&  isset($data->sub_accountid) && isset($data->descrip
      //$sql = "select * from login";
      if ($conn->query($debit_sql)===TRUE) {
      
-
-            $credit_sql = "INSERT INTO expenses_credit(userid,expensesid,sub_accountid,created_at) VALUES ($userid,$last_id,$payment_typeid,'$created_at')";
+          $credit_sql = "INSERT INTO expenses_credit(userid,expensesid,sub_accountid,created_at) VALUES ($userid,$last_id,$payment_typeid,'$created_at')";
          //$sql = "select * from login";
          if ($conn->query($credit_sql)===TRUE) {
          

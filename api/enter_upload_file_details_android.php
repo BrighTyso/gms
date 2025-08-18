@@ -16,6 +16,13 @@ if (!empty($_POST['image'])  && isset($_POST['userid']) && isset($_POST['seasoni
     $file_type=$_POST['file_type'];
     $location_url="";
     $datetimes="";
+    $name=$_POST['name'];
+    $surname=$_POST['surname'];
+    $phone=$_POST['phone'];
+    $id_num=$_POST['id_num'];
+    $area=$_POST['area'];
+    $province=$_POST['province'];
+    $created_at=$_POST['created_at'];
 
 
     $sql = "Select growers.id from growers  where  grower_num='$grower_num'";
@@ -30,7 +37,38 @@ if (!empty($_POST['image'])  && isset($_POST['userid']) && isset($_POST['seasoni
         
        }
 
+     }else{
+
+
+        $grower_farm_sql = "INSERT INTO growers(userid,seasonid,grower_num,name,surname,phone,id_num,area,province,created_at) VALUES ($userid,$seasonid,'$grower_num','$name','$surname','$phone','$id_num','$area','$province','$created_at')";
+         //$sql = "select * from login";
+         if ($conn->query($grower_farm_sql)===TRUE) {
+
+         }else{
+          $temp=array("response"=>$conn->error);
+          array_push($data,$temp);
+         }
+
      }
+
+
+
+
+
+     $sql = "Select growers.id from growers  where  grower_num='$grower_num' limit 1";
+    $result = $conn->query($sql);
+        
+     if ($result->num_rows > 0) {
+       // output data of each row
+       while($row = $result->fetch_assoc()) {
+        // product id
+       $growerid=$row["id"];
+       
+        
+       }
+
+     }
+
 
 
      if ($growerid>0) {
@@ -54,11 +92,17 @@ if (!empty($_POST['image'])  && isset($_POST['userid']) && isset($_POST['seasoni
 
       }
 
+     }else{
+      $temp=array("response"=>"grower not found");
+          array_push($data,$temp);
      }
 
 
 
   
+}else{
+  $temp=array("response"=>"Field Empty");
+          array_push($data,$temp);
 }
 
 

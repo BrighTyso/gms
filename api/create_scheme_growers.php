@@ -80,13 +80,12 @@ $result = $conn->query($sql);
 
 
 
-$sql = "Select * from scheme_hectares where  quantity='$hectares' and seasonid=$seasonid";
+$sql = "Select * from scheme_hectares where  quantity=$hectares and seasonid=$seasonid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
    // output data of each row
    while($row = $result->fetch_assoc()) {
-
     // product id
    $scheme_hectaresid=$row["id"];
    

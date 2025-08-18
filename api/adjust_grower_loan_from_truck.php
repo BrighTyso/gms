@@ -42,179 +42,8 @@ $created_at=$data->created_at;
 $security_otp_found=0;
 
 
-    // code...
-
-$sql = "Select truck_to_grower.id,truck_to_grower.disbursement_trucksid,disbursement.quantity from truck_to_grower join truck_disbursment_sync_active on truck_disbursment_sync_active.disbursement_trucksid=truck_to_grower.disbursement_trucksid join disbursement on disbursement.disbursement_trucksid=truck_disbursment_sync_active.disbursement_trucksid where truck_to_grower.growerid=$growerid and truck_to_grower.productid=$productid  and truck_to_grower.quantity=$quantity and seasonid=$seasonid and truck_to_grower.loanid=$loanid  limit 1";
-  $result = $conn->query($sql);
-   
-   if ($result->num_rows > 0) {
-     // output data of each row
-     while($row = $result->fetch_assoc()) {
-      // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
-
-      $loan_found=1;
-      $truck_to_growerid=$row["id"];
-      $disbursement_trucksid=$row["disbursement_trucksid"];
-      $disbusment_quantity=$row["quantity"];
-
-      
-      
-     }
-
-   }
-
-
-  if ($growerid>0 && $truck_to_growerid>0 && $disbursement_trucksid>0 && $loanid>0) {
+  if ($growerid>0  && $loanid>0) {
   
-
-      if ($quantity>$newquantity) {
-
-        $my_quantity=$quantity-$newquantity;
-
-        // update loan
-
-        $user_sql1 = "update loans set quantity=$newquantity  where id=$loanid";
-           //$sql = "select * from login";
-           if ($conn->query($user_sql1)===TRUE) {
-
-
-               $user_sql1 = "update disbursement set quantity=quantity+$my_quantity  where disbursement_trucksid=$disbursement_trucksid and productid=$productid";
-                   //$sql = "select * from login";
-                   if ($conn->query($user_sql1)===TRUE) {
-
-                    $user_sql1 = "update truck_to_grower set quantity=$newquantity  where disbursement_trucksid=$disbursement_trucksid and productid=$productid and growerid=$growerid";
-                   //$sql = "select * from login";
-                   if ($conn->query($user_sql1)===TRUE) {
-
-
-                         $insert_sql = "INSERT INTO loan_adjustments(userid,loanid,old_quantity,new_quantity,created_at) VALUES ($userid,$loanid,$quantity,$newquantity,'$created_at')";
-                           //$gr = "select * from login";
-                           if ($conn->query($insert_sql)===TRUE) {
-
-                                $temp=array("response"=>"success");
-                               array_push($data1,$temp);
-
-
-                           }else{
-
-
-                              $temp=array("response"=>$conn->error);
-                           array_push($data1,$temp);
-
-                           }
-
-                         }else{
-
-
-                            $temp=array("response"=>$conn->error);
-                           array_push($data1,$temp);
-
-                         }
-
-
-                   }else{
-
-
-                      $temp=array("response"=>$conn->error);
-                       array_push($data1,$temp);
-
-                   }
-
-
-
-           }else{
-
-                $temp=array("response"=>$conn->error);
-                 array_push($data1,$temp);
-
-           }
-
-
-    
-
-      }else{
-
-
-      $my_quantity=$newquantity-$quantity;
-
-
-      if ($disbusment_quantity>=$my_quantity) {
-        
-
-        // update loan
-
-        $user_sql1 = "update loans set quantity=$newquantity  where id=$loanid";
-           //$sql = "select * from login";
-           if ($conn->query($user_sql1)===TRUE) {
-
-
-         $user_sql1 = "update disbursement set quantity=quantity-$my_quantity  where disbursement_trucksid=$disbursement_trucksid and productid=$productid";
-                   //$sql = "select * from login";
-                   if ($conn->query($user_sql1)===TRUE) {
-
-                    $user_sql1 = "update truck_to_grower set quantity=$newquantity  where disbursement_trucksid=$disbursement_trucksid and productid=$productid and growerid=$growerid";
-                   //$sql = "select * from login";
-                   if ($conn->query($user_sql1)===TRUE) {
-
-                       $insert_sql = "INSERT INTO loan_adjustments(userid,loanid,old_quantity,new_quantity,created_at) VALUES ($userid,$loanid,$quantity,$newquantity,'$created_at')";
-                       //$gr = "select * from login";
-                       if ($conn->query($insert_sql)===TRUE) {
-
-                            $temp=array("response"=>"success");
-                           array_push($data1,$temp);
-
-
-                       }else{
-
-
-                          $temp=array("response"=>$conn->error);
-                          array_push($data1,$temp);
-
-                       }
-
-                     }else{
-
-                          $temp=array("response"=>$conn->error);
-                          array_push($data1,$temp);
-                     }
-
-
-                   }else{
-
-
-                    $temp=array("response"=>$conn->error);
-                       array_push($data1,$temp);
-
-                   }
-
-
-
-           }else{
-
-
-            $temp=array("response"=>$conn->error);
-             array_push($data1,$temp);
-
-
-           }
-
-
-      }else{
-
-
-        $temp=array("response"=>"Out Of Stock");
-        array_push($data1,$temp);
-
-      }
-
-
-        
-
-      }
-
-
-  }else{
-
 
     $store_to_grower=0;
     $storeitemid=0;
@@ -253,10 +82,7 @@ $sql = "Select truck_to_grower.id,truck_to_grower.disbursement_trucksid,disburse
 
        }
 
-
-       if ($store_to_grower>0) {
           
-
        if ($quantity>$newquantity) {
 
         $my_quantity=$quantity-$newquantity;
@@ -445,11 +271,6 @@ $sql = "Select truck_to_grower.id,truck_to_grower.disbursement_trucksid,disburse
 
 
 
-}else{
-
- $temp=array("response"=>"Loan Not Found");
-array_push($data1,$temp);
-}
 
    
 

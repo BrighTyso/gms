@@ -36,13 +36,13 @@ $result = $conn->query($sql);
     $scheme_growers=array();
     $scheme_otp=array();
 
-     $temp=array("quantity"=>$row["quantity"],"description"=>$row["description"],"scheme_hectares_id"=>$row["id"],"seasonid"=>$row["seasonid"],"scheme_id"=>$row["scheme_id"]);
+     $temp=array("quantity"=>$row["quantity"],"description"=>$row["description"],"scheme_hectares_id"=>$row["id"],"seasonid"=>$seasonid,"scheme_id"=>$row["scheme_id"]);
     array_push($scheme_data,$temp);
 
 
 
 
-      $sql1 = "Select distinct quantity,name,scheme_hectares_products.id,products.id as productid from scheme_hectares_products join products on scheme_hectares_products.productid=products.id   where scheme_hectares_products.scheme_hectaresid=$schemeid ";
+      $sql1 = "Select distinct quantity,name,scheme_hectares_products.id,products.id as productid from scheme_hectares_products join products on scheme_hectares_products.productid=products.id   where scheme_hectares_products.scheme_hectaresid=$scheme_hectareid ";
       $result1 = $conn->query($sql1);
        
        if ($result1->num_rows > 0) {

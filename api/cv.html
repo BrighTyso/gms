@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV - Emmanuel Homera</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .cv-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            max-width: 800px;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        @media (min-width: 768px) {
+            .cv-container {
+                flex-direction: row;
+            }
+        }
+        .sidebar {
+            background-color: #1f2937; /* Dark gray for sidebar */
+            color: #ffffff;
+            padding: 32px;
+            flex-shrink: 0;
+            width: 100%;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+        @media (min-width: 768px) {
+            .sidebar {
+                width: 300px;
+                border-top-right-radius: 0;
+                border-bottom-left-radius: 12px;
+            }
+        }
+        .main-content {
+            padding: 32px;
+            flex-grow: 1;
+        }
+        h1 {
+            font-size: 2.5rem; /* 40px */
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #e5e7eb; /* Lighter text for name */
+        }
+        h2 {
+            font-size: 1.75rem; /* 28px */
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1f2937; /* Dark text for section titles */
+            border-bottom: 2px solid #e5e7eb; /* Light border */
+            padding-bottom: 8px;
+        }
+        h3 {
+            font-size: 1.25rem; /* 20px */
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #374151; /* Medium dark text */
+        }
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 8px;
+            color: #4b5563; /* Gray text */
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        li {
+            margin-bottom: 4px;
+            color: #4b5563;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .sidebar p, .sidebar li {
+            color: #d1d5db; /* Lighter text for sidebar content */
+        }
+        .sidebar h2 {
+            color: #ffffff;
+            border-bottom-color: #4b5563;
+        }
+        .contact-info div {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .contact-info svg {
+            margin-right: 8px;
+            color: #9ca3af; /* Light gray icon color */
+        }
+        .section-item {
+            margin-bottom: 24px;
+        }
+        .section-item:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="cv-container">
+        <!-- Sidebar Section -->
+        <div class="sidebar">
+            <div class="text-center mb-8">
+                <h1 class="text-white">Emmanuel Homera</h1>
+                <p class="text-gray-300 text-lg">Truck Driver</p>
+            </div>
+
+            <div class="mb-8 contact-info">
+                <h2 class="text-white text-xl mb-4">Contact</h2>
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M2.96 4.87A1 1 0 013.82 4h12.36a1 1 0 01.86 1.87l-6.18 4.63a1 1 0 01-1.16 0L2.96 4.87zM2 6.5V15a1 1 0 001 1h14a1 1 0 001-1V6.5l-7 5.25L2 6.5z" clip-rule="evenodd" />
+                    </svg>
+                    <p>kemeulhomela@gmail.com</p>
+                </div>
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zm3 14a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                    </svg>
+                    <p>+263 78 693 5199</p>
+                </div>
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                    <p>Zimbabwean Citizen</p>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h2 class="text-white text-xl mb-4">Licenses & Certifications</h2>
+                <ul>
+                    <li>Valid Class 2 Driver's License</li>
+                    <li>ZIMSEC O'Level Certificate</li>
+                </ul>
+            </div>
+
+            <div class="mb-0">
+                <h2 class="text-white text-xl mb-4">Skills</h2>
+                <ul class="list-disc list-inside">
+                    <li>Safe Driving Practices</li>
+                    <li>Vehicle Maintenance (Basic)</li>
+                    <li>Route Planning</li>
+                    <li>Load Securement</li>
+                    <li>Time Management</li>
+                    <li>Communication</li>
+                    <li>Problem-Solving</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content Section -->
+        <div class="main-content">
+            <div class="section-item">
+                <h2>Summary</h2>
+                <p>Highly motivated and reliable truck driver with a valid Class 2 driver's license and extensive experience in agricultural logistics. Proven ability to operate heavy vehicles safely and efficiently, ensuring timely delivery of goods. A Zimbabwean citizen with a strong work ethic and commitment to maintaining vehicle integrity and operational excellence.</p>
+            </div>
+
+            <div class="section-item">
+                <h2>Work Experience</h2>
+                <div class="mb-4">
+                    <h3>Driver</h3>
+                    <p class="text-gray-600">Huruyadzo Farming | 2019 – Present</p>
+                    <ul class="list-disc list-inside mt-2">
+                        <li>Safely operated heavy goods vehicles for the transportation of agricultural products and inputs.</li>
+                        <li>Ensured timely and efficient delivery of goods to various destinations.</li>
+                        <li>Conducted pre-trip and post-trip inspections, maintaining vehicle cleanliness and reporting any mechanical issues.</li>
+                        <li>Adhered to all traffic laws and company safety regulations.</li>
+                        <li>Managed load securement to prevent damage during transit.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section-item">
+                <h2>Education</h2>
+                <div class="mb-4">
+                    <h3>ZIMSEC O'Level Certificate</h3>
+                    <p class="text-gray-600">Dzuvarasekwa High School | [Year of Completion - e.g., 2018]</p>
+                    <ul class="list-disc list-inside mt-2">
+                        <li>Passed Subjects: History, Geography, Shona, Science</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
