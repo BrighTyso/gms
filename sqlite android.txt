@@ -2169,6 +2169,118 @@ foreign key(seasonid) references seasons(id)
 );
 
 
+
+create table if not exists grower_scheme_signature(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+image_location varchar(100) not null,
+hectares varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists grower_disbursement_signature(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+disbursement_trucksid integer not null,
+image_location varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id),
+foreign key(disbursement_trucksid) references truck_destination_2(id)
+);
+
+
+create table if not exists wrong_grower_capture_position(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+distance double(100,4) not null,
+accuracy double(100,4) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetime varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+create table if not exists count_end_of_days(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetime varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists grower_assessment_confirmation(
+id integer primary key autoIncrement,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetime varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(growerid) references growers(id)
+);
+
+
+
+
+
+create table if not exists disburse_products_by_date(
+id integer primary key autoIncrement,
+userid integer not null,
+productid integer not null,
+seasonid integer not null,
+created_at varchar(100) not null,
+start_date varchar(100) not null,
+end_date varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(productid) references products(id)
+);
+
+
+public static final String TABLE_DISBURSE_PRODUCTS_BY_DATE="disburse_products_by_date";
+
+public static final String TABLE_GROWER_ASSESSMENT_CONFIRMATION="grower_assessment_confirmation";
+
+public static final String TABLE_COUNT_END_OF_DAYS="count_end_of_days";
+
+
+public static final String TABLE_WRONG_GROWER_CAPTURE_POSITION="wrong_grower_capture_position";
+
+public static final String TABLE_GROWER_SCHEME_SIGNATURE="grower_scheme_signature";
+
+public static final String TABLE_GROWER_DISBURSEMENT_SIGNATURE="grower_disbursement_signature";
+
 public static final String TABLE_TARGET_MONTHLY_HECTARE_VISITS="target_monthly_hectare_visits";
 
 

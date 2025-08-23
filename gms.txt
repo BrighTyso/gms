@@ -2890,7 +2890,6 @@ foreign key(main_accountid) references main_accounts(id)
 
 
 
-
 create table if not exists assets(
 id integer primary key auto_increment,
 userid integer not null,
@@ -5077,8 +5076,6 @@ foreign key(bonus_structureid) references bonus_structure(id)
 );
 
 
-
-
 create table if not exists target_working_days(
 id integer primary key auto_increment,
 userid integer not null,
@@ -5502,8 +5499,6 @@ foreign key(disbursement_trucksid) references truck_destination(id)
 
 
 
-
-
 create table if not exists file_manager(
 id integer primary key auto_increment,
 userid integer not null,
@@ -5673,6 +5668,278 @@ created_at varchar(100) not null,
 foreign key(userid) references users(id),
 foreign key(seasonid) references seasons(id)
 );
+
+
+
+create table if not exists wrong_grower_capture_position(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+distance double(100,4) not null,
+accuracy double(100,4) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetimes varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+
+create table if not exists wrong_grower_capture_position_penalty_structures_values(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+bonus_structureid integer not null,
+amount double(100,4) not null,
+created_at varchar(100) not null,
+active integer not null default 1,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(bonus_structureid) references bonus_structure(id)
+);
+
+
+
+create table if not exists target_wrong_position(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+positions integer not null default 15,
+created_at varchar(100) not null,
+active integer not null default 1,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists grades_description(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+description varchar(100) not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists grades_description_categories(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+grades_descriptionid integer not null,
+grade varchar(100) not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(grades_descriptionid) references grades_description_categories(id)
+);
+
+
+
+
+create table if not exists bale_counting_redo(
+id integer primary key auto_increment,
+userid integer not null,
+grade varchar(100) not null,
+barcode varchar(100) not null,
+mass double(100,4) not null,
+price double(100,4) not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id)
+);
+
+
+
+
+create table if not exists grower_signatures_schemes(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+image_location varchar(100) not null,
+created_at varchar(100) not null,
+hectares varchar(100) not null,
+datetime TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+create table if not exists truck_grower_qrcode_disbursed(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+disbursement_trucksid integer not null,
+growerid integer not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id),
+foreign key(disbursement_trucksid) references truck_destination(id)
+);
+
+
+
+create table if not exists disburse_products_by_date(
+id integer primary key auto_increment,
+userid integer not null,
+productid integer not null,
+seasonid integer not null,
+created_at varchar(100) not null,
+start_date varchar(100) not null,
+end_date varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id),
+foreign key(productid) references products(id)
+);
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS accounts_branch(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    userid integer not null,
+    seasonid integer not null,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255),
+    phone VARCHAR(50),
+    address TEXT,
+    active integer not null default 1,
+    created_at varchar(100) not null,
+    foreign key(userid) references users(id),
+	foreign key(seasonid) references seasons(id)
+);
+
+
+
+CREATE TABLE IF NOT EXISTS customers (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    userid integer not null,
+    seasonid integer not null,
+    growerid int default 0,
+    name VARCHAR(255) NOT NULL,
+    contact_person VARCHAR(255),
+    email VARCHAR(255),
+    phone VARCHAR(50),
+    address TEXT,
+    created_at varchar(100) not null,
+    foreign key(userid) references users(id),
+	foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS accounts_receivable_notes (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    userid integer not null,
+    seasonid integer not null,
+    currencyid INT NOT NULL,
+    customer_id INT NOT NULL,
+    note_date DATE NOT NULL,
+    due_date DATE,
+    original_amount DECIMAL(18, 4) NOT NULL,
+    outstanding_amount DECIMAL(18, 4) NOT NULL,
+    description VARCHAR(255),
+    status VARCHAR(50) NOT NULL DEFAULT 'Open', -- e.g., 'Open', 'Partially Paid', 'Paid', 'Overdue'
+    created_at varchar(100) not null,
+    FOREIGN KEY (customer_id) REFERENCES customers(id),
+    foreign key(userid) references users(id),
+	foreign key(seasonid) references seasons(id),
+    FOREIGN KEY (currencyid) REFERENCES currency(id)
+);
+
+
+CREATE TABLE IF NOT EXISTS accounts_receivable_notes_payments(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    userid integer not null,
+    seasonid integer not null,
+    accounts_receivable_notesid integer not null,
+    amount DECIMAL(18, 4) NOT NULL,
+    created_at varchar(100) not null,
+    FOREIGN KEY (accounts_receivable_notesid) REFERENCES accounts_receivable_notes(id),
+    foreign key(userid) references users(id),
+	foreign key(seasonid) references seasons(id)
+);
+
+
+CREATE TABLE IF NOT EXISTS accounts_payable_notes(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    userid integer not null,
+    seasonid integer not null,
+    currencyid INT NOT NULL,
+    supplierid INT NOT NULL,
+    note_date DATE NOT NULL,
+    due_date DATE,
+    original_amount DECIMAL(18, 4) NOT NULL,
+    outstanding_amount DECIMAL(18, 4) NOT NULL,
+    amount DECIMAL(18, 4) NOT NULL,
+    description VARCHAR(255),
+    status VARCHAR(50) NOT NULL DEFAULT 'Open', -- e.g., 'Open', 'Partially Paid', 'Paid', 'Overdue'
+    created_at varchar(100) not null,
+    FOREIGN KEY (supplierid) REFERENCES supplier(id),
+    foreign key(userid) references users(id),
+	foreign key(seasonid) references seasons(id),
+    FOREIGN KEY (currencyid) REFERENCES currency(id)
+);
+
+
+
+
+CREATE TABLE IF NOT EXISTS accounts_payable_notes_payments(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    userid integer not null,
+    seasonid integer not null,
+    accounts_payable_notesid integer not null,
+    amount DECIMAL(18, 4) NOT NULL,
+    created_at varchar(100) not null,
+    FOREIGN KEY (accounts_payable_notesid) REFERENCES accounts_payable_notes(id),
+    foreign key(userid) references users(id),
+	foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+CREATE TABLE IF NOT EXISTS transactions (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    userid INT NOT NULL,
+    account_branchid integer not null,
+    seasonid INT NOT NULL,
+    currencyid INT NOT NULL,
+    description VARCHAR(100) NOT NULL,
+    receipt_num VARCHAR(100),
+    amount DECIMAL(18, 4) NOT NULL DEFAULT 0,
+    debit_sub_accountsid INT NOT NULL,
+    credit_sub_accountsid INT NOT NULL,
+    incomeid int COMMENT 'income id for the transaction ',
+    expensesid INT COMMENT 'expenses id for the transaction ',
+    receivable_note_id INT, -- Nullable: only set if this transaction relates to a receivable note
+    payable_note_id INT,    -- Nullable: only set if this transaction relates to a payable note
+    receivable_note_paymentsid INT, -- Nullable: only set if this transaction relates to a receivable note
+    payable_note_paymentsid INT,    -- Nullable: only set if this transaction relates to a payable note
+    created_at varchar(100) not null,
+    datetimes TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (seasonid) REFERENCES seasons(id),
+    FOREIGN KEY (userid) REFERENCES users(id),
+    FOREIGN KEY (currencyid) REFERENCES currency(id),
+    FOREIGN KEY (debit_sub_accountsid) REFERENCES sub_accounts(id),
+    FOREIGN KEY (credit_sub_accountsid) REFERENCES sub_accounts(id)
+);
+
 
 
 insert into documents_descriptions(description)value("Grower Id");
@@ -5897,9 +6164,6 @@ insert into live_location_status(active) value(0);
 
 
 
-
-
-
 ALTER TABLE loans
 MODIFY COLUMN quantity double(100,3) default 0;
 
@@ -6033,3 +6297,31 @@ ADD adjust integer not null default 0;
 ALTER TABLE shipment_details
 ADD supplierid integer not null;
 
+
+
+ALTER TABLE truck_to_processing_bales
+ADD mass double(100,4) not null default 0;
+
+
+
+ALTER TABLE truck_to_processing_bales
+ADD lot double(100,4) not null default 0;
+
+
+ALTER TABLE monthly_salary_claims
+ADD positions integer default 0;
+
+
+ALTER TABLE monthly_salary_claims_penalty
+ADD positions integer default 0;
+
+
+ALTER TABLE loans
+ADD qr_code_loan integer not null default 0;
+
+
+
+
+
+ALTER TABLE bale_counting_redo
+ADD swapped integer not null default 0;
