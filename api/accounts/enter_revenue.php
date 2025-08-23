@@ -39,7 +39,7 @@ if (isset($data->userid) &&  isset($data->sub_accountid) && isset($data->descrip
   $transaction_at=substr($data->transaction_at,0,-8);
   $created_at=$data->created_at;
   $seasonid=$data->seasonid;
-
+  $account_branchid=1;
   //$created_at=date("Y-m-d");
 
 
@@ -82,10 +82,17 @@ if (isset($data->userid) &&  isset($data->sub_accountid) && isset($data->descrip
             $credit_sql = "INSERT INTO revenue_credit(userid,revenueid,sub_accountid,created_at) VALUES ($userid,$last_id,$sub_accountid,'$created_at')";
          //$sql = "select * from login";
          if ($conn->query($credit_sql)===TRUE) {
-         
+      
+          $credit_sql = "INSERT INTO transactions(userid,account_branchid,seasonid,currencyid,description,receipt_num,amount,debit_sub_accountsid,credit_sub_accountsid,incomeid,created_at) VALUES ($userid,$account_branchid,$seasonid,$currencyid,'$description','$receipt_num','$amount',$payment_typeid,$sub_accountid,$last_id,'$created_at')";
+         //$sql = "select * from login";
+         if ($conn->query($credit_sql)===TRUE) {
 
            $temp=array("response"=>"success");
             array_push($data1,$temp);
+          }else{
+            $temp=array("response"=>$conn->error);
+            array_push($data1,$temp);
+          }
 
          }else{
 

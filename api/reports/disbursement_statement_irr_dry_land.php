@@ -106,7 +106,7 @@ $result1 = $conn->query($sql11);
     $min_code="";
 
     $field_officer_username="";
-
+    $signature_url="";
 
     $sql2 = "Select * from grower_field_officer join users on users.id=grower_field_officer.field_officerid where growerid=$growerid and seasonid=$seasonid";
   $result2 = $conn->query($sql2);
@@ -238,7 +238,19 @@ $result1 = $conn->query($sql11);
        }
      }
 
+$sqlx = "select distinct image_location from grower_signatures_schemes join growers on growers.id=grower_signatures_schemes.growerid  where grower_num='$grower_num' and grower_signatures_schemes.seasonid=$seasonid order by grower_signatures_schemes.id desc limit 1";
+$resultx = $conn->query($sqlx);
+ 
+ if ($resultx->num_rows > 0) {
+   // output data of each row
+   while($rowx = $resultx->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
+  $signature_url=$rowx["image_location"];
+   
+   
+   }
+ }
 
     $sql12 = "Select  * from inputs_total join growers on growers.id=inputs_total.growerid where inputs_total.seasonid=$seasonid and inputs_total.growerid=$growerid";
 
@@ -337,7 +349,7 @@ $result1 = $conn->query($sql11);
      $loan_balance=$total_loan_amount+$loan_interest;
 
 
-   $temp=array("grower_area"=>$grower_area,"grower_id_num"=>$grower_id_num,"grower_name"=>$grower_name,"grower_surname"=>$grower_surname,"grower_num"=>$grower_num,"loan_total_amount"=>$loan_balance,"working_capital"=>$working_capital,"roll_over"=>$roll_over,"input_total"=>$input_total,"interest"=>$loan_interest,"inputs"=>$loans_data,"company_data"=>$company_details_data,"min_code"=>$min_code,"interest_value"=>$interest_amount,"field_officer"=>$field_officer_username);
+   $temp=array("grower_area"=>$grower_area,"grower_id_num"=>$grower_id_num,"grower_name"=>$grower_name,"grower_surname"=>$grower_surname,"grower_num"=>$grower_num,"loan_total_amount"=>$loan_balance,"working_capital"=>$working_capital,"roll_over"=>$roll_over,"input_total"=>$input_total,"interest"=>$loan_interest,"inputs"=>$loans_data,"company_data"=>$company_details_data,"min_code"=>$min_code,"interest_value"=>$interest_amount,"field_officer"=>$field_officer_username,"signature_url"=>$signature_url);
     array_push($data1,$temp);
 
    
@@ -411,7 +423,7 @@ $result1 = $conn->query($sql11);
 
 
     $field_officer_username="";
-
+    $signature_url="";
 
 $sql2 = "Select * from grower_field_officer join users on users.id=grower_field_officer.field_officerid where growerid=$growerid and seasonid=$seasonid limit 1";
   $result2 = $conn->query($sql2);
@@ -544,6 +556,21 @@ $sql2 = "Select * from grower_field_officer join users on users.id=grower_field_
 
 
 
+$sqlx = "select distinct image_location from grower_signatures_schemes join growers on growers.id=grower_signatures_schemes.growerid  where grower_num='$grower_num' and grower_signatures_schemes.seasonid=$seasonid order by grower_signatures_schemes.id desc limit 1";
+$resultx = $conn->query($sqlx);
+ 
+ if ($resultx->num_rows > 0) {
+   // output data of each row
+   while($rowx = $resultx->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+  $signature_url=$rowx["image_location"];
+   
+   
+   }
+ }
+
+
     $sql12 = "Select  * from inputs_total join growers on growers.id=inputs_total.growerid where inputs_total.seasonid=$seasonid and inputs_total.growerid=$growerid";
 
     $result2 = $conn->query($sql12);
@@ -643,7 +670,7 @@ $sql2 = "Select * from grower_field_officer join users on users.id=grower_field_
      $loan_balance=$total_loan_amount+$loan_interest;
 
 
-   $temp=array("grower_area"=>$grower_area,"grower_id_num"=>$grower_id_num,"grower_name"=>$grower_name,"grower_surname"=>$grower_surname,"grower_num"=>$grower_num,"loan_total_amount"=>$loan_balance,"working_capital"=>$working_capital,"roll_over"=>$roll_over,"input_total"=>$input_total,"interest"=>$loan_interest,"inputs"=>$loans_data,"company_data"=>$company_details_data,"min_code"=>$min_code,"interest_value"=>$interest_amount,"field_officer"=>$field_officer_username);
+   $temp=array("grower_area"=>$grower_area,"grower_id_num"=>$grower_id_num,"grower_name"=>$grower_name,"grower_surname"=>$grower_surname,"grower_num"=>$grower_num,"loan_total_amount"=>$loan_balance,"working_capital"=>$working_capital,"roll_over"=>$roll_over,"input_total"=>$input_total,"interest"=>$loan_interest,"inputs"=>$loans_data,"company_data"=>$company_details_data,"min_code"=>$min_code,"interest_value"=>$interest_amount,"field_officer"=>$field_officer_username,"signature_url"=>$signature_url);
     array_push($data1,$temp);
 
    
@@ -710,7 +737,7 @@ $result1 = $conn->query($sql11);
 
 
     $field_officer_username="";
-
+    $signature_url="";
 
     $sql2 = "Select * from grower_field_officer join users on users.id=grower_field_officer.field_officerid where growerid=$growerid and seasonid=$seasonid limit 1";
   $result2 = $conn->query($sql2);
@@ -846,6 +873,22 @@ $result1 = $conn->query($sql11);
 
 
 
+$sqlx = "select distinct image_location from grower_signatures_schemes join growers on growers.id=grower_signatures_schemes.growerid  where grower_num='$grower_num' and grower_signatures_schemes.seasonid=$seasonid order by grower_signatures_schemes.id desc limit 1";
+$resultx = $conn->query($sqlx);
+ 
+ if ($resultx->num_rows > 0) {
+   // output data of each row
+   while($rowx = $resultx->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+  $signature_url=$rowx["image_location"];
+   
+   
+   }
+ }
+
+
+
     $sql12 = "Select * from inputs_total join growers on growers.id=inputs_total.growerid where inputs_total.seasonid=$seasonid and inputs_total.growerid=$growerid";
 
     $result2 = $conn->query($sql12);
@@ -945,7 +988,7 @@ $result1 = $conn->query($sql11);
      $loan_balance=$total_loan_amount+$loan_interest;
 
 
-    $temp=array("grower_area"=>$grower_area,"grower_id_num"=>$grower_id_num,"grower_name"=>$grower_name,"grower_surname"=>$grower_surname,"grower_num"=>$grower_num,"loan_total_amount"=>$loan_balance,"working_capital"=>$working_capital,"roll_over"=>$roll_over,"input_total"=>$input_total,"interest"=>$loan_interest,"inputs"=>$loans_data,"company_data"=>$company_details_data,"min_code"=>$min_code,"interest_value"=>$interest_amount,"field_officer"=>$field_officer_username);
+    $temp=array("grower_area"=>$grower_area,"grower_id_num"=>$grower_id_num,"grower_name"=>$grower_name,"grower_surname"=>$grower_surname,"grower_num"=>$grower_num,"loan_total_amount"=>$loan_balance,"working_capital"=>$working_capital,"roll_over"=>$roll_over,"input_total"=>$input_total,"interest"=>$loan_interest,"inputs"=>$loans_data,"company_data"=>$company_details_data,"min_code"=>$min_code,"interest_value"=>$interest_amount,"field_officer"=>$field_officer_username,"signature_url"=>$signature_url);
     array_push($data1,$temp);
 
    

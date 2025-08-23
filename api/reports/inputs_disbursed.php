@@ -38,6 +38,7 @@ $result = $conn->query($sql);
 
 
             $growerid=$row["id"];
+            $fieldOfficer="";
 
             $sql1 = "Select * from grower_managers  where  growerid=$growerid and seasonid=$seasonid limit 1";
           $result1 = $conn->query($sql1);

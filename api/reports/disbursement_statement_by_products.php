@@ -226,6 +226,22 @@ $result1 = $conn->query($sql11);
 
 
 
+
+$sqlx = "select distinct image_location from grower_signatures_schemes join growers on growers.id=grower_signatures_schemes.growerid  where grower_num='$grower_num' and grower_signatures_schemes.seasonid=$seasonid order by grower_signatures_schemes.id desc limit 1";
+$resultx = $conn->query($sqlx);
+ 
+ if ($resultx->num_rows > 0) {
+   // output data of each row
+   while($rowx = $resultx->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+  $signature_url=$rowx["image_location"];
+   
+   
+   }
+ }
+
+
     $sql12 = "Select  * from inputs_total join growers on growers.id=inputs_total.growerid where inputs_total.seasonid=$seasonid and inputs_total.growerid=$growerid";
 
     $result2 = $conn->query($sql12);
@@ -517,6 +533,21 @@ $result1 = $conn->query($sql11);
 
 
 
+$sqlx = "select distinct image_location from grower_signatures_schemes join growers on growers.id=grower_signatures_schemes.growerid  where grower_num='$grower_num' and grower_signatures_schemes.seasonid=$seasonid order by grower_signatures_schemes.id desc limit 1";
+$resultx = $conn->query($sqlx);
+ 
+ if ($resultx->num_rows > 0) {
+   // output data of each row
+   while($rowx = $resultx->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+  $signature_url=$rowx["image_location"];
+   
+   
+   }
+ }
+
+
     $sql12 = "Select  * from inputs_total join growers on growers.id=inputs_total.growerid where inputs_total.seasonid=$seasonid and inputs_total.growerid=$growerid";
 
     $result2 = $conn->query($sql12);
@@ -801,6 +832,21 @@ $product_id=$row["productid"];
        }
      }
 
+
+
+$sqlx = "select distinct image_location from grower_signatures_schemes join growers on growers.id=grower_signatures_schemes.growerid  where grower_num='$grower_num' and grower_signatures_schemes.seasonid=$seasonid order by grower_signatures_schemes.id desc limit 1";
+$resultx = $conn->query($sqlx);
+ 
+ if ($resultx->num_rows > 0) {
+   // output data of each row
+   while($rowx = $resultx->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+  $signature_url=$rowx["image_location"];
+   
+   
+   }
+ }
 
 
     $sql12 = "Select * from inputs_total join growers on growers.id=inputs_total.growerid where inputs_total.seasonid=$seasonid and inputs_total.growerid=$growerid";

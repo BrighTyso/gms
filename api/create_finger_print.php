@@ -54,8 +54,15 @@ $result = $conn->query($sql);
      if ($conn->query($user_sql)===TRUE) {
      
        $last_id = $conn->insert_id;
+
+       $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'','','$created_at','Grower Finger Print');";
+       //$gr = "select * from login";
+       if ($conn->query($insert_sql)===TRUE) {
+
         $temp=array("pin"=>$grower_num);
         array_push($response,$temp);
+        
+      }
 
      }else{
 

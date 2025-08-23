@@ -303,6 +303,12 @@ if ($growerid>0 && $grower_field_loansid==0 && $productid>0 && $disbursement_tru
                     if ($conn->query($user_sql1)===TRUE) {
 
 
+                    $insert_sql111 = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$latitude','$longitude','$created_at','Inputs Distribution');";
+                     //$gr = "select * from login";
+                     if ($conn->query($insert_sql111)===TRUE) {
+
+                     }
+
 
                   if ($active_grower_found==0) {
                   $user_sql = "INSERT INTO active_growers(userid,growerid,seasonid) VALUES ($userid,$growerid,$seasonid)";
