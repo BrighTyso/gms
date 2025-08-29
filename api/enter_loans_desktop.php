@@ -441,8 +441,6 @@ if ($deduction_point==0) {
 
                             //$last_id = $conn->insert_id;
 
-
-                          
                             $new_quantity=$old_quantity-$quantity;
 
 

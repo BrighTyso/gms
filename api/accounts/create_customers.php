@@ -40,7 +40,7 @@ if (isset($data->userid) &&  isset($data->seasonid) && isset($data->name)  && is
   $found=0;
 
 //check farm
-  $sql1 = "Select id from customers  where  name='$name'";
+  $sql1 = "Select id from customers  where  name='$name' and growerid=$growerid";
   $result = $conn->query($sql1);
    
    if ($result->num_rows > 0) {

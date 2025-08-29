@@ -78,7 +78,7 @@ $result = $conn->query($sql);
     $surname=$row["surname"];
     $id_num=$row["id_num"];
     $area=$row["area"];
-
+    $hectares="";
     
     $sql2 = "Select * from grower_field_officer join users on users.id=grower_field_officer.field_officerid where growerid=$growerid and seasonid=$seasonid limit 1";
     $result2 = $conn->query($sql2);
@@ -94,7 +94,22 @@ $result = $conn->query($sql);
      }
 
 
-     $temp=array("grower_area"=>$row["area"],"grower_id_num"=>$row["id_num"],"grower_name"=>$row["name"],"grower_surname"=>$row["surname"],"grower_num"=>$row["grower_num"],"package_units"=>$row["package_units"],"productid"=>$row["productid"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"username"=>$row["username"],"loanid"=>$row["loanid"],"farmer_comment"=>$row["farmer_comment"],"adjustment_quantity"=>$row["adjustment_quantity"],"adjust"=>$row["adjust"]);
+
+     $sql2 = "Select scheme_hectares.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id  join scheme_hectares_growers on scheme_hectares_growers.scheme_hectaresid=scheme_hectares.id where scheme_hectares.seasonid=$seasonid  and scheme_hectares_growers.growerid=$growerid limit 1";
+    $result2 = $conn->query($sql2);
+ 
+     if ($result2->num_rows > 0) {
+       // output data of each row
+       while($row2 = $result2->fetch_assoc()) {
+        // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+        $hectares=$row2["quantity"];
+        
+       }
+     }
+
+
+     $temp=array("grower_area"=>$row["area"],"grower_id_num"=>$row["id_num"],"grower_name"=>$row["name"],"grower_surname"=>$row["surname"],"grower_num"=>$row["grower_num"],"package_units"=>$row["package_units"],"productid"=>$row["productid"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"username"=>$row["username"],"loanid"=>$row["loanid"],"farmer_comment"=>$row["farmer_comment"],"adjustment_quantity"=>$row["adjustment_quantity"],"adjust"=>$row["adjust"],"hectares"=>$hectares);
     array_push($loans_data,$temp);
     
    }

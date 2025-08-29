@@ -53,9 +53,58 @@ $field_officer_data=array();
 $grower_details_data=array();
 
 $number_of_visits=0;
+
+$barn_totals=0;
+$farm_totals=0;
+$home_totals=0;
+$seedbed_totals=0;
+$allocated_growers=0;
+$allocated_hectares=0;
 // get grower locations
 
 if ($userid!="") {
+
+
+
+$sql = "Select distinct scheme_hectares.quantity,grower_field_officer.growerid from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id  join scheme_hectares_growers on scheme_hectares_growers.scheme_hectaresid=scheme_hectares.id join grower_field_officer on scheme_hectares_growers.growerid=grower_field_officer.growerid  where scheme_hectares.seasonid=$seasonid and grower_field_officer.seasonid=$seasonid ";
+$result = $conn->query($sql);
+ $allocated_growers=$result->num_rows;
+
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+    $allocated_hectares+=$row["quantity"];
+    
+   }
+ }
+
+
+$sql = "select * from lat_long join grower_field_officer on lat_long.growerid=grower_field_officer.growerid where field_officerid=$fieldOfficerid and grower_field_officer.seasonid=$seasonid";
+  $result = $conn->query($sql);
+$home_totals=$result->num_rows;
+ 
+
+ $sql = "select * from seedbed_location join grower_field_officer on seedbed_location.growerid=grower_field_officer.growerid where field_officerid=$fieldOfficerid and grower_field_officer.seasonid=$seasonid ";
+  $result = $conn->query($sql);
+$seedbed_totals=$result->num_rows;
+ 
+
+
+
+ $sql = "select * from barn_location join grower_field_officer on barn_location.growerid=grower_field_officer.growerid where field_officerid=$fieldOfficerid and grower_field_officer.seasonid=$seasonid";
+  $result = $conn->query($sql);
+$barn_totals=$result->num_rows;
+ 
+
+
+
+
+ $sql = "select * from grower_farm join grower_field_officer on grower_farm.growerid=grower_field_officer.growerid where field_officerid=$fieldOfficerid and grower_field_officer.seasonid=$seasonid ";
+  $result = $conn->query($sql);
+$farm_totals=$result->num_rows;
+
 
 
  $sql = "select distinct growers.surname,growers.name,growers.grower_num,growers.id  from lat_long join growers on growers.id=lat_long.growerid where  lat_long.seasonid=$seasonid and lat_long.userid=$fieldOfficerid  order by lat_long.created_at desc ";
@@ -132,9 +181,14 @@ $h_lat="";
 $h_long="";
 $f_lat="";
 $f_long="";
+$s_lat="";
+$s_long="";
+
+    
+    
 
 
- $sql = "select * from lat_long where growerid=$growerid limit 1";
+ $sql = "select * from lat_long where growerid=$growerid and seasonid=$seasonid limit 1";
   $result = $conn->query($sql);
 
  
@@ -149,13 +203,37 @@ $f_long="";
     $h_lat=$latitude;
     $h_long=$longitude;
 
+
+
+
    }
 
  }
 
 
+ $sql = "select * from seedbed_location where growerid=$growerid and seasonid=$seasonid limit 1";
+  $result = $conn->query($sql);
 
- $sql = "select * from barn_location where growerid=$growerid limit 1";
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+
+    $latitude=$row["latitude"];
+    $longitude=$row["longitude"];
+
+    $s_lat=$latitude;
+    $s_long=$longitude;
+
+    
+
+   }
+
+ }
+
+
+ $sql = "select * from barn_location where growerid=$growerid and seasonid=$seasonid limit 1";
   $result = $conn->query($sql);
 
  
@@ -172,7 +250,8 @@ $f_long="";
     $b_lat=$latitude;
     $b_long=$longitude;
 
-    
+  
+
 
    }
 
@@ -181,7 +260,7 @@ $f_long="";
 
 
 
- $sql = "select * from grower_farm where growerid=$growerid limit 1";
+ $sql = "select * from grower_farm where growerid=$growerid and seasonid=$seasonid limit 1";
   $result = $conn->query($sql);
 
  
@@ -197,12 +276,14 @@ $f_long="";
 
     $f_lat=$latitude;
     $f_long=$longitude;
-
+   
+  
+    
    }
 
  }
 
-$temp=array("barn_lat"=>$b_lat,"barn_long"=>$b_long,"home_lat"=>$h_lat,"home_long"=>$h_long,"farm_lat"=>$f_lat,"farm_long"=>$f_long);
+$temp=array("barn_lat"=>$b_lat,"barn_long"=>$b_long,"home_lat"=>$h_lat,"home_long"=>$h_long,"farm_lat"=>$f_lat,"farm_long"=>$f_long,"seedbed_lat"=>$s_lat,"seedbed_long"=>$s_long);
     array_push($location_data,$temp);
 
 
@@ -542,8 +623,9 @@ $result = $conn->query($sql);
 
 
 
- $temp=array("grower_details"=>$grower_details_data,"field_officer_data"=>$field_officer_data,"location_data"=>$location_data,"barn_repair_and_maintenance_data"=>$barn_repair_and_maintenance_data,"cultural_practices_data"=>$cultural_practices_data,"crop_growth_data"=>$crop_growth_data,"crop_development_data"=>$crop_development_data,"planting_dryLand_data"=>$planting_dryLand_data,"plant_irrigated_data"=>$plant_irrigated_data,"seedling_quality_data"=>$seedling_quality_data,"seed_bed_data"=>$seed_bed_data,"reaping_data"=>$reaping_data,"curing_data"=>$curing_data,"visits_data"=>$visits_data,"num_of_visits"=>$number_of_visits,"weather_data"=>$weather_data);
+ $temp=array("grower_details"=>$grower_details_data,"field_officer_data"=>$field_officer_data,"location_data"=>$location_data,"barn_repair_and_maintenance_data"=>$barn_repair_and_maintenance_data,"cultural_practices_data"=>$cultural_practices_data,"crop_growth_data"=>$crop_growth_data,"crop_development_data"=>$crop_development_data,"planting_dryLand_data"=>$planting_dryLand_data,"plant_irrigated_data"=>$plant_irrigated_data,"seedling_quality_data"=>$seedling_quality_data,"seed_bed_data"=>$seed_bed_data,"reaping_data"=>$reaping_data,"curing_data"=>$curing_data,"visits_data"=>$visits_data,"num_of_visits"=>$number_of_visits,"weather_data"=>$weather_data,"barn_totals"=>$barn_totals,"farm_totals"=>$farm_totals,"home_totals"=>$home_totals,"seedbed_totals"=>$seedbed_totals,"allocated_growers"=>$allocated_growers,"allocated_hectares"=>$allocated_hectares);
     array_push($data1,$temp);
+
 
   }
 

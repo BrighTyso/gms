@@ -85,6 +85,14 @@ if (!empty($_POST['image'])  && isset($_POST['userid']) && isset($_POST['seasoni
          
            $last_id = $conn->insert_id;
 
+
+           $insert_sql111 = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'','','$created_at','Grower Images');";
+                     //$gr = "select * from login";
+             if ($conn->query($insert_sql111)===TRUE) {
+
+             }
+
+
           $temp=array("id"=>$sqliteid);
           array_push($data,$temp);
         

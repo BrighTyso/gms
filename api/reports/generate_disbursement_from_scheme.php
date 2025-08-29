@@ -385,7 +385,7 @@ $result = $conn->query($sql);
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
 
-$grower_hectares=$row["hectares"];
+    $grower_hectares=$row["hectares"];
 
      $temp=array("package_units"=>$row["package_units"],"productid"=>$row["productid"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"username"=>$row["username"],"receipt_number"=>$receipt_number,"loanid"=>"0","farmer_comment"=>"","adjustment_quantity"=>"0","hectares"=>$row["hectares"],"adjust"=>"0");
     array_push($loans_data,$temp);

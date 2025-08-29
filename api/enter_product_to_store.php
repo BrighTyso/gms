@@ -47,6 +47,83 @@ $currencyid=$data->currencyid;
 $purchase_orderid=$data->purchasing_orderid;
 $otp=$data->otp;
 
+$payment_typeid=0;
+$branch_id_count=0;
+$account_branchid=0;
+
+$original_amount=0;
+$sub_accountid=0;
+
+
+$sql = "Select id from accounts_branch";
+$result = $conn->query($sql);
+ 
+ $branch_id_count=$result->num_rows;
+
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+    // $temp=array("main_account"=>$row["main_account"],"sub_acc"=>$row["sub_acc"],"balance_side"=>$row["balance_side"],"main_account_id"=>$row["id"],"sub_account_id"=>$row["sub_account_id"]);
+    // array_push($response,$temp);
+
+    $account_branchid=$row['id'];
+
+   }
+ }
+
+
+
+
+$sql = "Select main_accounts.description as main_account,main_accounts.id,balancing_side.description as balance_side,sub_accounts.description as sub_acc , sub_accounts.id as sub_account_id from main_accounts join sub_accounts on main_accounts.id=sub_accounts.main_accountid join main_account_balancing_side on main_account_balancing_side.main_accountid=main_accounts.id join balancing_side on main_account_balancing_side.balancing_sideid=balancing_side.id where sub_accounts.description='Cash In Bank' order by main_accounts.id limit 1";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+    // $temp=array("main_account"=>$row["main_account"],"sub_acc"=>$row["sub_acc"],"balance_side"=>$row["balance_side"],"main_account_id"=>$row["id"],"sub_account_id"=>$row["sub_account_id"]);
+    // array_push($response,$temp);
+
+    $payment_typeid=$row['sub_account_id'];
+
+   }
+ }
+
+
+
+ $sql = "Select main_accounts.description as main_account,main_accounts.id,balancing_side.description as balance_side,sub_accounts.description as sub_acc , sub_accounts.id as sub_account_id from main_accounts join sub_accounts on main_accounts.id=sub_accounts.main_accountid join main_account_balancing_side on main_account_balancing_side.main_accountid=main_accounts.id join balancing_side on main_account_balancing_side.balancing_sideid=balancing_side.id where sub_accounts.description='Purchases' order by main_accounts.id limit 1";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+    // $temp=array("main_account"=>$row["main_account"],"sub_acc"=>$row["sub_acc"],"balance_side"=>$row["balance_side"],"main_account_id"=>$row["id"],"sub_account_id"=>$row["sub_account_id"]);
+    // array_push($response,$temp);
+
+    $sub_accountid=$row['sub_account_id'];
+
+   }
+ }
+
+
+
+   //  $account_receivableid=0;
+
+   //  $sql1 = "Select id from accounts_receivable_notes  where  customer_id=$customerid and seasonid=$seasonid";
+   //   $result = $conn->query($sql1);
+   
+   //  if ($result->num_rows > 0) {
+   //   // output data of each row
+   //   while($row = $result->fetch_assoc()) {
+
+   //   $account_receivableid=$row['id'];
+     
+   //   }
+
+   // }
+
 
 
 $sql = "Select * from purchase_order_otp where  otp='$otp' and purchasing_orderid=$purchase_orderid and storeid=$storeid AND created_at > NOW() - INTERVAL 30 MINUTE limit 1";
@@ -158,6 +235,7 @@ $sql = "Select * from purchasing_order_products where productid=$productid and p
       // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
       $purchase_order_product_quantity=$row["quantity"];
+      $original_amount=$row["quantity"]*$row["unit_price"];
       
      }
    }
@@ -237,9 +315,19 @@ if ($found==0) {
           
                             if ($conn->query($user_sql2)===TRUE) {
 
+
+                                $purchase_insert_orderid = $conn->insert_id;
+
                                 $user_sql1 = "update purchasing_order_products set quantity_received=quantity_received+$quantity  where purchasing_orderid = $purchase_orderid and productid=$productid";
                                    //$sql = "select * from login";
                                    if ($conn->query($user_sql1)===TRUE) {
+
+
+
+                            $credit_sql = "INSERT INTO transactions(userid,account_branchid,seasonid,currencyid,description,receipt_num,amount,debit_sub_accountsid,credit_sub_accountsid,purchasing_order_received_productsid,created_at) VALUES ($userid,$account_branchid,$seasonid,$currencyid,'Product Purchase','$invoice_number',$original_amount,$sub_accountid,$payment_typeid,$purchase_insert_orderid,'$created_at')";
+                                 //$sql = "select * from login";
+                                 if ($conn->query($credit_sql)===TRUE) {
+
 
                                         $sql = "Select * from operations_contacts where  active=1";
                                         $result = $conn->query($sql);
@@ -259,6 +347,7 @@ if ($found==0) {
                                            }
 
                                          }
+                                     }
 
 
                                         $temp=array("response"=>"success");
@@ -308,9 +397,16 @@ if ($found==0) {
           
                                         if ($conn->query($user_sql2)===TRUE) {
 
+                                            $purchase_insert_orderid=$conn->insert_id;
+                                            
                                             $user_sql1 = "update purchasing_order_products set quantity_received=quantity_received+$quantity  where purchasing_orderid = $purchase_orderid and productid=$productid";
                                                //$sql = "select * from login";
                                                if ($conn->query($user_sql1)===TRUE) {
+
+
+                                                $credit_sql = "INSERT INTO transactions(userid,account_branchid,seasonid,currencyid,description,receipt_num,amount,debit_sub_accountsid,credit_sub_accountsid,purchasing_order_received_productsid,created_at) VALUES ($userid,$account_branchid,$seasonid,$currencyid,'Product Purchase','$invoice_number',$original_amount,$sub_accountid,$payment_typeid,$purchase_insert_orderid,'$created_at')";
+                                                     //$sql = "select * from login";
+                                                     if ($conn->query($credit_sql)===TRUE) {
 
                                                 $sql = "Select * from operations_contacts where  active=1";
                                                     $result = $conn->query($sql);
@@ -328,6 +424,7 @@ if ($found==0) {
                                                        }
 
                                                      }
+                                                 }
 
                                                     $temp=array("response"=>"success");
                                                        array_push($response,$temp);
