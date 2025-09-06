@@ -60,7 +60,7 @@ if ($description!="" && $groups==""){
 
 
 
-$sql = "Select * from users where username='$description' or surname='$description' or name='$description'";
+$sql = "Select * from users where username='$description' or surname='$description' or name='$description limit 1'";
   $result = $conn->query($sql);
    
    if ($result->num_rows > 0) {
@@ -80,7 +80,7 @@ $sql = "Select * from users where username='$description' or surname='$descripti
 
 
 
-$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num,growers.area,growers.id_num from  growers join active_growers on active_growers.growerid=growers.id join grower_field_officer on grower_field_officer.growerid=growers.id join land_irrigation_growers on land_irrigation_growers.growerid=growers.id where active_growers.seasonid=$seasonid and  field_officerid=$officerid";
+$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num,growers.area,growers.id_num from  growers join loans on loans.growerid=growers.id join grower_field_officer on grower_field_officer.growerid=growers.id where loans.seasonid=$seasonid and  field_officerid=$officerid";
 
 $result1 = $conn->query($sql11);
  
@@ -400,7 +400,7 @@ $resultx = $conn->query($sqlx);
 
 
 
-$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num,growers.area,growers.id_num from  growers join active_growers on active_growers.growerid=growers.id join grower_field_officer on grower_field_officer.growerid=growers.id join grower_field_officer_groups on grower_field_officer_groups.growerid=growers.id join grower_groups on grower_groups.id=grower_field_officer_groups.grower_groupid join land_irrigation_growers on land_irrigation_growers.growerid=growers.id where active_growers.seasonid=$seasonid and grower_groups.description='$groups'";
+$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num,growers.area,growers.id_num from  growers join loans on loans.growerid=growers.id join grower_field_officer on grower_field_officer.growerid=growers.id join grower_field_officer_groups on grower_field_officer_groups.growerid=growers.id join grower_groups on grower_groups.id=grower_field_officer_groups.grower_groupid where loans.seasonid=$seasonid and grower_groups.description='$groups'";
 
 $result1 = $conn->query($sql11);
  
@@ -543,7 +543,7 @@ $sql2 = "Select * from grower_field_officer join users on users.id=grower_field_
 
           $to_be_disbursed_quantity=$product_scheme_quantity-$disbursed_quantity;
 
-           if ($product_scheme_quantity>$disbursed_quantity && $to_be_disbursed_quantity>0) {
+           if ($userid>0) {
 
             $insert_sql = "INSERT INTO grower_disbursed_products(userid,seasonid,growerid,productid,quantity,created_at) VALUES ($userid,$seasonid,$growerid,$product_id,$to_be_disbursed_quantity,'$created_at')";
              //$gr = "select * from login";
@@ -717,7 +717,7 @@ $sql = "Select * from grower_groups where description='$groups' limit 1";
    }
 
 
-$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num,growers.area,growers.id_num from  growers join active_growers on active_growers.growerid=growers.id join grower_field_officer on grower_field_officer.growerid=growers.id join grower_field_officer_groups on grower_field_officer_groups.growerid=growers.id join land_irrigation_growers on land_irrigation_growers.growerid=growers.id where active_growers.seasonid=$seasonid  and grower_field_officer_groups.field_officerid=$officerid and grower_field_officer_groups.grower_groupid=$groupid";
+$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num,growers.area,growers.id_num from  growers join loans on loans.growerid=growers.id join grower_field_officer on grower_field_officer.growerid=growers.id join grower_field_officer_groups on grower_field_officer_groups.growerid=growers.id join land_irrigation_growers on land_irrigation_growers.growerid=growers.id where loans.seasonid=$seasonid  and grower_field_officer_groups.field_officerid=$officerid and grower_field_officer_groups.grower_groupid=$groupid";
 
 $result1 = $conn->query($sql11);
  
@@ -858,7 +858,7 @@ $product_id=$row["productid"];
 
           $to_be_disbursed_quantity=$product_scheme_quantity-$disbursed_quantity;
 
-           if ($product_scheme_quantity>$disbursed_quantity && $to_be_disbursed_quantity>0) {
+           if ($userid>0) {
 
             $insert_sql = "INSERT INTO grower_disbursed_products(userid,seasonid,growerid,productid,quantity,created_at) VALUES ($userid,$seasonid,$growerid,$product_id,$to_be_disbursed_quantity,'$created_at')";
              //$gr = "select * from login";

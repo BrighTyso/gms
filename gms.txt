@@ -6161,9 +6161,6 @@ insert into live_location_status(active) value(0);
 
 
 
-
-
-
 ALTER TABLE loans
 MODIFY COLUMN quantity double(100,3) default 0;
 
@@ -6325,3 +6322,8 @@ ADD qr_code_loan integer not null default 0;
 
 ALTER TABLE bale_counting_redo
 ADD swapped integer not null default 0;
+
+
+
+ALTER TABLE transactions
+ADD purchasing_order_received_productsid int;

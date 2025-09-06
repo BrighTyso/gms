@@ -156,8 +156,9 @@ $result = $conn->query($sql);
 
  }
 
+//echo $scheme_grower_quantity;
 
-if ($scheme_grower_quantitys>1) {
+if ($scheme_grower_quantity>1) {
   
   $select_limit=$scheme_grower_quantity-1;
 
@@ -174,9 +175,8 @@ if ($scheme_grower_quantitys>1) {
      $user_sql111 = "DELETE FROM scheme_hectares_growers where id = $found_new and growerid=$growerid ";
      //$sql = "select * from login";
      if ($conn->query($user_sql111)===TRUE) {
-
+//echo "delete";
      }
-
    
    }
 

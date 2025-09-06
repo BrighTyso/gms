@@ -18,20 +18,20 @@ $disbursement_trucks_store_itemsid=0;
 $data=array();
 //http://192.168.1.190/gms/api/enter_hail_strike.php?userid=1&grower_num=V123456&latitude=13.2222&longitude=3.33376&created_at=23-09-2022&percentage_strike=12333&strike_date=12333&seasonid=1&sqliteid=1
 
-$userid=validate($_GET['userid']);
-$seasonid=validate($_GET['seasonid']);
-$latitude=validate($_GET['latitude']);
-$longitude=validate($_GET['longitude']);
-$description=validate($_GET['description']);
-$product=validate($_GET['product']);
-$quantity=validate($_GET['quantity']);
-$trucknumber=validate($_GET['trucknumber']);
-$created_at=validate($_GET['created_at']);
-$sqliteid=validate($_GET['sqliteid']);
-$comment=validate($_GET['comment']);
-$adjust=validate($_GET['adjust']);
-$adjustment_quantity=validate($_GET['adjustment_quantity']);
-$datetime=validate($_GET['datetime']);
+$userid=$_GET['userid'];
+$seasonid=$_GET['seasonid'];
+$latitude=$_GET['latitude'];
+$longitude=$_GET['longitude'];
+$description=$_GET['description'];
+$product=$_GET['product'];
+$quantity=$_GET['quantity'];
+$trucknumber=$_GET['trucknumber'];
+$created_at=$_GET['created_at'];
+$sqliteid=$_GET['sqliteid'];
+$comment=$_GET['comment'];
+$adjust=$_GET['adjust'];
+$adjustment_quantity=$_GET['adjustment_quantity'];
+$datetime=$_GET['datetime'];
 
 
 $disbused_total_quantity=0;
@@ -303,11 +303,11 @@ if ($growerid>0 && $grower_field_loansid==0 && $productid>0 && $disbursement_tru
                     if ($conn->query($user_sql1)===TRUE) {
 
 
-                    $insert_sql111 = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$latitude','$longitude','$created_at','Inputs Distribution');";
-                     //$gr = "select * from login";
-                     if ($conn->query($insert_sql111)===TRUE) {
+                    // $insert_sql111 = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$latitude','$longitude','$created_at','Inputs Distribution');";
+                    //  //$gr = "select * from login";
+                    //  if ($conn->query($insert_sql111)===TRUE) {
 
-                     }
+                    //  }
 
 
                   if ($active_grower_found==0) {

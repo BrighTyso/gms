@@ -34,6 +34,21 @@ $receipt_number="";
 $field_officer_username="";
 
 $truck_number="";
+
+
+$sql = "Select * from users where id=$userid limit 1";
+  $result = $conn->query($sql);
+   
+   if ($result->num_rows > 0) {
+     // output data of each row
+     while($row = $result->fetch_assoc()) {
+      // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+      $username=$row['username'];
+      
+     }
+   }
+
+
 $sql = "Select * from truck_destination join total_disbursement on total_disbursement.disbursement_trucksid=truck_destination.id join products on products.id=total_disbursement.productid where truck_destination.id=$disbursement_truckid limit 1";
   $result = $conn->query($sql);
    
@@ -198,8 +213,8 @@ $sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower
       }
 
 
-   $sql = "Select distinct  products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,scheme_hectares_products.quantity,units,package_units,total_disbursement.created_at, users.username,scheme_hectares.quantity as hectares, scheme_hectares_products.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id join scheme_hectares_products on scheme_hectares_products.scheme_hectaresid=scheme_hectares.id join scheme_hectares_growers on scheme_hectares_growers.scheme_hectaresid=scheme_hectares.id 
-join growers on growers.id=scheme_hectares_growers.growerid join products on scheme_hectares_products.productid=products.id join users on users.id=scheme_hectares_growers.userid join total_disbursement on total_disbursement.productid=products.id where scheme_hectares.seasonid=$seasonid and scheme_hectares_growers.growerid=$growerid and total_disbursement.disbursement_trucksid=$disbursement_truckid order by grower_num";
+   $sql = "Select distinct  products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,scheme_hectares_products.quantity,units,package_units,total_disbursement.created_at,scheme_hectares.quantity as hectares, scheme_hectares_products.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id join scheme_hectares_products on scheme_hectares_products.scheme_hectaresid=scheme_hectares.id join scheme_hectares_growers on scheme_hectares_growers.scheme_hectaresid=scheme_hectares.id 
+join growers on growers.id=scheme_hectares_growers.growerid join products on scheme_hectares_products.productid=products.id join users on users.id=scheme_hectares_growers.userid join total_disbursement on total_disbursement.productid=products.id where scheme_hectares.seasonid=$seasonid and scheme_hectares_growers.growerid=$growerid and total_disbursement.disbursement_trucksid=$disbursement_truckid order by grower_num desc";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -211,7 +226,7 @@ $result = $conn->query($sql);
     $grower_hectares=$row["hectares"];
 
 
-     $temp=array("package_units"=>$row["package_units"],"productid"=>$row["productid"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"username"=>$row["username"],"receipt_number"=>$receipt_number,"loanid"=>"0","farmer_comment"=>"","adjustment_quantity"=>"0","hectares"=>$row["hectares"],"adjust"=>"0");
+     $temp=array("package_units"=>$row["package_units"],"productid"=>$row["productid"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"username"=>$username,"receipt_number"=>$receipt_number,"loanid"=>"0","farmer_comment"=>"","adjustment_quantity"=>"0","hectares"=>$row["hectares"],"adjust"=>"0");
     array_push($loans_data,$temp);
     
    }
@@ -373,8 +388,8 @@ $receipt_number=0;
       }
 
 
- $sql = "Select distinct  products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,scheme_hectares_products.quantity,units,package_units,total_disbursement.created_at, users.username,scheme_hectares.quantity as hectares, scheme_hectares_products.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id join scheme_hectares_products on scheme_hectares_products.scheme_hectaresid=scheme_hectares.id join scheme_hectares_growers on scheme_hectares_growers.scheme_hectaresid=scheme_hectares.id 
-join growers on growers.id=scheme_hectares_growers.growerid join products on scheme_hectares_products.productid=products.id join users on users.id=scheme_hectares_growers.userid join total_disbursement on total_disbursement.productid=products.id where scheme_hectares.seasonid=$seasonid and scheme_hectares_growers.growerid=$growerid and total_disbursement.disbursement_trucksid=$disbursement_truckid order by grower_num";
+ $sql = "Select distinct  products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,scheme_hectares_products.quantity,units,package_units,total_disbursement.created_at,scheme_hectares.quantity as hectares, scheme_hectares_products.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id join scheme_hectares_products on scheme_hectares_products.scheme_hectaresid=scheme_hectares.id join scheme_hectares_growers on scheme_hectares_growers.scheme_hectaresid=scheme_hectares.id 
+join growers on growers.id=scheme_hectares_growers.growerid join products on scheme_hectares_products.productid=products.id join users on users.id=scheme_hectares_growers.userid join total_disbursement on total_disbursement.productid=products.id where scheme_hectares.seasonid=$seasonid and scheme_hectares_growers.growerid=$growerid and total_disbursement.disbursement_trucksid=$disbursement_truckid order by grower_num desc";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -384,7 +399,7 @@ $result = $conn->query($sql);
 
     $grower_hectares=$row["hectares"];
 
-     $temp=array("package_units"=>$row["package_units"],"productid"=>$row["productid"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"username"=>$row["username"],"receipt_number"=>$receipt_number,"loanid"=>"0","farmer_comment"=>"","adjustment_quantity"=>"0","hectares"=>$row["hectares"],"adjust"=>"0");
+     $temp=array("package_units"=>$row["package_units"],"productid"=>$row["productid"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"username"=>$username,"receipt_number"=>$receipt_number,"loanid"=>"0","farmer_comment"=>"","adjustment_quantity"=>"0","hectares"=>$row["hectares"],"adjust"=>"0");
     array_push($loans_data,$temp);
     
    }

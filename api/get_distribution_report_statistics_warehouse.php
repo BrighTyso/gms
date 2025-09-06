@@ -28,7 +28,7 @@ if ($userid!="") {
   
 
 
-  $sql = "SELECT
+  $sql = "SELECT distinct
     users.username AS field_officer,
 
     -- Participants Section
@@ -65,6 +65,8 @@ JOIN
     scheme_hectares_growers on scheme_hectares_growers.growerid=grower_field_officer.growerid
 JOIN 
     scheme_hectares on scheme_hectares_growers.scheme_hectaresid=scheme_hectares.id
+
+    where loans.seasonid=$seasonid and scheme_hectares.seasonid=$seasonid and scheme_hectares_growers.id in (select id from scheme_hectares_growers order by id desc)
 -- Note: products table is not joined as the image summary is only by field officer, not by product.
 -- If you need product details, we'll need to adjust the GROUP BY clause.
 GROUP BY

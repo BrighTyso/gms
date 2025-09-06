@@ -59,6 +59,8 @@ FROM
     grower_field_loans
 JOIN
     users ON users.id = grower_field_loans.userid
+
+    where grower_field_loans.seasonid=$seasonid
 -- Note: products table is not joined as the image summary is only by field officer, not by product.
 -- If you need product details, we'll need to adjust the GROUP BY clause.
 GROUP BY

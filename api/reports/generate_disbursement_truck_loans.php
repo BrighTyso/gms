@@ -64,20 +64,20 @@ $sql = "Select * from truck_destination join total_disbursement on total_disburs
       $season_data=array();
 
   
-  $sql = "Select distinct disbursed_products_grower_truck.id as loanid, products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,id_num,area,products.name as product_name,disbursed_products_grower_truck.quantity,units,package_units,disbursed_products_grower_truck.created_at, users.username,farmer_comment,adjustment_quantity,adjust from disbursed_products_grower_truck join growers on growers.id=disbursed_products_grower_truck.growerid join products on disbursed_products_grower_truck.productid=products.id join users on users.id=disbursed_products_grower_truck.userid  where disbursed_products_grower_truck.seasonid=$seasonid and  disbursement_trucksid=$disbursement_truckid order by grower_num";
-$result = $conn->query($sql);
+  $sql1 = "Select distinct disbursed_products_grower_truck.id as loanid, products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,id_num,area,products.name as product_name,disbursed_products_grower_truck.quantity,units,package_units,disbursed_products_grower_truck.created_at, users.username,farmer_comment,adjustment_quantity,adjust from disbursed_products_grower_truck join growers on growers.id=disbursed_products_grower_truck.growerid join products on disbursed_products_grower_truck.productid=products.id join users on users.id=disbursed_products_grower_truck.userid  where disbursed_products_grower_truck.seasonid=$seasonid and  disbursement_trucksid=$disbursement_truckid  and products.id=$productid order by grower_num";
+$result1 = $conn->query($sql1);
  
- if ($result->num_rows > 0) {
+ if ($result1->num_rows > 0) {
    // output data of each row
-   while($row = $result->fetch_assoc()) {
+   while($row1 = $result1->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-    $growerid=$row["id"];
-    $grower_num=$row["grower_num"];
-    $name=$row["name"];
-    $surname=$row["surname"];
-    $id_num=$row["id_num"];
-    $area=$row["area"];
+    $growerid=$row1["id"];
+    $grower_num=$row1["grower_num"];
+    $name=$row1["name"];
+    $surname=$row1["surname"];
+    $id_num=$row1["id_num"];
+    $area=$row1["area"];
     $hectares="";
     
     $sql2 = "Select * from grower_field_officer join users on users.id=grower_field_officer.field_officerid where growerid=$growerid and seasonid=$seasonid limit 1";
@@ -109,7 +109,7 @@ $result = $conn->query($sql);
      }
 
 
-     $temp=array("grower_area"=>$row["area"],"grower_id_num"=>$row["id_num"],"grower_name"=>$row["name"],"grower_surname"=>$row["surname"],"grower_num"=>$row["grower_num"],"package_units"=>$row["package_units"],"productid"=>$row["productid"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"username"=>$row["username"],"loanid"=>$row["loanid"],"farmer_comment"=>$row["farmer_comment"],"adjustment_quantity"=>$row["adjustment_quantity"],"adjust"=>$row["adjust"],"hectares"=>$hectares);
+     $temp=array("grower_area"=>$row1["area"],"grower_id_num"=>$row1["id_num"],"grower_name"=>$row1["name"],"grower_surname"=>$row1["surname"],"grower_num"=>$row1["grower_num"],"package_units"=>$row1["package_units"],"productid"=>$row1["productid"],"product_name"=>$row1["product_name"],"quantity"=>$row1["quantity"],"units"=>$row1["units"],"created_at"=>$row1["created_at"],"username"=>$row1["username"],"loanid"=>$row1["loanid"],"farmer_comment"=>$row1["farmer_comment"],"adjustment_quantity"=>$row1["adjustment_quantity"],"adjust"=>$row1["adjust"],"hectares"=>$hectares);
     array_push($loans_data,$temp);
     
    }
