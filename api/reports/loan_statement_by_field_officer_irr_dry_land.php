@@ -108,6 +108,20 @@ $signature_url="";
 
 $field_officer_username="";
 
+$serialized=0;
+
+    $sql2 = "Select distinct * from system_receipt_number where growerid=$growerid and seasonid=$seasonid order by id desc limit 1";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $serialized=$row2['id'];
+
+         }
+       }
+
 
     $sql2 = "Select * from grower_field_officer join users on users.id=grower_field_officer.field_officerid where growerid=$growerid and seasonid=$seasonid limit 1";
   $result2 = $conn->query($sql2);
@@ -201,7 +215,7 @@ $resultx = $conn->query($sqlx);
  }
 
 
-    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and processed=1 and loans.growerid=$growerid order by product_amount ";
+    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost,loans.splitid  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and prices.splitid=loans.splitid and processed=1 and loans.growerid=$growerid order by products.product_typeid ";
     $result = $conn->query($sql);
 
  
@@ -419,6 +433,20 @@ $signature_url="";
 
 $field_officer_username="";
 
+$serialized=0;
+
+    $sql2 = "Select distinct * from system_receipt_number where growerid=$growerid and seasonid=$seasonid order by id desc limit 1";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $serialized=$row2['id'];
+
+         }
+       }
+
 
     $sql2 = "Select * from grower_field_officer join users on users.id=grower_field_officer.field_officerid where growerid=$growerid and seasonid=$seasonid limit 1";
   $result2 = $conn->query($sql2);
@@ -512,7 +540,7 @@ $resultx = $conn->query($sqlx);
 
 
 
-    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and processed=1 and loans.growerid=$growerid order by product_amount ";
+    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost,loans.splitid  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and prices.splitid=loans.splitid and processed=1 and loans.growerid=$growerid order by products.product_typeid ";
     $result = $conn->query($sql);
 
  
@@ -726,6 +754,19 @@ $signature_url="";
 
 $field_officer_username="";
 
+$serialized=0;
+
+    $sql2 = "Select distinct * from system_receipt_number where growerid=$growerid and seasonid=$seasonid order by id desc limit 1";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $serialized=$row2['id'];
+
+         }
+       }
 
     $sql2 = "Select * from grower_field_officer join users on users.id=grower_field_officer.field_officerid where growerid=$growerid and seasonid=$seasonid limit 1";
   $result2 = $conn->query($sql2);
@@ -817,7 +858,7 @@ $resultx = $conn->query($sqlx);
  }
 
 
-    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and processed=1 and loans.growerid=$growerid order by product_amount ";
+    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and prices.splitid=loans.splitid and processed=1 and loans.growerid=$growerid order by products.product_typeid ";
     $result = $conn->query($sql);
 
  

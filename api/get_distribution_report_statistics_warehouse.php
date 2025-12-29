@@ -32,24 +32,24 @@ if ($userid!="") {
     users.username AS field_officer,
 
     -- Participants Section
-    SUM(CASE WHEN scheme_hectares.quantity = 0.5 THEN 1 ELSE 0 END) AS q_Issued_0_5_hac,
-    SUM(CASE WHEN scheme_hectares.quantity = 1.0 THEN 1 ELSE 0 END) AS q_Issued_1_hac,
+    SUM(CASE WHEN scheme_hectares.quantity = 0.5 or scheme_hectares.quantity = 0.25 THEN 1 ELSE 0 END) AS q_Issued_0_5_hac,
+    SUM(CASE WHEN scheme_hectares.quantity = 1 or scheme_hectares.quantity = 0.75 THEN 1 ELSE 0 END) AS q_Issued_1_hac,
     SUM(CASE WHEN scheme_hectares.quantity = 1.5 THEN 1 ELSE 0 END) AS q_Issued_1_5_hac,
-    SUM(CASE WHEN scheme_hectares.quantity = 2.0 THEN 1 ELSE 0 END) AS q_Issued_2_hac,
+    SUM(CASE WHEN scheme_hectares.quantity = 2 THEN 1 ELSE 0 END) AS q_Issued_2_hac,
     SUM(CASE WHEN scheme_hectares.quantity = 2.5 THEN 1 ELSE 0 END) AS q_Issued_2_5_hac,
-    SUM(CASE WHEN scheme_hectares.quantity = 3.0 THEN 1 ELSE 0 END) AS q_Issued_3_hac,
+    SUM(CASE WHEN scheme_hectares.quantity = 3 THEN 1 ELSE 0 END) AS q_Issued_3_hac,
     SUM(CASE WHEN scheme_hectares.quantity = 3.5 THEN 1 ELSE 0 END) AS q_Issued_3_5_hac,
     SUM(CASE WHEN scheme_hectares.quantity = 4 THEN 1 ELSE 0 END) AS q_Issued_4_hac,
     SUM(CASE WHEN scheme_hectares.quantity = 5 THEN 1 ELSE 0 END) AS q_Issued_5_hac,
     COUNT(*) AS Total_participants, -- Counts all records for the field officer
 
     -- Equivalent Hecterage Section
-    SUM(CASE WHEN scheme_hectares.quantity = 0.5 THEN scheme_hectares.quantity ELSE 0 END) AS Issued_0_5_hac_,
-    SUM(CASE WHEN scheme_hectares.quantity = 1.0 THEN scheme_hectares.quantity ELSE 0 END) AS Issued_1_hac_,
+    SUM(CASE WHEN scheme_hectares.quantity = 0.5 or scheme_hectares.quantity = 0.25 THEN scheme_hectares.quantity ELSE 0 END) AS Issued_0_5_hac_,
+    SUM(CASE WHEN scheme_hectares.quantity = 1 or scheme_hectares.quantity = 0.75 THEN scheme_hectares.quantity ELSE 0 END) AS Issued_1_hac_,
     SUM(CASE WHEN scheme_hectares.quantity = 1.5 THEN scheme_hectares.quantity ELSE 0 END) AS Issued_1_5_hac_,
-    SUM(CASE WHEN scheme_hectares.quantity = 2.0 THEN scheme_hectares.quantity ELSE 0 END) AS Issued_2_hac_,
+    SUM(CASE WHEN scheme_hectares.quantity = 2 THEN scheme_hectares.quantity ELSE 0 END) AS Issued_2_hac_,
     SUM(CASE WHEN scheme_hectares.quantity = 2.5 THEN scheme_hectares.quantity ELSE 0 END) AS Issued_2_5_hac_,
-    SUM(CASE WHEN scheme_hectares.quantity = 3.0 THEN scheme_hectares.quantity ELSE 0 END) AS Issued_3_hac_,
+    SUM(CASE WHEN scheme_hectares.quantity = 3 THEN scheme_hectares.quantity ELSE 0 END) AS Issued_3_hac_,
     SUM(CASE WHEN scheme_hectares.quantity = 3.5 THEN scheme_hectares.quantity ELSE 0 END) AS Issued_3_5_hac_,
     SUM(CASE WHEN scheme_hectares.quantity = 4 THEN scheme_hectares.quantity ELSE 0 END) AS Issued_4_hac_,
     SUM(CASE WHEN scheme_hectares.quantity = 5 THEN scheme_hectares.quantity ELSE 0 END) AS Issued_5_hac_,
@@ -66,7 +66,7 @@ JOIN
 JOIN 
     scheme_hectares on scheme_hectares_growers.scheme_hectaresid=scheme_hectares.id
 
-    where loans.seasonid=$seasonid and scheme_hectares.seasonid=$seasonid and scheme_hectares_growers.id in (select id from scheme_hectares_growers order by id desc)
+    where loans.seasonid=$seasonid and loans.productid=$productid and scheme_hectares.seasonid=$seasonid and scheme_hectares_growers.id in (select id from scheme_hectares_growers order by id desc) 
 -- Note: products table is not joined as the image summary is only by field officer, not by product.
 -- If you need product details, we'll need to adjust the GROUP BY clause.
 GROUP BY

@@ -17,8 +17,10 @@ $seasonid=$_POST['seasonid'];
 $userid=$_POST['userid'];
 $feature=$_POST['feature'];
 $grower_num=$_POST['grower_num'];
+$description=$_POST['description'];
 $growerid=0;
 $print_found=0;
+$userid_finger_found=0;
 
 
 $sql = "Select distinct * from growers  where grower_num='$grower_num' ";
@@ -33,41 +35,69 @@ $result = $conn->query($sql);
  }
 
 
-
-$sql = "Select distinct * from grower_finger_print   where growerid=$growerid ";
+$sql = "Select distinct * from users  where username='$grower_num' ";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
    // output data of each row
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
-    $print_found=$row["id"];
+    $userid_finger_found=$row["id"];
    }
  }
 
 
- if ($print_found==0) {
+$sql = "Select distinct * from grower_finger_print   where growerid=$growerid ";
+$result = $conn->query($sql);
+$print_found=$result->num_rows;
+ 
 
 
-   $user_sql = "INSERT INTO grower_finger_print(userid,seasonid,growerid,feature) VALUES ($userid,$seasonid,$growerid,'$feature')";
+
+ if ($print_found<10 && $growerid>0 && $userid_finger_found==0) {
+
+   $user_sql = "INSERT INTO grower_finger_print(userid,seasonid,growerid,feature,description) VALUES ($userid,$seasonid,$growerid,'$feature','$description')";
            //$sql = "select * from login";
      if ($conn->query($user_sql)===TRUE) {
      
        $last_id = $conn->insert_id;
 
-       $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'','','$created_at','Grower Finger Print');";
-       //$gr = "select * from login";
-       if ($conn->query($insert_sql)===TRUE) {
+         $insert_sql = "insert into visits(userid,growerid,seasonid,created_at,description) value($userid,$growerid,$seasonid,'$created_at','Grower Finger Print');";
+         //$gr = "select * from login";
+         if ($conn->query($insert_sql)===TRUE) {
 
-        $temp=array("pin"=>$grower_num);
-        array_push($response,$temp);
-        
-      }
+          $temp=array("pin"=>$grower_num);
+          array_push($response,$temp);
+          
+        }
 
      }else{
 
 
      }
+ }else{
+
+
+  if ($print_found<10 && $growerid==0 && $userid_finger_found>0) {
+
+   $user_sql = "INSERT INTO user_finger_print(userid,userid_verifier,seasonid,feature,description) VALUES ($userid,$userid_finger_found,$seasonid,'$feature','$description')";
+           //$sql = "select * from login";
+     if ($conn->query($user_sql)===TRUE) {
+     
+       $last_id = $conn->insert_id;
+
+        $temp=array("pin"=>$grower_num);
+        array_push($response,$temp);
+          
+     }else{
+
+
+     }
+ }
+
+
+
+
  }
 
 

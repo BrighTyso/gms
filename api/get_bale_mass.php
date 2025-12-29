@@ -28,7 +28,7 @@ $grades="";
 
 
 
-$sql1 = "Select * from bale_counting_redo where barcode='$barcode' limit 1";
+$sql1 = "Select * from bale_counting_redo where (barcode='$barcode' or old_barcode='$barcode') limit 1";
     $result1 = $conn->query($sql1);
      
    if ($result1->num_rows > 0) {

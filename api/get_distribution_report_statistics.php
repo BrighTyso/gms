@@ -32,22 +32,23 @@ if ($userid!="") {
     users.username AS field_officer,
 
     -- Participants Section
-    SUM(CASE WHEN grower_field_loans.hectares = 0.5 THEN 1 ELSE 0 END) AS q_Issued_0_5_hac,
-    SUM(CASE WHEN grower_field_loans.hectares = 1.0 THEN 1 ELSE 0 END) AS q_Issued_1_hac,
+
+    SUM(CASE WHEN grower_field_loans.hectares = 0.5 or grower_field_loans.hectares = 0.25 THEN 1 ELSE 0 END) AS q_Issued_0_5_hac,
+    SUM(CASE WHEN grower_field_loans.hectares = 1  or grower_field_loans.hectares = 0.75 THEN 1 ELSE 0 END) AS q_Issued_1_hac,
     SUM(CASE WHEN grower_field_loans.hectares = 1.5 THEN 1 ELSE 0 END) AS q_Issued_1_5_hac,
-    SUM(CASE WHEN grower_field_loans.hectares = 2.0 THEN 1 ELSE 0 END) AS q_Issued_2_hac,
+    SUM(CASE WHEN grower_field_loans.hectares = 2 THEN 1 ELSE 0 END) AS q_Issued_2_hac,
     SUM(CASE WHEN grower_field_loans.hectares = 2.5 THEN 1 ELSE 0 END) AS q_Issued_2_5_hac,
-    SUM(CASE WHEN grower_field_loans.hectares = 3.0 THEN 1 ELSE 0 END) AS q_Issued_3_hac,
+    SUM(CASE WHEN grower_field_loans.hectares = 3 THEN 1 ELSE 0 END) AS q_Issued_3_hac,
     SUM(CASE WHEN grower_field_loans.hectares = 3.5 THEN 1 ELSE 0 END) AS q_Issued_3_5_hac,
     SUM(CASE WHEN grower_field_loans.hectares = 4 THEN 1 ELSE 0 END) AS q_Issued_4_hac,
     SUM(CASE WHEN grower_field_loans.hectares = 5 THEN 1 ELSE 0 END) AS q_Issued_5_hac,
     COUNT(*) AS Total_participants, -- Counts all records for the field officer
 
     -- Equivalent Hecterage Section
-    SUM(CASE WHEN grower_field_loans.hectares = 0.5 THEN grower_field_loans.hectares ELSE 0 END) AS Issued_0_5_hac_,
-    SUM(CASE WHEN grower_field_loans.hectares = 1.0 THEN grower_field_loans.hectares ELSE 0 END) AS Issued_1_hac_,
+    SUM(CASE WHEN grower_field_loans.hectares = 0.5 or grower_field_loans.hectares = 0.25 THEN grower_field_loans.hectares ELSE 0 END) AS Issued_0_5_hac_,
+    SUM(CASE WHEN grower_field_loans.hectares = 1 or grower_field_loans.hectares = 0.75 THEN grower_field_loans.hectares ELSE 0 END) AS Issued_1_hac_,
     SUM(CASE WHEN grower_field_loans.hectares = 1.5 THEN grower_field_loans.hectares ELSE 0 END) AS Issued_1_5_hac_,
-    SUM(CASE WHEN grower_field_loans.hectares = 2.0 THEN grower_field_loans.hectares ELSE 0 END) AS Issued_2_hac_,
+    SUM(CASE WHEN grower_field_loans.hectares = 2 THEN grower_field_loans.hectares ELSE 0 END) AS Issued_2_hac_,
     SUM(CASE WHEN grower_field_loans.hectares = 2.5 THEN grower_field_loans.hectares ELSE 0 END) AS Issued_2_5_hac_,
     SUM(CASE WHEN grower_field_loans.hectares = 3.0 THEN grower_field_loans.hectares ELSE 0 END) AS Issued_3_hac_,
     SUM(CASE WHEN grower_field_loans.hectares = 3.5 THEN grower_field_loans.hectares ELSE 0 END) AS Issued_3_5_hac_,
@@ -60,7 +61,7 @@ FROM
 JOIN
     users ON users.id = grower_field_loans.userid
 
-    where grower_field_loans.seasonid=$seasonid
+    where grower_field_loans.seasonid=$seasonid and grower_field_loans.productid=$productid
 -- Note: products table is not joined as the image summary is only by field officer, not by product.
 -- If you need product details, we'll need to adjust the GROUP BY clause.
 GROUP BY

@@ -15,12 +15,30 @@ $userid=0;
 
 $response=array();
 
-if (isset($data->userid)){
+$company_details_data=array();
+$sql13 = "Select * from company_details_and_contact limit 1";
+
+    $result3 = $conn->query($sql13);
+     
+     if ($result3->num_rows > 0) {
+       // output data of each row
+       while($row3 = $result3->fetch_assoc()) {
+
+        $loans=array("name"=>$row3["company_name"],"address"=>$row3["address"],"phone_1"=>$row3["phone_1"],"phone_2"=>$row3["phone_2"],"phone_3"=>$row3["phone_3"],"email"=>$row3["email"]);
+
+          array_push($company_details_data,$loans);
+       
+       }
+     }
+
+
+if (isset($data->userid)  && isset($data->startDate) && isset($data->endDate)){
 
 $userid=$data->userid;
-//$description=$data->description;
-$start_date=$data->start_date;
-$end_date=$data->end_date;
+$description="";
+$startDate=substr($data->startDate,0,-8);
+$endDate=substr($data->endDate,0,-8);
+
 
 if($description==""){
 
@@ -31,7 +49,7 @@ $sql = "SELECT
     ELSE 0
   END) AS total_amount
 FROM transactions AS T
-JOIN  sub_accounts on sub_accounts.id=T.credit_sub_accountsid or sub_accounts.id=T.debit_sub_accountsid join main_accounts on sub_accounts.main_accountid=main_accounts.id WHERE main_accounts.description = 'Revenue'
+JOIN  sub_accounts on sub_accounts.id=T.credit_sub_accountsid or sub_accounts.id=T.debit_sub_accountsid join main_accounts on sub_accounts.main_accountid=main_accounts.id WHERE main_accounts.description = 'Revenue' and  (T.created_at between '$startDate' and '$endDate')
 
 group by sub_accounts.description
 
@@ -44,7 +62,7 @@ SELECT
     ELSE 0
   END) AS total_amount
 FROM transactions AS T
-JOIN  sub_accounts on sub_accounts.id=T.credit_sub_accountsid or sub_accounts.id=T.debit_sub_accountsid join main_accounts on sub_accounts.main_accountid=main_accounts.id WHERE main_accounts.description = 'Cost Of Merchandise Sold'
+JOIN  sub_accounts on sub_accounts.id=T.credit_sub_accountsid or sub_accounts.id=T.debit_sub_accountsid join main_accounts on sub_accounts.main_accountid=main_accounts.id WHERE main_accounts.description = 'Cost Of Merchandise Sold' and  (T.created_at between '$startDate' and '$endDate')
 
 group by sub_accounts.description
 
@@ -58,7 +76,7 @@ SELECT
     ELSE 0
   END) AS total_amount
 FROM transactions AS T
-JOIN  sub_accounts on sub_accounts.id=T.credit_sub_accountsid or sub_accounts.id=T.debit_sub_accountsid join main_accounts on sub_accounts.main_accountid=main_accounts.id WHERE main_accounts.description = 'Expenses'
+JOIN  sub_accounts on sub_accounts.id=T.credit_sub_accountsid or sub_accounts.id=T.debit_sub_accountsid join main_accounts on sub_accounts.main_accountid=main_accounts.id WHERE main_accounts.description = 'Expenses' and  (T.created_at between '$startDate' and '$endDate')
 
 group by sub_accounts.description
 
@@ -71,7 +89,7 @@ SELECT
     ELSE 0
   END) AS total_amount
 FROM transactions AS T
-JOIN  sub_accounts on sub_accounts.id=T.credit_sub_accountsid or sub_accounts.id=T.debit_sub_accountsid join main_accounts on sub_accounts.main_accountid=main_accounts.id WHERE main_accounts.description = 'Expenses'
+JOIN  sub_accounts on sub_accounts.id=T.credit_sub_accountsid or sub_accounts.id=T.debit_sub_accountsid join main_accounts on sub_accounts.main_accountid=main_accounts.id WHERE main_accounts.description = 'Expenses' and  (T.created_at between '$startDate' and '$endDate')
 
 group by sub_accounts.description";
 $result = $conn->query($sql);
@@ -82,7 +100,7 @@ $result = $conn->query($sql);
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
 
-    $temp=array("main"=>$row["main"],"description"=>$row["description"],"total_amount"=>$row["total_amount"]);
+    $temp=array("main"=>$row["main"],"description"=>$row["description"],"total_amount"=>$row["total_amount"],"company_data"=>$company_details_data);
     array_push($response,$temp);
     
    }

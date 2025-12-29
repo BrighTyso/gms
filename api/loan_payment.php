@@ -126,6 +126,19 @@ if (isset($data->seasonid) && isset($data->userid)  && isset($data->amount) && i
     
      }
 
+
+  if ($customerid>0 && $account_receivableid==0) {
+    
+    $grower_farm_sql = "INSERT INTO accounts_receivable_notes(userid,seasonid,currencyid,customer_id,note_date,due_date,original_amount,outstanding_amount,description,status,created_at) VALUES ($userid,$seasonid,$currencyid,$customerid,'$created_at','$created_at',0,0,'$description','Open','$created_at')";
+     //$sql = "select * from login";
+     if ($conn->query($grower_farm_sql)===TRUE) {
+     
+      
+     }
+
+  }
+
+
 }
 
 
@@ -255,9 +268,24 @@ $result = $conn->query($sql);
               $user_sql2 = "update loan_payment_total set amount=amount+$amount , mass=mass+$mass , bales=bales+$bales  where growerid = $growerid and seasonid=$seasonid";
              //$sql = "select * from login";
              if ($conn->query($user_sql2)===TRUE) {
+
+
+
+              $credit_sql = "INSERT INTO transactions(userid,account_branchid,seasonid,currencyid,description,receipt_num,amount,debit_sub_accountsid,credit_sub_accountsid,receivable_note_id,receivable_note_paymentsid,created_at) VALUES ($userid,$account_branchid,$seasonid,$currencyid,'Recovery','$receipt_num',$original_amount,$payment_typeid,$sub_accountid,$account_receivableid,$last_id,'$created_at')";
+                 //$sql = "select * from login";
+                 if ($conn->query($credit_sql)===TRUE) {
+
+
+                    $temp=array("response"=>"success update");
+                     array_push($response,$temp);
+                    
+                  }else{
+                    $temp=array("response"=>$conn->error);
+                    array_push($response,$temp);
+                  }
+
              
-                $temp=array("response"=>"success update");
-               array_push($response,$temp);
+                
 
              }else{
 

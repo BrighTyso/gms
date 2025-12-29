@@ -65,7 +65,8 @@ $result = $conn->query($sql1);
 
      }else{
 
-      
+      $temp=array("response"=>$conn->error);
+      array_push($data1,$temp);
 
      }
 

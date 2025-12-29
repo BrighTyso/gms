@@ -23,7 +23,7 @@ $seasonid=$data->seasonid;
 
 if ($description=="") {
 
-  $sql = "Select distinct loans.id as loanid, products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username,receipt_number from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid  where loans.seasonid=$seasonid order by grower_num limit 30";
+  $sql = "Select distinct loans.id as loanid, products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username,receipt_number from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid  where loans.seasonid=$seasonid order by grower_num limit 100";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -40,7 +40,7 @@ $result = $conn->query($sql);
 }else{
 
 
-$sql = "Select distinct loans.id as loanid,products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username , receipt_number from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id  join users on users.id=loans.userid  where loans.seasonid=$seasonid and (grower_num='$description' or  users.username='$description' or province='$description' or receipt_number='$description' or  grower_num  like '%$description') order by grower_num limit 30";
+$sql = "Select distinct loans.id as loanid,products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username , receipt_number from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id  join users on users.id=loans.userid  where loans.seasonid=$seasonid and (grower_num='$description' or  users.username='$description' or province='$description' or receipt_number='$description' or  grower_num  like '%$description') order by grower_num limit 100";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

@@ -116,6 +116,8 @@ if ($result111->num_rows > 0) {
 
     $growerid_found=$row111['id'];
     $hectares="";
+    $growerid=$row111["id"];
+    $fieldOfficer="";
     $inputs=array();
     $sql = "Select distinct growers.phone,growers.id_num,area,products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid  where loans.seasonid=$seasonid and growerid=$growerid_found order by growers.grower_num,product_amount ";
 $result = $conn->query($sql);
@@ -125,9 +127,7 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-
-        $growerid=$row["id"];
-        $fieldOfficer="";
+        
 
         $temp=array("productid"=>$row["productid"],"id"=>$row["id"],"product_name"=>$row["product_name"],"quantity"=>$row["quantity"],"units"=>$row["units"],"created_at"=>$row["created_at"],"verified"=>$row["verified"],"username"=>$row["username"],"receipt_number"=>$row["receipt_number"],"product_amount"=>$row["product_amount"],"product_total_cost"=>$row["product_total_cost"]);
         array_push($inputs,$temp);

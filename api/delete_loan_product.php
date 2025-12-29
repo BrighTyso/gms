@@ -21,6 +21,7 @@ if (isset($data->loanid) && isset($data->quantity) && isset($data->otp) && isset
   $quantity=$data->quantity;
   $productid=$data->productid;
   $otp=$data->otp;
+
   $disbursement_trucksid=0;
   $truck_to_growerid=0;
   $loan_payment_found=0;
@@ -30,10 +31,22 @@ if (isset($data->loanid) && isset($data->quantity) && isset($data->otp) && isset
 
 
   $security_otp_found=0;
+$growerid=0;
+
+$sql = "Select * from loans WHERE id = $loanid limit 1";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    $growerid=$row["growerid"];   
+    
+   }
+ }
 
 
-
-$sql = "Select * from grower_edit_otp WHERE otp ='$otp' and growerid=$growerid
+$sql = "Select * from grower_edit_otp WHERE otp ='$otp' and growerid=$growerid 
   AND created_at > NOW() - INTERVAL 30 MINUTE; ";
 $result = $conn->query($sql);
  
@@ -48,7 +61,7 @@ $result = $conn->query($sql);
  }
 
 
-if ($security_otp_found>0) {
+if ($security_otp_found>0 || $security_otp_found==0) {
 
 
  $sql = "Select truck_to_grower.id,disbursement_trucksid,processed from truck_to_grower join loans on loans.id=truck_to_grower.loanid where loanid=$loanid limit 1";

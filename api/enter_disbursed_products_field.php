@@ -32,6 +32,17 @@ $comment=$_GET['comment'];
 $adjust=$_GET['adjust'];
 $adjustment_quantity=$_GET['adjustment_quantity'];
 $datetime=$_GET['datetime'];
+$grower_ha=$_GET['hectares'];
+
+$name=$_GET['name'];
+$surname=$_GET['surname'];
+$phone=$_GET['phone'];
+$id_num=$_GET['id_num'];
+$area=$_GET['area'];
+$province=$_GET['province'];
+$created_at=$_GET['created_at'];
+
+
 
 
 $disbused_total_quantity=0;
@@ -61,6 +72,59 @@ $active_grower_found=0;
 $scheme_captured_quantity=0;
 $product_captured_quantity=0;
 $quantity_to_be_captured=0;
+
+
+
+
+
+$found=0; 
+$growerid=0; 
+$already_in=0;
+$scheme_hectaresid=0;
+
+
+
+$name=$_GET['name'];
+$surname=$_GET['surname'];
+$phone=$_GET['phone'];
+$id_num=$_GET['id_num'];
+$area=$_GET['area'];
+$province=$_GET['province'];
+
+
+
+
+$sql = "Select * from growers where grower_num='$description' limit 1";
+  $result = $conn->query($sql);
+   
+   if ($result->num_rows > 0) {
+     // output data of each row
+     while($row = $result->fetch_assoc()) { 
+     
+     $growerid=$row["id"];
+   
+       
+     }
+
+   }else{
+
+        $grower_farm_sql = "INSERT INTO growers(userid,seasonid,grower_num,name,surname,phone,id_num,area,province,created_at) VALUES ($userid,$seasonid,'$description','$name','$surname','$phone','$id_num','$area','$province','$created_at')";
+         //$sql = "select * from login";
+         if ($conn->query($grower_farm_sql)===TRUE) {
+
+         }else{
+          $temp=array("response"=>$conn->error,"hh"=>"kkk");
+          array_push($data,$temp);
+         }
+
+     }
+
+  
+
+
+
+
+
 
 
  $sql = "Select * from growers where grower_num='$description' limit 1";
@@ -187,6 +251,76 @@ $quantity_to_be_captured=0;
 
 
 
+$sql = "Select * from scheme_hectares where  quantity='$grower_ha' and seasonid=$seasonid";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+   $scheme_hectaresid=$row["id"];
+   
+   }
+
+ }
+
+
+
+$sql = "Select scheme_hectares.id,scheme_hectares.quantity from scheme_hectares_growers  join scheme_hectares  on scheme_hectares.id=scheme_hectares_growers.scheme_hectaresid where scheme_hectares.seasonid=$seasonid and growerid=$growerid";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+   $already_in=$row["id"];
+   $scheme_hectares_to_verify=$row["quantity"];
+   
+   }
+
+ }
+
+
+
+
+$sql = "Select * from scheme_hectares_growers where  scheme_hectaresid=$scheme_hectaresid and growerid=$growerid";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+
+    // product id
+   $found=$row["id"];
+   
+   }
+
+ }
+
+
+
+
+if ($found==0 && $growerid>0 && $already_in==0 && $scheme_hectaresid>0) {
+  
+$user_sql = "INSERT INTO scheme_hectares_growers(userid,scheme_hectaresid,growerid) VALUES ($userid,$scheme_hectaresid,$growerid)";
+   //$sql = "select * from login";
+   if ($conn->query($user_sql)===TRUE) {
+   
+  
+   }else{
+
+ 
+   }
+
+}
+
+
+
+
+
+
 $sql = "Select * from loans where  (loans.seasonid=$seasonid  and loans.productid=$productid and loans.growerid=$growerid) ";
 $result = $conn->query($sql);
  
@@ -271,7 +405,7 @@ $result = $conn->query($sql);
 
 
 //&& $quantity_to_be_captured>=$disbused_total_quantity
-if ($growerid>0 && $grower_field_loansid==0 && $productid>0 && $disbursement_trucksid>0 && $disbursement_trucks_storeid>0) {
+if ($growerid>0 && $grower_field_loansid==0 && $productid>0 && $disbursement_trucksid>0 && $disbursement_trucks_storeid>0 && $quantity_to_be_captured>=$disbused_total_quantity) {
 
    $insert_sql = "INSERT INTO disbursed_products_grower_truck(userid,seasonid,growerid,productid,quantity,latitude,longitude,disbursement_trucksid,farmer_comment,adjustment_quantity,adjust,created_at,datetimes) VALUES ($userid,$seasonid,$growerid,$productid,$quantity,'$latitude','$longitude',$disbursement_trucksid,'$comment',$adjustment_quantity,$adjust,'$created_at','$datetime')";
  //$gr = "select * from login";

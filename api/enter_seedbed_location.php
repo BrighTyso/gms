@@ -32,6 +32,46 @@ $response=0;
 $farm_response=0;
 
 
+
+
+
+$name=$_GET['name'];
+$surname=$_GET['surname'];
+$phone=$_GET['phone'];
+$id_num=$_GET['id_num'];
+$area=$_GET['area'];
+$province=$_GET['province'];
+
+
+
+
+$sql = "Select * from growers where grower_num='$grower_num' limit 1";
+  $result = $conn->query($sql);
+   
+   if ($result->num_rows > 0) {
+     // output data of each row
+     while($row = $result->fetch_assoc()) { 
+     
+     $growerid=$row["id"];
+   
+       
+     }
+
+   }else{
+
+        $grower_farm_sql = "INSERT INTO growers(userid,seasonid,grower_num,name,surname,phone,id_num,area,province,created_at) VALUES ($userid,$seasonid,'$grower_num','$name','$surname','$phone','$id_num','$area','$province','$created_at')";
+         //$sql = "select * from login";
+         if ($conn->query($grower_farm_sql)===TRUE) {
+
+         }else{
+          $temp=array("response"=>$conn->error,"hh"=>"kkk");
+          array_push($data,$temp);
+         }
+
+     }
+
+
+
 // checks if grower is already in database
 
 $sql = "Select growers.id from growers  where  grower_num='$grower_num'";

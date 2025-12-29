@@ -24,6 +24,7 @@ $disbursement_trucksid=0;
 $disbusment_quantity=0;
 $created_at="";
 $product_found=0;
+$captured_by_id=0;
 
 
 $description=$data->description;
@@ -59,10 +60,12 @@ $sql91 = "Select distinct scheme_hectares.quantity as hectares,scheme_hectares_p
         $productid=$row91["productid"];
         $scheme_quantity=$row91["quantity"]; 
 
+
+
         // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
         //  $temp=array("description"=>$row["description"],"name"=>$row["name"],"quantity"=>$row["quantity"],"hectares"=>$row["hectares"],"id"=>$row["id"]);
         // array_push($data1,$temp);
-             $sql99 = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost,loans.id as loanid  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and processed=0 and loans.growerid=$growerid and loans.productid=$productid order by product_amount limit 1";
+             $sql99 = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,receipt_number,product_amount,product_total_cost,loans.id as loanid,loans.userid  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid  where loans.seasonid=$seasonid and  processed=0 and loans.growerid=$growerid and loans.productid=$productid order by product_amount limit 1";
              $result99 = $conn->query($sql99);
              if ($result99->num_rows > 0) {
                // output data of each row
@@ -74,7 +77,9 @@ $sql91 = "Select distinct scheme_hectares.quantity as hectares,scheme_hectares_p
                 $quantity=$row99["quantity"];
                 $newquantity=$scheme_quantity+$quantity;
                 $loanid=$row99["loanid"];
-                
+                $captured_by_id=$row99["userid"];
+
+              
                }
              }
 
@@ -259,25 +264,44 @@ $sql = "Select truck_to_grower.id,truck_to_grower.disbursement_trucksid,disburse
     $store_quantity=0;
     $storeid=0;
 
+    $storeid_found=0;
 
-    $sql = "Select * from arc_product_grower join arc_products on arc_product_grower.arc_productid=arc_products.id where arc_product_grower.loanid=$loanid";
+
+
+    $sql = "Select * from user_to_store  where loan_userid=$captured_by_id ";
       $result = $conn->query($sql);
        
        if ($result->num_rows > 0) {
          // output data of each row
          while($row = $result->fetch_assoc()) { 
          
-         $store_to_grower=$row["id"];
-         $storeitemid=$row["storeitemid"];
+         //$store_to_grower=$row["id"];
+         //$storeitemid=$row["storeitemid"];
+         $storeid_found=$row["id"];
+
             
          }
 
        }
 
 
+      //  $sql = "Select * from arc_product_grower join arc_products on arc_product_grower.arc_productid=arc_products.id where arc_product_grower.loanid=$loanid ";
+      // $result = $conn->query($sql);
+       
+      //  if ($result->num_rows > 0) {
+      //    // output data of each row
+      //    while($row = $result->fetch_assoc()) { 
+         
+      //    $store_to_grower=$row["id"];
+      //    $storeitemid=$row["storeitemid"];
+
+            
+      //    }
+
+      //  }
 
 
-       $sql = "Select * from store_items  where productid=$productid and id=$storeitemid";
+       $sql = "Select * from store_items  where productid=$productid and storeid=$storeid_found";
       $result = $conn->query($sql);
        
        if ($result->num_rows > 0) {
@@ -286,13 +310,16 @@ $sql = "Select truck_to_grower.id,truck_to_grower.disbursement_trucksid,disburse
          
          $store_quantity=$row["quantity"];
          $storeid=$row["storeid"];
+         $storeitemid=$row["id"];
+
+
            
          }
 
        }
 
 
-       if ($store_to_grower>0) {
+       if ($storeid>0) {
           
 
        if ($quantity>$newquantity) {

@@ -85,7 +85,7 @@ if ($response==0) {
  }else{
 
 
-  $user_sql = "update growers set area='$area',id_num='$id_num',phone='$phone'  where id = $growerid";
+  $user_sql = "update growers set surname='$surname',name='$name',id_num='$id_num',phone='$phone',area='$area',province='$province'  where id = $growerid";
        //$sql = "select * from login";
        if ($conn->query($user_sql)===TRUE) {
 

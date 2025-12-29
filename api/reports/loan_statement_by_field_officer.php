@@ -111,6 +111,21 @@ $result1 = $conn->query($sql11);
 $field_officer_username="";
 
 
+$serialized=0;
+
+    $sql2 = "Select distinct * from system_receipt_number where growerid=$growerid and seasonid=$seasonid order by id desc limit 1";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $serialized=$row2['id'];
+
+         }
+       }
+
+
     $sql2 = "Select * from grower_field_officer join users on users.id=grower_field_officer.field_officerid where growerid=$growerid and seasonid=$seasonid limit 1";
   $result2 = $conn->query($sql2);
    
@@ -189,6 +204,20 @@ $resultx = $conn->query($sqlx);
  }
 
 
+$sql = "Select scheme_hectares.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id  join scheme_hectares_growers on scheme_hectares_growers.scheme_hectaresid=scheme_hectares.id where scheme_hectares.seasonid=$seasonid  and scheme_hectares_growers.growerid=$growerid";
+  $result = $conn->query($sql);
+   
+   if ($result->num_rows > 0) {
+     // output data of each row
+     while($row = $result->fetch_assoc()) {
+      // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+      $hectares=$row["quantity"];
+      
+     }
+   } 
+
+
 
  $sqlx = "select distinct image_location from grower_signatures_schemes join growers on growers.id=grower_signatures_schemes.growerid  where grower_num='$grower_num' and grower_signatures_schemes.seasonid=$seasonid order by grower_signatures_schemes.id desc limit 1";
 $resultx = $conn->query($sqlx);
@@ -204,7 +233,7 @@ $resultx = $conn->query($sqlx);
    }
  }
 
-    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and processed=1 and loans.growerid=$growerid order by product_amount ";
+    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost,loans.splitid  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and prices.splitid=loans.splitid and processed=1 and loans.growerid=$growerid order by product_amount ";
     $result = $conn->query($sql);
 
  
@@ -422,6 +451,20 @@ $signature_url="";
 
 $field_officer_username="";
 
+$serialized=0;
+
+    $sql2 = "Select distinct * from system_receipt_number where growerid=$growerid and seasonid=$seasonid order by id desc limit 1";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $serialized=$row2['id'];
+
+         }
+       }
+
 
     $sql2 = "Select * from grower_field_officer join users on users.id=grower_field_officer.field_officerid where growerid=$growerid and seasonid=$seasonid limit 1";
   $result2 = $conn->query($sql2);
@@ -498,6 +541,22 @@ $resultx = $conn->query($sqlx);
 
 
 
+
+ $sql = "Select scheme_hectares.quantity from scheme join scheme_hectares on scheme_hectares.schemeid=scheme.id  join scheme_hectares_growers on scheme_hectares_growers.scheme_hectaresid=scheme_hectares.id where scheme_hectares.seasonid=$seasonid  and scheme_hectares_growers.growerid=$growerid";
+  $result = $conn->query($sql);
+   
+   if ($result->num_rows > 0) {
+     // output data of each row
+     while($row = $result->fetch_assoc()) {
+      // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+
+      $hectares=$row["quantity"];
+      
+     }
+   }
+
+
+
  $sqlx = "select distinct image_location from grower_signatures_schemes join growers on growers.id=grower_signatures_schemes.growerid  where grower_num='$grower_num' and grower_signatures_schemes.seasonid=$seasonid order by grower_signatures_schemes.id desc limit 1";
 $resultx = $conn->query($sqlx);
  
@@ -512,7 +571,7 @@ $resultx = $conn->query($sqlx);
    }
  }
 
-    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and processed=1 and loans.growerid=$growerid order by product_amount ";
+    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and prices.splitid=loans.splitid and processed=1 and loans.growerid=$growerid order by products.product_typeid ";
     $result = $conn->query($sql);
 
  
@@ -698,7 +757,7 @@ $sql = "Select * from grower_groups where description='$groups' limit 1";
    }
 
 
-$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num,growers.area,growers.id_num from  growers join loans on loans.growerid=growers.id join grower_field_officer on grower_field_officer.growerid=growers.id join grower_field_officer_groups on grower_field_officer_groups.growerid=growers.id join land_irrigation_growers on land_irrigation_growers.growerid=growers.id where loans.seasonid=$seasonid  and grower_field_officer_groups.field_officerid=$officerid and grower_field_officer_groups.grower_groupid=$groupid";
+$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num,growers.area,growers.id_num from  growers join loans on active_growers.growerid=growers.id join grower_field_officer on grower_field_officer.growerid=growers.id join grower_field_officer_groups on grower_field_officer_groups.growerid=growers.id join land_irrigation_growers on land_irrigation_growers.growerid=growers.id where active_growers.seasonid=$seasonid  and grower_field_officer_groups.field_officerid=$officerid and grower_field_officer_groups.grower_groupid=$groupid";
 
 $result1 = $conn->query($sql11);
  
@@ -725,6 +784,20 @@ $signature_url="";
 
 
 $field_officer_username="";
+
+$serialized=0;
+
+    $sql2 = "Select distinct * from system_receipt_number where growerid=$growerid and seasonid=$seasonid order by id desc limit 1";
+      $result2 = $conn->query($sql2);
+       
+       if ($result2->num_rows > 0) {
+         // output data of each row
+         while($row2 = $result2->fetch_assoc()) {
+
+          $serialized=$row2['id'];
+
+         }
+       }
 
 
     $sql2 = "Select * from grower_field_officer join users on users.id=grower_field_officer.field_officerid where growerid=$growerid and seasonid=$seasonid limit 1";
@@ -789,7 +862,7 @@ $field_officer_username="";
 
 
 
-    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and processed=1 and loans.growerid=$growerid order by product_amount ";
+    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost,loans.splitid  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and prices.splitid=loans.splitid and processed=1 and loans.growerid=$growerid order by products.product_typeid ";
     $result = $conn->query($sql);
 
  

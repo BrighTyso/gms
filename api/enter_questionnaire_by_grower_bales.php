@@ -34,6 +34,47 @@ $sqliteid=validate($_GET['sqliteid']);
 
 
 
+
+
+$name=$_GET['name'];
+$surname=$_GET['surname'];
+$phone=$_GET['phone'];
+$id_num=$_GET['id_num'];
+$area=$_GET['area'];
+$province=$_GET['province'];
+
+
+
+
+$sql = "Select * from growers where grower_num='$grower_num' limit 1";
+  $result = $conn->query($sql);
+   
+   if ($result->num_rows > 0) {
+     // output data of each row
+     while($row = $result->fetch_assoc()) { 
+     
+     $growerid=$row["id"];
+   
+       
+     }
+
+   }else{
+
+        $grower_farm_sql = "INSERT INTO growers(userid,seasonid,grower_num,name,surname,phone,id_num,area,province,created_at) VALUES ($userid,$seasonid,'$grower_num','$name','$surname','$phone','$id_num','$area','$province','$created_at')";
+         //$sql = "select * from login";
+         if ($conn->query($grower_farm_sql)===TRUE) {
+
+         }else{
+          $temp=array("response"=>$conn->error,"hh"=>"kkk");
+          array_push($data,$temp);
+         }
+
+     }
+
+
+
+
+
 $sql = "Select * from growers where grower_num='$grower_num';";
 $result = $conn->query($sql);
  
@@ -52,7 +93,27 @@ $result = $conn->query($sql);
 // then insert loan
 // insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value(NEW.userid,NEW.growerid,NEW.seasonid,NEW.latitude,NEW.longitude,NEW.created_at,"fertilization potassium");
 
-  if ($growerid>0) {
+
+ $question_created_at_found=0;
+
+  $sql = "Select * from questionnaires_answers_by_grower where growerid=$growerid and question='$bales' and  question_created_at='$question_created_at' and created_at='$created_at' and userid=$userid;";
+  $result = $conn->query($sql);
+   
+   if ($result->num_rows > 0) {
+     // output data of each row
+     while($row = $result->fetch_assoc()) {
+     
+     $question_created_at_found=$row["id"];
+    
+      
+     }
+
+   }
+
+
+
+
+  if ($growerid>0 && $question_created_at_found==0) {
 
    $insert_sql = "INSERT INTO questionnaires_bales_answers_by_grower(userid,growerid,seasonid,latitude,longitude,question,bales,question_created_at,created_at,datetimes) VALUES ($userid,$growerid,$seasonid,'$lat','$long','$question','$answer','$question_created_at','$created_at','$datetimes')";
    //$gr = "select * from login";

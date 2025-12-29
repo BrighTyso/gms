@@ -126,6 +126,25 @@ $result = $conn->query($sql);
 
 
 
+
+$transaction_description="";
+//check farm
+$sql = "Select sub_accounts.description,sub_accounts.id from sub_accounts where id=$sub_accountid limit 1";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+   
+      $transaction_description=$row['description'];
+    
+   }
+ }
+
+
+
+
+
 $sql = "Select * from purchase_order_otp where  otp='$otp' and purchasing_orderid=$purchase_orderid and storeid=$storeid AND created_at > NOW() - INTERVAL 30 MINUTE limit 1";
 $result = $conn->query($sql);
  
@@ -324,7 +343,7 @@ if ($found==0) {
 
 
 
-                            $credit_sql = "INSERT INTO transactions(userid,account_branchid,seasonid,currencyid,description,receipt_num,amount,debit_sub_accountsid,credit_sub_accountsid,purchasing_order_received_productsid,created_at) VALUES ($userid,$account_branchid,$seasonid,$currencyid,'Product Purchase','$invoice_number',$original_amount,$sub_accountid,$payment_typeid,$purchase_insert_orderid,'$created_at')";
+                            $credit_sql = "INSERT INTO transactions(userid,account_branchid,seasonid,currencyid,description,receipt_num,amount,debit_sub_accountsid,credit_sub_accountsid,purchasing_order_received_productsid,created_at) VALUES ($userid,$account_branchid,$seasonid,$currencyid,'$transaction_description','$invoice_number',$original_amount,$sub_accountid,$payment_typeid,$purchase_insert_orderid,'$created_at')";
                                  //$sql = "select * from login";
                                  if ($conn->query($credit_sql)===TRUE) {
 
@@ -347,11 +366,17 @@ if ($found==0) {
                                            }
 
                                          }
+
+
+                                  $temp=array("response"=>"success");
+                                           array_push($response,$temp);
+                                     }else{
+                                      $temp=array("response"=>$conn->error);
+                                           array_push($response,$temp);
                                      }
 
 
-                                        $temp=array("response"=>"success");
-                                           array_push($response,$temp);
+                                        
                                }
 
                             }
@@ -404,7 +429,7 @@ if ($found==0) {
                                                if ($conn->query($user_sql1)===TRUE) {
 
 
-                                                $credit_sql = "INSERT INTO transactions(userid,account_branchid,seasonid,currencyid,description,receipt_num,amount,debit_sub_accountsid,credit_sub_accountsid,purchasing_order_received_productsid,created_at) VALUES ($userid,$account_branchid,$seasonid,$currencyid,'Product Purchase','$invoice_number',$original_amount,$sub_accountid,$payment_typeid,$purchase_insert_orderid,'$created_at')";
+                                                $credit_sql = "INSERT INTO transactions(userid,account_branchid,seasonid,currencyid,description,receipt_num,amount,debit_sub_accountsid,credit_sub_accountsid,purchasing_order_received_productsid,created_at) VALUES ($userid,$account_branchid,$seasonid,$currencyid,'$transaction_description','$invoice_number',$original_amount,$sub_accountid,$payment_typeid,$purchase_insert_orderid,'$created_at')";
                                                      //$sql = "select * from login";
                                                      if ($conn->query($credit_sql)===TRUE) {
 
@@ -428,7 +453,11 @@ if ($found==0) {
 
                                                     $temp=array("response"=>"success");
                                                        array_push($response,$temp);
+                                             }else{
+                                              $temp=array("response"=>$conn->error);
+                                                   array_push($response,$temp);
                                              }
+
 
                                      }
 
@@ -446,6 +475,7 @@ if ($found==0) {
 
    }
 
+}
 }
  
 }else{

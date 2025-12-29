@@ -465,7 +465,7 @@ $result1 = $conn->query($sql11);
 
 
 
-    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and processed=1 and loans.growerid=$growerid order by product_amount ";
+    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and prices.splitid=loans.splitid and processed=1 and loans.growerid=$growerid order by product_amount ";
     $result = $conn->query($sql);
 
  
@@ -485,7 +485,7 @@ $result1 = $conn->query($sql11);
 
 
 
-      $sql = "Select  products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loan_credit_note.created_at,amount,users.username  from loan_credit_note join growers on growers.id=loan_credit_note.growerid join products on loan_credit_note.productid=products.id join users on users.id=loan_credit_note.userid join prices on prices.productid=loan_credit_note.productid where loan_credit_note.seasonid=$seasonid and prices.seasonid=$seasonid and loan_credit_note.growerid=$growerid order by loan_credit_note.id ";
+      $sql = "Select  products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loan_credit_note.created_at,amount,users.username  from loan_credit_note join growers on growers.id=loan_credit_note.growerid join products on loan_credit_note.productid=products.id join users on users.id=loan_credit_note.userid join prices on prices.productid=loan_credit_note.productid where loan_credit_note.seasonid=$seasonid and prices.seasonid=$seasonid  and loan_credit_note.growerid=$growerid order by loan_credit_note.id ";
     $result = $conn->query($sql);
 
      if ($result->num_rows > 0) {

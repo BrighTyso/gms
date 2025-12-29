@@ -28,7 +28,30 @@ $sub_accountid=0;
 $found=0;
 
 $note_date=date("Y-m-d");
+
+
 $due_date=date("Y-m-d");
+
+
+
+
+// $company_details_data=array();
+// $sql13 = "Select * from company_details_and_contact limit 1";
+
+//     $result3 = $conn->query($sql13);
+     
+//      if ($result3->num_rows > 0) {
+//        // output data of each row
+//        while($row3 = $result3->fetch_assoc()) {
+
+//         $loans=array("name"=>$row3["company_name"],"address"=>$row3["address"],"phone_1"=>$row3["phone_1"],"phone_2"=>$row3["phone_2"],"phone_3"=>$row3["phone_3"],"email"=>$row3["email"]);
+
+//           array_push($company_details_data,$loans);
+       
+//        }
+//      }
+
+
 
 if($description==""){
 
@@ -62,6 +85,7 @@ $result_loan = $conn->query($sql);
     $customerid=0;
     $original_amount=$row_loan["total_product_loan"];
     $receipt_num=$row_loan["receipt_number"];
+    $found=0;
 
 
 
@@ -85,7 +109,7 @@ $result_loan = $conn->query($sql);
 
 
 
-     $sql1 = "Select id from customers  where  name='$grower_number' and growerid=$growerid";
+    $sql1 = "Select customers.id from customers join growers on growers.id=customers.growerid  where  grower_num='$grower_number' and growerid=$growerid limit 1";
      $result = $conn->query($sql1);
    
     if ($result->num_rows > 0) {
@@ -161,7 +185,7 @@ $result = $conn->query($sql);
 
     $account_receivableid=0;
 
-    $sql1 = "Select id from accounts_receivable_notes  where  customer_id=$customerid and seasonid=$seasonid";
+    $sql1 = "Select accounts_receivable_notes.id from accounts_receivable_notes  where  customer_id=$customerid and seasonid=$seasonid limit 1";
      $result = $conn->query($sql1);
    
     if ($result->num_rows > 0) {
@@ -173,6 +197,21 @@ $result = $conn->query($sql);
      }
 
    }
+
+
+$transaction_description="";
+//check farm
+$sql = "Select sub_accounts.description,sub_accounts.id from sub_accounts where id=$sub_accountid limit 1";
+$result = $conn->query($sql);
+ 
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+   
+      $transaction_description=$row['description'];
+    
+   }
+ }
 
 
 
@@ -202,9 +241,6 @@ $result = $conn->query($sql);
 
 
 
-
-
-
 if ($customerid>0 && $account_receivableid==0) {
     
     $grower_farm_sql = "INSERT INTO accounts_receivable_notes(userid,seasonid,currencyid,customer_id,note_date,due_date,original_amount,outstanding_amount,description,status,created_at) VALUES ($userid,$seasonid,$currencyid,$customerid,'$note_date','$due_date',$original_amount,$original_amount,'$description','Open','$created_at')";
@@ -213,7 +249,7 @@ if ($customerid>0 && $account_receivableid==0) {
      
        $last_id = $conn->insert_id;
 
-       $credit_sql = "INSERT INTO transactions(userid,account_branchid,seasonid,currencyid,description,receipt_num,amount,debit_sub_accountsid,credit_sub_accountsid,receivable_note_id,created_at) VALUES ($userid,$account_branchid,$seasonid,$currencyid,'$description','$receipt_num',$original_amount,$sub_accountid,$payment_typeid,$last_id,'$created_at')";
+       $credit_sql = "INSERT INTO transactions(userid,account_branchid,seasonid,currencyid,description,receipt_num,amount,debit_sub_accountsid,credit_sub_accountsid,receivable_note_id,created_at) VALUES ($userid,$account_branchid,$seasonid,$currencyid,'$transaction_description','$receipt_num',$original_amount,$sub_accountid,$payment_typeid,$last_id,'$created_at')";
          //$sql = "select * from login";
          if ($conn->query($credit_sql)===TRUE) {
 
@@ -238,15 +274,19 @@ if ($customerid>0 && $account_receivableid==0) {
 
     if ($customerid>0) {
       
-        $grower_farm_sql = "update accounts_receivable_notes set currencyid=$currencyid,amount='$original_amount' where id=$account_receivableid";
+        $grower_farm_sql = "update accounts_receivable_notes set currencyid=$currencyid,original_amount=$original_amount where id=$account_receivableid";
          //$sql = "select * from login";
          if ($conn->query($grower_farm_sql)===TRUE) {
          
-           $grower_farm_sql1 = "update transactions set currencyid=$currencyid,original_amount='$original_amount',receipt_num='$receipt_num',debit_sub_accountsid=$sub_accountid,credit_sub_accountsid=$payment_typeid where id=$account_receivableid";
+           $grower_farm_sql1 = "update transactions set currencyid=$currencyid,amount=$original_amount,receipt_num='$receipt_num',debit_sub_accountsid=$sub_accountid,credit_sub_accountsid=$payment_typeid,description='$transaction_description' where receivable_note_id=$account_receivableid";
          //$sql = "select * from login";
              if ($conn->query($grower_farm_sql1)===TRUE) {
 
-               $temp=array("response"=>"success");
+               $temp=array("response"=>"successfully updated","grower_num"=>$grower_number);
+                array_push($response,$temp);
+            }else{
+
+              $temp=array("response"=>$conn->error,"grower_num"=>$grower_number);
                 array_push($response,$temp);
             }
 
@@ -263,52 +303,6 @@ if ($customerid>0 && $account_receivableid==0) {
    }
  }
 
-
-}else{
-
-
-$sql = "SELECT
-    grower_num,name,surname,phone,growerid,
-    SUM(product_amount * quantity) AS total_product_loan, -- Weighted average price considering mass
-    COUNT(*) AS total_records
-FROM
-    loans -- Replace 'your_table_name' with the actual name of your table
-    join growers on growers.id=loans.growerid
-    where `processed`=1 and loans.seasonid=$seasonid
-GROUP BY
-    grower_num
-ORDER BY
-    grower_num;";
-$result = $conn->query($sql);
- 
- if ($result->num_rows > 0) {
-   // output data of each row
-   while($row = $result->fetch_assoc()) {
-    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
-
-    $expenseid=$row["id"];
-    $payment_type="";
-   
-
-
-     $sql1 = "Select sub_accounts.description,expenses.id from expenses join sub_accounts on expenses.payment_typeid=sub_accounts.id where expenses.id=$expenseid";
-    $result1 = $conn->query($sql1);
-     
-     if ($result1->num_rows > 0) {
-       // output data of each row
-       while($row1 = $result1->fetch_assoc()) {
-        // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
-        $payment_type=$row1["description"];
-        
-       }
-     }
-
-
-    $temp=array("expense_description"=>$row["expense_description"],"amount"=>$row["amount"],"receipt_num"=>$row["receipt_num"],"transaction_at"=>$row["transaction_at"],"description"=>$row["description"],"id"=>$row["id"],"currency_name"=>$row["currency_name"],"payment_type"=>$payment_type);
-    array_push($response,$temp);
-    
-   }
- }
 
 }
 

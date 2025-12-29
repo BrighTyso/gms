@@ -16,7 +16,7 @@ $data = json_decode(file_get_contents("php://input"));
 $data1=array();
 
 
-$sql = "Select * from seasons ";
+$sql = "Select * from seasons where active=1";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

@@ -57,7 +57,10 @@ $result = $conn->query($sql);
 
   if ($growerid>0) {
 
-        $user_sql2 = "update growers set area='$area' , province='$province',phone='$phone',name='$name',surname='$surname',id_num='$id_num'  where id = $growerid ";
+
+      // $user_sql2 = "update growers set area='$area' , province='$province',phone='$phone',name='$name',surname='$surname',id_num='$id_num'  where id = $growerid ";
+
+        $user_sql2 = "update growers set id_num='$id_num'  where id = $growerid ";
              //$sql = "select * from login";
              if ($conn->query($user_sql2)===TRUE) {
              

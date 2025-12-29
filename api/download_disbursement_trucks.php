@@ -37,7 +37,7 @@ $sql13 = "Select * from company_details_and_contact limit 1";
 
 
 
-$sql = "Select * from truck_destination where close_open=0 order by id desc limit 11";
+$sql = "Select * from truck_destination where close_open=0 order by id desc limit 11 ";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

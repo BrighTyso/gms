@@ -76,8 +76,8 @@ $result = $conn->query($sql1);
 
 	   }
 
-}else{
-	$user_sql1 = "update distance set distance=distance+$distance where userid=$userid and created_at='$created_at'";
+}else{ 
+	$user_sql1 = "update distance set distance=$distance where userid=$userid and created_at='$created_at'";
    //$sql = "select * from login";
    if ($conn->query($user_sql1)===TRUE) {
 

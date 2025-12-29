@@ -24,7 +24,7 @@ $seasonid=$data->seasonid;
 
 if ($description=="") {
 
-  $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and  prices.seasonid=$seasonid order by grower_num,receipt_number,verified limit 50";
+  $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and prices.splitid=loans.splitid  order by grower_num,receipt_number,verified limit 50";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -44,7 +44,7 @@ $result = $conn->query($sql);
   // $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username, amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join contracted_hectares on contracted_hectares.growerid=growers.id join users on users.id=contracted_hectares.userid join prices on prices.productid=loans.productid  where loans.seasonid=$seasonid and prices.seasonid=$seasonid and contracted_hectares.seasonid=$seasonid  and (grower_num='$description' or  users.username='$description' or province='$description')  ";
 
 
-$sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username, amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid  join prices on prices.productid=loans.productid  where loans.seasonid=$seasonid and prices.seasonid=$seasonid   and (grower_num='$description' or  users.username='$description' or province='$description' or receipt_number='$description' or grower_num like '%$description')  order by grower_num,receipt_number,verified limit 50";
+$sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username, amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid  join prices on prices.productid=loans.productid  where loans.seasonid=$seasonid and prices.seasonid=$seasonid  and prices.splitid=loans.splitid and (grower_num='$description' or  users.username='$description' or province='$description' or receipt_number='$description' or grower_num like '%$description')  order by grower_num,receipt_number,verified limit 50";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

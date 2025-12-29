@@ -30,7 +30,7 @@ $grower_found=0;
 
 
 
-$sql = "Select * from users where username='$username' or surname='$username' or name='$username'";
+$sql = "Select * from users where username='$username' or surname='$username' or name='$username' limit 1";
   $result = $conn->query($sql);
    
    if ($result->num_rows > 0) {
@@ -46,7 +46,7 @@ $sql = "Select * from users where username='$username' or surname='$username' or
 
 
 
-  $sql = "Select * from growers where grower_num='$grower_num'";
+  $sql = "Select * from growers where grower_num='$grower_num' limit 1";
   $result = $conn->query($sql);
    
    if ($result->num_rows > 0) {
@@ -78,7 +78,7 @@ $sql = "Select * from active_growers where growerid=$growerid and seasonid=$seas
 
 
 
-  $sql = "Select * from grower_field_officer where growerid=$growerid and seasonid=$seasonid";
+  $sql = "Select * from grower_field_officer where growerid=$growerid and seasonid=$seasonid limit 1";
   $result = $conn->query($sql);
    
    if ($result->num_rows > 0) {
@@ -123,7 +123,7 @@ $sql = "Select * from active_growers where growerid=$growerid and seasonid=$seas
    }else{
     if ($grower_found>0) {
 
-          $user_sql = "update grower_field_officer set field_officerid=$officerid  where growerid = $growerid and seasonid=$seasonid ";
+          $user_sql = "update grower_field_officer set field_officerid=$officerid  where growerid=$growerid and seasonid=$seasonid ";
        //$sql = "select * from login";
        if ($conn->query($user_sql)===TRUE) {
 

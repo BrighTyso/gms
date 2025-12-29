@@ -173,7 +173,7 @@ $result1 = $conn->query($sql11);
 
 
 
-    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid join disbursement_products on disbursement_products.productid=products.id where loans.seasonid=$seasonid and prices.seasonid=$seasonid and processed=1 and loans.growerid=$growerid and disbursement_products.created_at='$created_at' order by product_amount ";
+    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid join disbursement_products on disbursement_products.productid=products.id where loans.seasonid=$seasonid and prices.seasonid=$seasonid and prices.splitid=loans.splitid and processed=1 and loans.growerid=$growerid and disbursement_products.created_at='$created_at' order by product_amount ";
     $result = $conn->query($sql);
 
  
@@ -227,15 +227,15 @@ $result1 = $conn->query($sql11);
 
            if ($product_scheme_quantity>$disbursed_quantity && $to_be_disbursed_quantity>0) {
 
-            $insert_sql = "INSERT INTO grower_disbursed_products(userid,seasonid,growerid,productid,quantity,created_at) VALUES ($userid,$seasonid,$growerid,$product_id,$to_be_disbursed_quantity,'$created_at')";
-             //$gr = "select * from login";
-             if ($conn->query($insert_sql)===TRUE) {
+            // $insert_sql = "INSERT INTO grower_disbursed_products(userid,seasonid,growerid,productid,quantity,created_at) VALUES ($userid,$seasonid,$growerid,$product_id,$to_be_disbursed_quantity,'$created_at')";
+            //  //$gr = "select * from login";
+            //  if ($conn->query($insert_sql)===TRUE) {
 
                 $loans=array("id"=>$row["id"],"product_name"=>$row["product_name"],"quantity"=>$to_be_disbursed_quantity,"units"=>$row["units"],"package_units"=>$row["package_units"],"created_at"=>$row["created_at"],"amount"=>$row["amount"],"receipt_number"=>$row["receipt_number"],"product_amount"=>$row["product_amount"],"product_total_cost"=>$row["product_total_cost"],"product_items"=>$product_items_data);
 
                array_push($loans_data,$loans);
              
-              }
+             // }
 
            }
         
@@ -493,7 +493,7 @@ $sql2 = "Select * from grower_field_officer join users on users.id=grower_field_
 
 
 
-    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid join disbursement_products on disbursement_products.productid=products.id where loans.seasonid=$seasonid and prices.seasonid=$seasonid and processed=1 and loans.growerid=$growerid and disbursement_products.created_at='$created_at' order by product_amount ";
+    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost,prices.splitid  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid join disbursement_products on disbursement_products.productid=products.id where loans.seasonid=$seasonid and prices.seasonid=$seasonid and prices.splitid=loans.splitid and processed=1 and loans.growerid=$growerid and disbursement_products.created_at='$created_at' order by product_amount ";
     $result = $conn->query($sql);
 
  
@@ -547,15 +547,15 @@ $sql2 = "Select * from grower_field_officer join users on users.id=grower_field_
 
            if ($product_scheme_quantity>$disbursed_quantity && $to_be_disbursed_quantity>0) {
 
-            $insert_sql = "INSERT INTO grower_disbursed_products(userid,seasonid,growerid,productid,quantity,created_at) VALUES ($userid,$seasonid,$growerid,$product_id,$to_be_disbursed_quantity,'$created_at')";
-             //$gr = "select * from login";
-             if ($conn->query($insert_sql)===TRUE) {
+            // $insert_sql = "INSERT INTO grower_disbursed_products(userid,seasonid,growerid,productid,quantity,created_at) VALUES ($userid,$seasonid,$growerid,$product_id,$to_be_disbursed_quantity,'$created_at')";
+            //  //$gr = "select * from login";
+            //  if ($conn->query($insert_sql)===TRUE) {
 
                 $loans=array("id"=>$row["id"],"product_name"=>$row["product_name"],"quantity"=>$to_be_disbursed_quantity,"units"=>$row["units"],"package_units"=>$row["package_units"],"created_at"=>$row["created_at"],"amount"=>$row["amount"],"receipt_number"=>$row["receipt_number"],"product_amount"=>$row["product_amount"],"product_total_cost"=>$row["product_total_cost"],"product_items"=>$product_items_data);
 
                array_push($loans_data,$loans);
              
-              }
+              //}
 
            }
         
@@ -810,7 +810,7 @@ $result1 = $conn->query($sql11);
 
 
 
-    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid join disbursement_products on disbursement_products.productid=products.id where loans.seasonid=$seasonid and prices.seasonid=$seasonid and processed=1 and loans.growerid=$growerid and disbursement_products.created_at='$created_at' order by product_amount ";
+    $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost,prices.splitid  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid join disbursement_products on disbursement_products.productid=products.id where loans.seasonid=$seasonid and prices.seasonid=$seasonid and prices.splitid=loans.splitid and processed=1 and loans.growerid=$growerid and disbursement_products.created_at='$created_at' order by product_amount ";
     $result = $conn->query($sql);
 
  
@@ -865,15 +865,15 @@ $result1 = $conn->query($sql11);
 
            if ($product_scheme_quantity>$disbursed_quantity && $to_be_disbursed_quantity>0) {
 
-            $insert_sql = "INSERT INTO grower_disbursed_products(userid,seasonid,growerid,productid,quantity,created_at) VALUES ($userid,$seasonid,$growerid,$product_id,$to_be_disbursed_quantity,'$created_at')";
-             //$gr = "select * from login";
-             if ($conn->query($insert_sql)===TRUE) {
+            // $insert_sql = "INSERT INTO grower_disbursed_products(userid,seasonid,growerid,productid,quantity,created_at) VALUES ($userid,$seasonid,$growerid,$product_id,$to_be_disbursed_quantity,'$created_at')";
+            //  //$gr = "select * from login";
+            //  if ($conn->query($insert_sql)===TRUE) {
 
                 $loans=array("id"=>$row["id"],"product_name"=>$row["product_name"],"quantity"=>$to_be_disbursed_quantity,"units"=>$row["units"],"package_units"=>$row["package_units"],"created_at"=>$row["created_at"],"amount"=>$row["amount"],"receipt_number"=>$row["receipt_number"],"product_amount"=>$row["product_amount"],"product_total_cost"=>$row["product_total_cost"],"product_items"=>$product_items_data);
 
                array_push($loans_data,$loans);
              
-              }
+              //}
 
            }
         

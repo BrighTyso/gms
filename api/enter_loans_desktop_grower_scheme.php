@@ -18,11 +18,17 @@ $created_at=$data->created_at;
 $trucknumber=validate($data->trucknumber);
 $grower_num=$data->description;
 
+$splitid=$data->splitid;
+
 $fetched_records=0;
 $processed_records=0;
 
 $data1=array();
 // get grower locations
+
+
+
+
 
 if ($userid!="") {
   
@@ -33,8 +39,6 @@ $sql123 = "Select distinct scheme_hectares_products.quantity as products_quantit
    if ($result123->num_rows > 0) {
      // output data of each row
      while($row123 = $result123->fetch_assoc()) {
-
-
 
 
     
@@ -311,9 +315,11 @@ if ($deduction_point==0) {
 
                            
 
+                          // $sql2 = "Select store.id,quantity,store_items.id as storeid from store join store_items on store.id=store_items.storeid where store.id=$storeid and productid=$productid and quantity>0 and quantity>=$quantity";
 
 
-                           $sql2 = "Select store.id,quantity,store_items.id as storeid from store join store_items on store.id=store_items.storeid where store.id=$storeid and productid=$productid and quantity>0 and quantity>=$quantity";
+
+                           $sql2 = "Select store.id,quantity,store_items.id as storeid from store join store_items on store.id=store_items.storeid where store.id=$storeid and productid=$productid ";
                             $result = $conn->query($sql2);
                              if ($result->num_rows > 0) {
                                // output data of each row
@@ -382,13 +388,14 @@ if ($deduction_point==0) {
 
 
 
+// && ($previous_growerid==$growerid || $previous_growerid==0)
+                               //&& $quantity_to_be_captured>=$quantity
 
-
-  if (($productid>0  && $growerid>0 && $verifyLoan==0) && ($previous_growerid==$growerid || $previous_growerid==0)  &&  ($quantity_Enough>0) && $quantity_to_be_captured>=$quantity) {
+  if (($productid>0  && $growerid>0 && $verifyLoan==0) &&  ($quantity_Enough>0) ) {
 
 
     
-     $insert_sql = "INSERT INTO loans(userid,growerid,productid,seasonid,quantity,latitude,longitude,hectares,verified,created_at,receipt_number) VALUES ($userid,$growerid,$productid,$seasonid,$quantity,'$lat','$long','$hectares',1,'$created_at','$receipt_number')";
+     $insert_sql = "INSERT INTO loans(userid,growerid,productid,seasonid,quantity,latitude,longitude,hectares,verified,created_at,receipt_number,splitid) VALUES ($userid,$growerid,$productid,$seasonid,$quantity,'$lat','$long','$hectares',1,'$created_at','$receipt_number',$splitid)";
          //$gr = "select * from login";
          if ($conn->query($insert_sql)===TRUE) {
 
@@ -773,12 +780,13 @@ $result = $conn->query($sql);
 
 // then insert loan
 
+//&& ($previous_growerid==$growerid || $previous_growerid==0)
 
-  if (($productid>0  && $growerid>0 && $verifyLoan==0) && ($previous_growerid==$growerid || $previous_growerid==0) && $quantity_to_be_captured>=$quantity) {
+  if (($productid>0  && $growerid>0 && $verifyLoan==0)  && $quantity_to_be_captured>=$quantity) {
 
     if ($disbursementid>0 && $disbursement_trucksid>0 ) {
 
-       $insert_sql = "INSERT INTO loans(userid,growerid,productid,seasonid,quantity,latitude,longitude,hectares,verified,created_at,receipt_number) VALUES ($userid,$growerid,$productid,$seasonid,$quantity,'$lat','$long','$hectares',1,'$created_at','$receipt_number')";
+       $insert_sql = "INSERT INTO loans(userid,growerid,productid,seasonid,quantity,latitude,longitude,hectares,verified,created_at,receipt_number,splitid) VALUES ($userid,$growerid,$productid,$seasonid,$quantity,'$lat','$long','$hectares',1,'$created_at','$receipt_number',$splitid)";
    //$gr = "select * from login";
    if ($conn->query($insert_sql)===TRUE) {
    

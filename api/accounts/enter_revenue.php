@@ -48,21 +48,19 @@ if (isset($data->userid) &&  isset($data->sub_accountid) && isset($data->descrip
 
 
 // //check farm
-// $sql1 = "Select id from expenses where  sub_accountid=$sub_accountid and name='$name' and serial_number='$serial_number'";
-// $result = $conn->query($sql1);
+$transaction_description="";
+$sql = "Select sub_accounts.description,sub_accounts.id from sub_accounts where id=$sub_accountid limit 1";
+$result = $conn->query($sql);
  
-//  if ($result->num_rows > 0) {
-//    // output data of each row
-//    while($row = $result->fetch_assoc()) {
-
-//     // product id
-//    $found=1;
-//   // $growerid=$row["id"];
+ if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
    
+      $transaction_description=$row['description'];
+      
     
-//    }
-
-//  }
+   }
+ }
 
 
 
@@ -83,7 +81,7 @@ if (isset($data->userid) &&  isset($data->sub_accountid) && isset($data->descrip
          //$sql = "select * from login";
          if ($conn->query($credit_sql)===TRUE) {
       
-          $credit_sql = "INSERT INTO transactions(userid,account_branchid,seasonid,currencyid,description,receipt_num,amount,debit_sub_accountsid,credit_sub_accountsid,incomeid,created_at) VALUES ($userid,$account_branchid,$seasonid,$currencyid,'$description','$receipt_num','$amount',$payment_typeid,$sub_accountid,$last_id,'$created_at')";
+          $credit_sql = "INSERT INTO transactions(userid,account_branchid,seasonid,currencyid,description,receipt_num,amount,debit_sub_accountsid,credit_sub_accountsid,incomeid,created_at) VALUES ($userid,$account_branchid,$seasonid,$currencyid,'$transaction_description','$receipt_num','$amount',$payment_typeid,$sub_accountid,$last_id,'$created_at')";
          //$sql = "select * from login";
          if ($conn->query($credit_sql)===TRUE) {
 

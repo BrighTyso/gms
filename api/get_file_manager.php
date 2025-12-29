@@ -24,7 +24,7 @@ $description=$data->description;
 
 
 if($description==""){
-  $sql = "select distinct file_manager.id,growerid,location_url,description,file_type,storages,file_manager.created_at,datetimes,grower_num,growers.name,surname,seasons.name as season_name from file_manager join growers on growers.id=file_manager.growerid join seasons on seasons.id=file_manager.seasonid order by file_manager.id desc";
+  $sql = "select distinct file_manager.id,growerid,location_url,description,file_type,storages,file_manager.created_at,datetimes,grower_num,growers.name,surname,seasons.name as season_name from file_manager join growers on growers.id=file_manager.growerid join seasons on seasons.id=file_manager.seasonid order by file_manager.id desc limit 100";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -38,7 +38,7 @@ $result = $conn->query($sql);
    }
  }
 }else{
-  $sql = "select distinct file_manager.id,growerid,location_url,description,file_type,storages,file_manager.created_at,datetimes,grower_num,growers.name,surname,seasons.name as season_name from file_manager join growers on growers.id=file_manager.growerid join seasons on seasons.id=file_manager.seasonid where grower_num='$description' or seasons.name='$description' or surname='$description' order by seasons.id desc";
+  $sql = "select distinct file_manager.id,growerid,location_url,description,file_type,storages,file_manager.created_at,datetimes,grower_num,growers.name,surname,seasons.name as season_name from file_manager join growers on growers.id=file_manager.growerid join seasons on seasons.id=file_manager.seasonid where grower_num='$description' or seasons.name='$description' or surname='$description' or description='$description' or growers.name='$description' order by seasons.id desc limit 500";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

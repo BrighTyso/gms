@@ -21,17 +21,18 @@ $processed_found=0;
 $found_product_has_items=0;
 $response=array();
 
-if (isset($data->userid) && isset($data->productid)  && isset($data->amount)  && isset($data->seasonid) && isset($data->created_at)){
+if (isset($data->userid) && isset($data->productid)  && isset($data->amount)  && isset($data->seasonid) && isset($data->created_at) && isset($data->splitid)){
 
 $userid=$data->userid;
 $productid=$data->productid;
 $amount=$data->amount;
 $seasonid=$data->seasonid;
 $created_at=$data->created_at;
+$splitid=$data->splitid;
 
 
 
-$sql = "Select * from prices where productid=$productid and seasonid=$seasonid";
+$sql = "Select * from prices where productid=$productid and seasonid=$seasonid and splitid=$splitid";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -60,7 +61,7 @@ $result = $conn->query($sql);
  }
 
 
- $sql = "Select * from loans where processed=1 and productid=$productid and seasonid=$seasonid limit 1";
+ $sql = "Select * from loans where processed=1 and productid=$productid and seasonid=$seasonid and splitid=$splitid limit 1";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -77,7 +78,7 @@ $result = $conn->query($sql);
 
 if ($found==0 &&  $found_product_has_items==0) {
 
- $user_sql = "INSERT INTO prices(userid,productid,amount,seasonid,created_at) VALUES ($userid,$productid,'$amount',$seasonid,'$created_at')";
+ $user_sql = "INSERT INTO prices(userid,productid,amount,seasonid,created_at,splitid) VALUES ($userid,$productid,'$amount',$seasonid,'$created_at',$splitid)";
    //$sql = "select * from login";
    if ($conn->query($user_sql)===TRUE) {
    
@@ -101,7 +102,7 @@ if ($found==0 &&  $found_product_has_items==0) {
 if ($processed_found==0 &&  $found_product_has_items==0) {
   
 
-$sql = "UPDATE prices SET amount = $amount  WHERE productid=$productid and seasonid=$seasonid";
+$sql = "UPDATE prices SET amount = $amount  WHERE productid=$productid and seasonid=$seasonid and splitid=$splitid";
 
    //$sql = "select * from login";
    if ($conn->query($sql)===TRUE) {
