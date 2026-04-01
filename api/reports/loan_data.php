@@ -14,6 +14,7 @@ $data = json_decode(file_get_contents("php://input"));
 $userid=$data->userid;
 $seasonid=$data->seasonid;
 $description=$data->description;
+$splitid=$data->splitid;
 
 $data1=array();
 $product_items_data=array();
@@ -50,7 +51,7 @@ if ($description==""){
 
 
 
-$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num from  growers join active_growers on active_growers.growerid=growers.id where active_growers.seasonid=$seasonid ";
+$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num from  growers join active_growers on active_growers.growerid=growers.id join loans on loans.growerid=growers.id where active_growers.seasonid=$seasonid and loans.seasonid=$seasonid and loans.splitid=$splitid and growers.id not in (select growerid from blocked_growers)";
 
 $result1 = $conn->query($sql11);
  
@@ -59,7 +60,7 @@ $result1 = $conn->query($sql11);
    while($row1 = $result1->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
     $loans_data=array();
-$grower_credit_note_data=array();
+    $grower_credit_note_data=array();
     $company_details_data=array();
     $input_total=0;
     $working_capital=0;
@@ -112,7 +113,7 @@ $grower_credit_note_data=array();
 
 
 
-      $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and prices.splitid=loans.splitid and processed=1 and loans.growerid=$growerid order by product_amount ";
+      $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost,loans.splitid   from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and prices.splitid=loans.splitid and processed=1 and loans.growerid=$growerid and loans.splitid=$splitid order by product_amount ";
       $result = $conn->query($sql);
 
  
@@ -129,8 +130,10 @@ $grower_credit_note_data=array();
      }
 
 
+//and prices.splitid=loans.splitid
 
-     $sql = "Select  products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loan_credit_note.created_at,amount,users.username  from loan_credit_note join growers on growers.id=loan_credit_note.growerid join products on loan_credit_note.productid=products.id join users on users.id=loan_credit_note.userid join prices on prices.productid=loan_credit_note.productid where loan_credit_note.seasonid=$seasonid and prices.seasonid=$seasonid and prices.splitid=loans.splitid and loan_credit_note.growerid=$growerid order by loan_credit_note.id ";
+
+     $sql = "Select  products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loan_credit_note.created_at,amount,users.username  from loan_credit_note join growers on growers.id=loan_credit_note.growerid join products on loan_credit_note.productid=products.id join users on users.id=loan_credit_note.userid join prices on prices.productid=loan_credit_note.productid where loan_credit_note.seasonid=$seasonid and prices.seasonid=$seasonid  and loan_credit_note.growerid=$growerid order by loan_credit_note.id ";
     $result = $conn->query($sql);
 
      if ($result->num_rows > 0) {
@@ -264,7 +267,7 @@ $grower_credit_note_data=array();
 
 }else{
 
-$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num from growers join active_growers on active_growers.growerid=growers.id where active_growers.seasonid=$seasonid and ( name ='$description' or grower_num='$description' or province='$description' or area='$description' or grower_num like '%$description')";
+$sql11 = "Select distinct growers.id,growers.name,growers.surname,growers.grower_num from growers join active_growers on active_growers.growerid=growers.id join loans on loans.growerid=growers.id where active_growers.seasonid=$seasonid and ( name ='$description' or grower_num='$description' or province='$description' or area='$description' or grower_num like '%$description') and loans.seasonid=$seasonid and loans.splitid=$splitid and growers.id not in (select growerid from blocked_growers)";
 
 $result1 = $conn->query($sql11);
  
@@ -273,6 +276,7 @@ $result1 = $conn->query($sql11);
    while($row1 = $result1->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 $grower_credit_note_data=array();
+$loans_data=array();
     $input_total=0;
     $working_capital=0;
     $roll_over=0;
@@ -321,7 +325,7 @@ $grower_credit_note_data=array();
 
 
 
-      $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and prices.splitid=loans.splitid and processed=1 and loans.growerid=$growerid order by product_amount ";
+      $sql = "Select distinct products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,package_units,loans.created_at,verified, users.username,amount,receipt_number,product_amount,product_total_cost,loans.splitid  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid join prices on prices.productid=loans.productid where loans.seasonid=$seasonid and prices.seasonid=$seasonid and prices.splitid=loans.splitid and processed=1 and loans.growerid=$growerid and loans.splitid=$splitid order by product_amount ";
       $result = $conn->query($sql);
 
  
@@ -357,7 +361,9 @@ $sql = "Select  products.id as productid,growers.name,growers.id,growers.surname
      }
 
 
-     $sql14 = "Select * from rollover_total join growers on growers.id=rollover_total.growerid where rollover_total.seasonid=$seasonid and rollover_total.growerid=$growerid and calculate_interest=1";
+//and calculate_interest=1
+
+     $sql14 = "Select * from rollover_total join growers on growers.id=rollover_total.growerid where rollover_total.seasonid=$seasonid and rollover_total.growerid=$growerid ";
 
     $result4 = $conn->query($sql14);
      

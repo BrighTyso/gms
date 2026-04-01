@@ -73,8 +73,17 @@ $user_sql = "INSERT INTO performance_payments(userid,seasonid,performance_typesi
    }
 
 }else{
-     $temp=array("response"=>"already created");
-     array_push($data1,$temp);
+    
+  $user_sql1 = "update performance_payments set amount=$amount where performance_typesid=$performance_typesid and seasonid=$seasonid";
+     //$sql = "select * from login";
+     if ($conn->query($user_sql1)===TRUE) {
+
+      $temp=array("response"=>"successfully updated");
+      array_push($data1,$temp);
+
+       
+    }
+
 }
 
 

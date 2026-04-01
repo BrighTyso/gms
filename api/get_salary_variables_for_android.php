@@ -8,6 +8,7 @@ $data1=array();
 
 $seasonid=$_GET['seasonid'];
 $userid=$_GET['userid'];
+$created_at=$_GET['created_at'];
 $rightsid=0;
 $payroll_structure=0;
 $field_officer_basic_salary=0;
@@ -90,7 +91,17 @@ if ($payroll_structure==1 || $payroll_structure==0) {
 }
 
 
-$sql = "Select userid,seasonid,hectares,daily_reports,grower_visits,system_based_tasks,bike_maintenance,ctl_related,training_and_demo,created_at,datetimes from salary_variables order by id desc";
+$hectares=0;
+$daily_reports=0;
+$grower_visits=0;
+$system_based_tasks=0;
+$bike_maintenance=0;
+$ctl_related=0;
+$training_and_demo=0;
+$created_at="";
+$datetimes="";
+
+$sql = "Select description,amount,seasonid from performance_payments join performance_types on performance_types.id=performance_payments.performance_typesid order by performance_payments.id desc";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -98,13 +109,59 @@ $result = $conn->query($sql);
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
 
-     $temp=array("seasonid"=>$row["seasonid"],"hectares"=>$row["hectares"],"daily_reports"=>$row["daily_reports"],"grower_visits"=>$row["grower_visits"],"system_based_tasks"=>$row["system_based_tasks"],"bike_maintenance"=>$row["bike_maintenance"],"ctl_related"=>$row["ctl_related"],"training_and_demo"=>$row["training_and_demo"],"created_at"=>$row["created_at"],"salary"=>$field_officer_basic_salary,"rightsid"=>$rightsid);
-    array_push($data1,$temp);
+    // userid,seasonid,hectares,daily_reports,grower_visits,system_based_tasks,bike_maintenance,ctl_related,training_and_demo,created_at,datetimes
+
+    if ($row["description"]=="hectares") {
+     
+     $hectares=$row["amount"];
+    }
+
+    if ($row["description"]=="Daily Reports") {
+     
+     $daily_reports=$row["amount"];
+    }
+
+
+    if ($row["description"]=="Grower Visits") {
+     
+     $grower_visits=$row["amount"];
+    }
+
+
+    if ($row["description"]=="System Tasks") {
+     
+     $system_based_tasks=$row["amount"];
+
+    }
+
+
+    if ($row["description"]=="Bike Maintenance") {
+     
+     $bike_maintenance=$row["amount"];
+    }
+
+
+    if ($row["description"]=="CTL Related") {
+     
+     $ctl_related=$row["amount"];
+    }
+
+
+    if ($row["description"]=="training_and_demo") {
+     
+     $training_and_demo=$row["amount"];
+    }
+
    
     
    }
    
 }
+
+
+
+     $temp=array("seasonid"=>$seasonid,"hectares"=>$hectares,"daily_reports"=>$daily_reports,"grower_visits"=>$grower_visits,"system_based_tasks"=>$system_based_tasks,"bike_maintenance"=>$bike_maintenance,"ctl_related"=>$ctl_related,"training_and_demo"=>$training_and_demo,"created_at"=>$created_at,"salary"=>$field_officer_basic_salary,"rightsid"=>$rightsid);
+    array_push($data1,$temp);
 
  }
 }

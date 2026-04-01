@@ -1,0 +1,18 @@
+/usr/local/bin/php /home/coreafri/public_html/test/gms/api/reports/read_vegitative_growth_ai_cron.php
+/usr/local/bin/php /home/coreafri/public_html/test/gms/api/reports/read_transplanting_data_ai_cron.php
+/usr/local/bin/php /home/coreafri/public_html/test/gms/api/reports/read_seadbed_ai_cron.php
+/usr/local/bin/php /home/coreafri/public_html/test/gms/api/reports/read_land_preparation_ai_cron.php
+/usr/local/bin/php /home/coreafri/public_html/test/gms/api/reports/read_harvesting_ai_cron.php
+/usr/local/bin/php /home/coreafri/public_html/test/gms/api/reports/read_geo_fencing_ai_cron.php
+/usr/local/bin/php /home/coreafri/public_html/test/gms/api/reports/read_harvesting_ai_cron.php
+/usr/local/bin/php /home/coreafri/public_html/test/gms/api/reports/read_land_preparation_ai_cron.php
+/usr/local/bin/php /home/coreafri/public_html/test/gms/api/reports/read_seadbed_ai_cron.php
+/usr/local/bin/php /home/coreafri/public_html/test/gms/api/reports/read_transplanting_data_ai_cron.php
+/usr/local/bin/php /home/coreafri/public_html/test/gms/api/reports/read_all_visits_ai_cron.php
+/usr/local/bin/php /home/coreafri/public_html/test/gms/api/reports/read_visits_with_loans_al_cron.php
+/usr/local/bin/php /home/coreafri/public_html/test/gms/api/reports/read_visits_with_loans_al_cron_full_analyses.php
+
+
+
+/usr/local/bin/php /home/coreafri/public_html/test/gms/api/enter_weather_data.php
+

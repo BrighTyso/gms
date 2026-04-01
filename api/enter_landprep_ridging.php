@@ -115,7 +115,7 @@ inrow_spacing_measurement,  inrow_pockets_done ,  inrow_pockets_count,datetimes)
    
     // $last_id = $conn->insert_id;
 
-     $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$latitude','$longitude','$created_at','landprep ridging');";
+     $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description,times) value($userid,$growerid,$seasonid,'$latitude','$longitude','$created_at','landprep ridging','$datetimes');";
        //$gr = "select * from login";
        if ($conn->query($insert_sql)===TRUE) {
        

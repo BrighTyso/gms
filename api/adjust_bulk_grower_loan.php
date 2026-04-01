@@ -371,7 +371,7 @@ $sql = "Select truck_to_grower.id,truck_to_grower.disbursement_trucksid,disburse
       $my_quantity=$newquantity-$quantity;
 
 
-      if ($store_quantity>=$my_quantity) {
+      // if ($store_quantity>=$my_quantity) {
         
 
         // update loan
@@ -454,13 +454,13 @@ $sql = "Select truck_to_grower.id,truck_to_grower.disbursement_trucksid,disburse
            }
 
 
-      }else{
+      // }else{
 
 
-        $temp=array("response"=>"Out Of Stock");
-        array_push($data1,$temp);
+      //   $temp=array("response"=>"Out Of Stock");
+      //   array_push($data1,$temp);
 
-      }
+      // }
 
 
         

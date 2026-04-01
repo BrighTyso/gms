@@ -108,7 +108,7 @@ landprep_comment2,  landprep_comment3,  landprep_comment4,  landprep_comment5,da
    
     // $last_id = $conn->insert_id;
 
-     $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$latitude','$longitude','$created_at','landprep comments');";
+     $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description,times) value($userid,$growerid,$seasonid,'$latitude','$longitude','$created_at','landprep comments','$datetimes');";
        //$gr = "select * from login";
        if ($conn->query($insert_sql)===TRUE) {
        

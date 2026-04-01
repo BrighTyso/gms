@@ -12,6 +12,7 @@ $data = json_decode(file_get_contents("php://input"));
 
 $data1=array();
 $questions=array();
+$task_array=array();
 
 
 $seasonid=$data->seasonid;
@@ -24,18 +25,43 @@ $userid=0;
 $username="";
 
 
-  $sql = "Select distinct users.username,id from users where active=1 order by id desc";
+
+$sql22 = "Select distinct question,questionnaires_answers_by_grower.created_at from questionnaires_answers_by_grower  where  questionnaires_answers_by_grower.seasonid=$seasonid and questionnaires_answers_by_grower.created_at between '$start_date' and '$end_date' ";
+  $result22 = $conn->query($sql22);
+   
+   if ($result22->num_rows > 0) {
+     // output data of each row
+     while($row1 = $result22->fetch_assoc()) {
+
+      $temp=array("question"=>$row1["question"],"created_at"=>$row1["created_at"]);
+      array_push($task_array,$temp);
+
+     }
+  }
+
+
+
+
+
+
+
+
+
+  $sql = "Select distinct grower_num,growers.id,username from questionnaires_answers_by_grower join growers on growers.id=questionnaires_answers_by_grower.growerid join users on users.id=questionnaires_answers_by_grower.userid  where  questionnaires_answers_by_grower.seasonid=$seasonid and questionnaires_answers_by_grower.created_at between '$start_date' and '$end_date' ";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
    // output data of each row
    while($row = $result->fetch_assoc()) {
     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
-        $userid=$row['id'];
+        $growerid=$row['id'];
+        $grower_num=$row['grower_num'];
         $username=$row['username'];
+        $questions=Array();
+
         
 
-      $sql2 = "Select distinct grower_num,question,answer,questionnaires_answers_by_grower.created_at,questionnaires_answers_by_grower.datetimes from questionnaires_answers_by_grower join growers on growers.id=questionnaires_answers_by_grower.growerid where  questionnaires_answers_by_grower.userid=$userid and questionnaires_answers_by_grower.seasonid=$seasonid and questionnaires_answers_by_grower.created_at between '$start_date' and '$end_date' order by growers.id";
+      $sql2 = "Select distinct grower_num,question,answer,questionnaires_answers_by_grower.created_at,questionnaires_answers_by_grower.datetimes from questionnaires_answers_by_grower join growers on growers.id=questionnaires_answers_by_grower.growerid where  questionnaires_answers_by_grower.growerid=$growerid and questionnaires_answers_by_grower.seasonid=$seasonid and questionnaires_answers_by_grower.created_at between '$start_date' and '$end_date' order by growers.id";
       $result2 = $conn->query($sql2);
        
        if ($result2->num_rows > 0) {
@@ -50,14 +76,11 @@ $result = $conn->query($sql);
 
 
 
-    $temp=array("username"=>$row["username"],"data"=>$questions);
+    $temp=array("grower_num"=>$row["grower_num"],"username"=>$row["username"],"data"=>$questions);
     array_push($data1,$temp);
    
    }
 }
-
-
-
 
 
 // else if ($description=="" && $seasonid!=""){
@@ -78,7 +101,13 @@ $result = $conn->query($sql);
 
 // }
 
+$response=Array();
 
- echo json_encode($data1); 
+$temp=array("questions"=>$task_array,"data"=>$data1);
+array_push($response,$temp);
+
+
+
+ echo json_encode($response); 
 
 ?>

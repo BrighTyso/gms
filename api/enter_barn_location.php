@@ -40,7 +40,7 @@ $area=$_GET['area'];
 $province=$_GET['province'];
 
 
-
+$datetimes=$_GET['datetimes'];
 
 $sql = "Select * from growers where grower_num='$grower_num' limit 1";
   $result = $conn->query($sql);
@@ -110,7 +110,7 @@ $result = $conn->query($sql1);
 
  if ($response==1 && $farm_response==0){
 
-	$grower_farm_sql = "INSERT INTO barn_location(userid,growerid,latitude,longitude,seasonid,created_at) VALUES ($userid,$growerid,'$lat','$long',$seasonid,'$created_at')";
+	$grower_farm_sql = "INSERT INTO barn_location(userid,growerid,latitude,longitude,seasonid,created_at,datetimes) VALUES ($userid,$growerid,'$lat','$long',$seasonid,'$created_at','$datetimes')";
 	   //$sql = "select * from login";
 	   if ($conn->query($grower_farm_sql)===TRUE) {
 	   
@@ -118,7 +118,9 @@ $result = $conn->query($sql1);
 
 	     //$sqlitegrowerid=0;
 
-       $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$lat','$long','$created_at','Barn Location');";
+//$datetimes=$_GET['datetimes'];
+
+       $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description,times) value($userid,$growerid,$seasonid,'$lat','$long','$created_at','Barn Location','$datetimes');";
        //$gr = "select * from login";
        if ($conn->query($insert_sql)===TRUE) {
        

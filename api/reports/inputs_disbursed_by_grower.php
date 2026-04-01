@@ -14,6 +14,8 @@ $data = json_decode(file_get_contents("php://input"));
 $userid=$data->userid;
 $seasonid=$data->seasonid;
 $productid=$data->productid;
+$splitid=$data->splitid;
+
 
 
 $chairman="";
@@ -23,10 +25,13 @@ $growerid=0;
 
 $data1=array();
 // get grower locations
+$inputs=array();
+$response=array();
+$products=array();
 
 if ($productid>0) {
   
-  $sql = "Select distinct growers.phone,growers.id_num,area,products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid  where loans.seasonid=$seasonid  and loans.productid=$productid order by growers.grower_num,product_amount ";
+  $sql = "Select distinct growers.phone,growers.id_num,area,products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid  where loans.seasonid=$seasonid  and loans.productid=$productid and loans.splitid=$splitid and growers.id not in (select growerid from blocked_growers) order by growers.grower_num,product_amount ";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {
@@ -108,7 +113,7 @@ if ($result111->num_rows > 0) {
 
 
 
-$sql111 = "Select distinct growers.phone,growers.id_num,area,growers.name,growers.id,growers.surname,growers.grower_num  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid  where loans.seasonid=$seasonid order by growers.grower_num,products.name ";
+$sql111 = "Select distinct growers.phone,growers.id_num,area,growers.name,growers.id,growers.surname,growers.grower_num  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid  where loans.seasonid=$seasonid  and loans.splitid=$splitid and growers.id not in (select growerid from blocked_growers) order by growers.grower_num,products.name ";
 $result111 = $conn->query($sql111);
 if ($result111->num_rows > 0) {
    // output data of each row
@@ -119,7 +124,8 @@ if ($result111->num_rows > 0) {
     $growerid=$row111["id"];
     $fieldOfficer="";
     $inputs=array();
-    $sql = "Select distinct growers.phone,growers.id_num,area,products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid  where loans.seasonid=$seasonid and growerid=$growerid_found order by growers.grower_num,product_amount ";
+
+    $sql = "Select distinct growers.phone,growers.id_num,area,products.id as productid,growers.name,growers.id,growers.surname,growers.grower_num,products.name as product_name,quantity,units,loans.created_at,verified, users.username,receipt_number,product_amount,product_total_cost  from loans join growers on growers.id=loans.growerid join products on loans.productid=products.id join users on users.id=loans.userid  where loans.seasonid=$seasonid and growerid=$growerid_found and loans.splitid=$splitid order by growers.grower_num,product_amount ";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

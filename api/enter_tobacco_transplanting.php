@@ -41,6 +41,7 @@ $transplant_survival_rate=validate($_GET['transplant_survival_rate']);
 
 $hectares_transplanted=validate($_GET['hectares_transplanted']);
 $transplant_date=validate($_GET['transplant_date']);
+$no_of_plants=$_GET['no_of_plants'];
 
 
 $created_at=validate($_GET['created_at']);
@@ -110,13 +111,13 @@ $result = $conn->query($sql);
   if ($growerid>0) {
 
    $insert_sql = "INSERT INTO tobacco_transplanting(userid,   growerid,  latitude,  longitude,  created_at,  seasonid,  field_name, transplant_vigor, transplant_root_health, transplant_diseases, transplant_pests, 
-transplant_weeds, transplant_survival_rate, hectares_transplanted, transplant_date,datetimes) VALUES ($userid,$growerid,'$latitude','$longitude',  '$created_at',  $seasonid,  '$field_name','$transplant_vigor','$transplant_root_health','$transplant_diseases','$transplant_pests','$transplant_weeds', '$transplant_survival_rate','$hectares_transplanted','$transplant_date','$datetimes')";
+transplant_weeds, transplant_survival_rate, hectares_transplanted, transplant_date,datetimes,no_of_plants) VALUES ($userid,$growerid,'$latitude','$longitude',  '$created_at',  $seasonid,  '$field_name','$transplant_vigor','$transplant_root_health','$transplant_diseases','$transplant_pests','$transplant_weeds', '$transplant_survival_rate','$hectares_transplanted','$transplant_date','$datetimes','$no_of_plants')";
    //$gr = "select * from login";
    if ($conn->query($insert_sql)===TRUE) {
    
     // $last_id = $conn->insert_id;
 
-     $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$latitude','$longitude','$created_at','tobacco transplanting');";
+     $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description,times) value($userid,$growerid,$seasonid,'$latitude','$longitude','$created_at','tobacco transplanting','$datetimes');";
        //$gr = "select * from login";
        if ($conn->query($insert_sql)===TRUE) {
        

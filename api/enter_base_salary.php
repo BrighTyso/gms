@@ -74,8 +74,21 @@ $user_sql = "INSERT INTO base_pay(userid,seasonid,amount,rightsid) VALUES ($user
    }
 
 }else{
-     $temp=array("response"=>"already created");
-     array_push($data1,$temp);
+     // $temp=array("response"=>"already created");
+     // array_push($data1,$temp);
+
+
+     $user_sql1 = "update base_pay set amount=$amount where rightsid=$rightsid";
+   //$sql = "select * from login";
+   if ($conn->query($user_sql1)===TRUE) {
+
+    $temp=array("response"=>"successfully updated");
+    array_push($data1,$temp);
+
+     
+    }
+
+
 }
 
 

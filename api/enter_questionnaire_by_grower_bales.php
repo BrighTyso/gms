@@ -119,7 +119,7 @@ $result = $conn->query($sql);
    //$gr = "select * from login";
    if ($conn->query($insert_sql)===TRUE) {
    
-     $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$lat','$long','$created_at','Questionnaire grower bales');";
+     $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description,times) value($userid,$growerid,$seasonid,'$lat','$long','$created_at','Questionnaire grower bales','$datetimes');";
        //$gr = "select * from login";
        if ($conn->query($insert_sql)===TRUE) {
        

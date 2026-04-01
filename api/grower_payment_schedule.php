@@ -48,9 +48,11 @@ if (isset($data->userid)){
 
   $sale_date=date_format($date,"Y-m-d");
 
+  //$sale_date=$data->sale_date;
 
 
-  $sql = "Select * from growers WHERE grower_num='$grower_num' limit 1";
+
+  $sql = "Select * from growers WHERE grower_num='$grower_num' or grower_num like '%$grower_num' limit 1";
   $result = $conn->query($sql);
    
    if ($result->num_rows > 0) {
@@ -64,7 +66,7 @@ if (isset($data->userid)){
 
 
 
-$sql ="Select * from grower_payment_schedule where  growerid=$growerid and sale_no=$sale_no  limit 1";
+$sql ="Select * from grower_payment_schedule where  growerid=$growerid and sale_no=$sale_no and sale_date='$sale_date' limit 1";
 $result = $conn->query($sql);
  
  if ($result->num_rows > 0) {

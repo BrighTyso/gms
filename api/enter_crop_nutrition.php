@@ -113,7 +113,7 @@ topping_app_rate, topping_app_date, datetimes, crop_symptoms) VALUES ($userid,  
    
     // $last_id = $conn->insert_id;
 
-     $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$latitude','$longitude','$created_at','Crop Nutrition');";
+     $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description,times) value($userid,$growerid,$seasonid,'$latitude','$longitude','$created_at','Crop Nutrition','$datetimes');";
        //$gr = "select * from login";
        if ($conn->query($insert_sql)===TRUE) {
        

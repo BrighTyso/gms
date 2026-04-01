@@ -122,7 +122,7 @@ herbi_app,  herbi_app_date,datetimes) VALUES ($userid,$seasonid,$growerid,'$lati
    
     // $last_id = $conn->insert_id;
 
-     $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$latitude','$longitude','$created_at','seedbed management');";
+     $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description,times) value($userid,$growerid,$seasonid,'$latitude','$longitude','$created_at','seedbed management','$datetimes');";
        //$gr = "select * from login";
        if ($conn->query($insert_sql)===TRUE) {
        

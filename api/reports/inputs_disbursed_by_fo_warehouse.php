@@ -13,6 +13,7 @@ $data = json_decode(file_get_contents("php://input"));
 
 $userid=$data->userid;
 $seasonid=$data->seasonid;
+$splitid=$data->splitid;
 $productid=0;
 
 
@@ -44,7 +45,7 @@ if ($result111->num_rows > 0) {
 
 
 
- $sql1 = "Select distinct username,users.id from grower_field_officer join users on users.id=grower_field_officer.field_officerid  where grower_field_officer.seasonid=$seasonid ";
+ $sql1 = "Select distinct username,users.id from grower_field_officer join users on users.id=grower_field_officer.field_officerid  where grower_field_officer.seasonid=$seasonid  ";
     $result1 = $conn->query($sql1);
      
      if ($result1->num_rows > 0) {
@@ -89,6 +90,10 @@ if ($result111->num_rows > 0) {
             where loans.seasonid=$seasonid and loans.productid=$productid and 
 
              grower_field_officer.field_officerid=$fieldOfficerid
+
+             and loans.growerid not in (select growerid from blocked_growers) 
+
+             and loans.splitid=$splitid
         -- Note: products table is not joined as the image summary is only by field officer, not by product.
         -- If you need product details, we'll need to adjust the GROUP BY clause.
         GROUP BY

@@ -44,6 +44,9 @@ $hectares=$_GET['hectares'];
 $lat=$_GET['lat'];
 $long=$_GET['long'];
 
+
+$datetimes=$_GET['datetimes'];
+
 $response=0;
 $growerid=0;
 $grower_last_id=0;
@@ -79,7 +82,7 @@ if ($response==0) {
      $grower_last_id = $conn->insert_id;
      
 
-	$lat_long_sql = "INSERT INTO lat_long(userid,growerid,latitude,longitude,seasonid,hectares,created_at) VALUES ($userid,$grower_last_id,'$lat','$long',$seasonid,'$hectares','$created_at')";
+	$lat_long_sql = "INSERT INTO lat_long(userid,growerid,latitude,longitude,seasonid,hectares,created_at,datetimes) VALUES ($userid,$grower_last_id,'$lat','$long',$seasonid,'$hectares','$created_at','$datetimes')";
 	   //$sql = "select * from login";
 	   if ($conn->query($lat_long_sql)===TRUE) {
 	   
@@ -88,7 +91,7 @@ if ($response==0) {
 	     //$sqlitegrowerid=0;
 
 
-       $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$grower_last_id,$seasonid,'$lat','$long','$created_at','Home Location');";
+       $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description,times) value($userid,$grower_last_id,$seasonid,'$lat','$long','$created_at','Home Location','$datetimes');";
        //$gr = "select * from login";
        if ($conn->query($insert_sql)===TRUE) {
       
@@ -135,7 +138,7 @@ if ($response==0) {
 
    if ($response==0) {
   
-	$lat_long_sql = "INSERT INTO lat_long(userid,growerid,latitude,longitude,seasonid,hectares,created_at) VALUES ($userid,$growerid,'$lat','$long',$seasonid,'$hectares','$created_at')";
+	$lat_long_sql = "INSERT INTO lat_long(userid,growerid,latitude,longitude,seasonid,hectares,created_at,datetimes) VALUES ($userid,$growerid,'$lat','$long',$seasonid,'$hectares','$created_at','$datetimes')";
 	   //$sql = "select * from login";
 	   if ($conn->query($lat_long_sql)===TRUE) {
 	   
@@ -146,7 +149,7 @@ if ($response==0) {
 	     //$sqlitegrowerid=0;
 
 
-       $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description) value($userid,$growerid,$seasonid,'$lat','$long','$created_at','Home Location');";
+       $insert_sql = "insert into visits(userid,growerid,seasonid,latitude,longitude,created_at,description,times) value($userid,$growerid,$seasonid,'$lat','$long','$created_at','Home Location','$datetimes');";
        //$gr = "select * from login";
        if ($conn->query($insert_sql)===TRUE) {
        

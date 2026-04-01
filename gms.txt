@@ -3836,6 +3836,9 @@ create table if not exists end_battery_level(
 
 
 
+
+
+
 create table if not exists leave_form(
   id integer primary key auto_increment,
   userid integer not null,
@@ -5806,6 +5809,7 @@ foreign key(productid) references products(id)
 
 
 
+ 
 
 
 CREATE TABLE IF NOT EXISTS accounts_branch(
@@ -5942,6 +5946,1791 @@ CREATE TABLE IF NOT EXISTS transactions (
 
 
 
+
+create table if not exists truck_grower_qrcode_disbursed_mobile(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+disbursement_trucksid integer not null,
+growerid integer not null,
+receipt_num varchar(100) not null,
+hectares varchar(100) not null,
+created_at varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id),
+foreign key(disbursement_trucksid) references truck_destination(id)
+);
+
+
+
+create table if not exists user_finger_print(
+  id integer primary key auto_increment,
+  userid integer not null,
+  userid_verifier integer not null,
+  seasonid integer not null,
+  feature text not null,
+  sync integer not null default 0,
+  datetime TIMESTAMP not null,
+  foreign key(userid) references users(id),
+  foreign key(userid_verifier) references users(id),
+  foreign key(seasonid) references seasons(id)
+);
+
+
+
+create table if not exists officials_signatures(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+image_location varchar(100) not null,
+created_at varchar(100) not null,
+datetimes TIMESTAMP not null,
+foreign key(userid) references users(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+create table if not exists disbursement_finger_print_verification_and_approval(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+disbursement_trucksid integer not null,
+userid_verifier integer not null,
+created_at varchar(100) not null,
+datetimes varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id),
+foreign key(userid_verifier) references users(id),
+foreign key(disbursement_trucksid) references truck_destination(id)
+);
+
+
+
+
+
+CREATE TABLE if not exists seed_germination ( 
+id INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+sync integer not null default 0, 
+seasonid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+plantedDate TEXT,  
+intendedHa TEXT,  
+bed_type TEXT, 
+seedVariety TEXT,  
+germination_percentage TEXT,
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id)
+);
+
+
+
+
+
+
+
+
+
+CREATE TABLE if not exists seedbed_leafcolor ( 
+id INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+sync integer not null default 0, 
+seasonid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+bed_number TEXT,  
+seedbed_leaf_color TEXT ,
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+
+
+
+
+CREATE TABLE if not exists seedling_growth_vigour ( 
+id INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+sync integer not null default 0, 
+seasonid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seedling_health TEXT,  
+seedling_health_rate TEXT,  
+seedling_growth TEXT,  
+seedling_stage_date TEXT ,
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+
+CREATE TABLE if not exists seedbed_soil_health ( 
+id INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+sync integer not null default 0, 
+seasonid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seedbed_soil_drainage TEXT,  
+seedbed_drainage_rate TEXT,  
+seedbed_soil_structure TEXT,  
+seedbed_structure_rate TEXT,
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id) );
+
+
+
+
+
+
+
+
+CREATE TABLE if not exists diseases_pest_control ( 
+id INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+sync integer not null default 0, 
+seasonid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seedbed_pest_identified TEXT,  
+seedbed_pesticide_applied TEXT,  
+seedbed_pesticide_app_date TEXT,  
+seedbed_disease_identified TEXT,  
+seedbed_fungicide_applied TEXT,  
+seedbed_fungicide_app_date TEXT ,
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+CREATE TABLE if not exists seedbed_management ( 
+id INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+sync integer not null default 0, 
+seasonid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seedbed_type TEXT,  
+pocket_numbering TEXT,  
+weeding_done TEXT,  
+weeds_rate TEXT,  
+fertiliser_top TEXT,  
+fertiliser_top_date TEXT,  
+fungi_app TEXT,  
+fungi_app_date TEXT,  
+pesti_app TEXT,  
+pesti_app_date TEXT,  
+herbi_app TEXT,  
+herbi_app_date TEXT ,
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE if not exists seedbed_comments ( 
+id   INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+sync integer not null default 0, 
+seasonid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seedbed_comment1 TEXT,  
+seedbed_comment2 TEXT,  
+seedbed_comment3 TEXT,  
+seedbed_comment4 TEXT,  
+seedbed_comment5 TEXT,
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+
+CREATE TABLE  if not exists landprep_comments ( 
+id   INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+sync integer not null default 0, 
+seasonid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+landprep_comment1 TEXT,  
+landprep_comment2 TEXT,  
+landprep_comment3 TEXT,  
+landprep_comment4 TEXT,  
+landprep_comment5 TEXT ,
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+
+
+CREATE TABLE if not exists landprep_ridging ( 
+id   INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+sync integer not null default 0, 
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+ridging_done TEXT,  
+ridging_done_date TEXT,  
+inter_rowspacing_done TEXT,  
+inter_rowspacing_measurement TEXT,  
+inrow_spacing_done TEXT,  
+inrow_spacing_measurement TEXT,  
+inrow_pockets_done TEXT,  
+inrow_pockets_count TEXT,  
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id) );
+
+
+
+
+
+
+CREATE TABLE if not exists landprep_discing ( 
+id   INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+sync integer not null default 0, 
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+discingOptions TEXT,  
+dateOfDiscing TEXT ,  
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE if not exists landprep_ploughing ( 
+id   INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+sync integer not null default 0, 
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+PloughingOptions TEXT,  
+dateOfPloughing TEXT ,
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+
+
+
+CREATE TABLE if not exists tobacco_transplanting ( 
+id   INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+sync integer not null default 0, 
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+field_name TEXT, 
+transplant_vigor TEXT, 
+transplant_root_health TEXT, 
+transplant_diseases TEXT, 
+transplant_pests TEXT, 
+transplant_weeds TEXT, 
+transplant_survival_rate TEXT, 
+hectares_transplanted TEXT, 
+transplant_date TEXT, 
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key (seasonid) references seasons(id) );
+
+
+
+
+CREATE TABLE if not exists transplanting_comments ( 
+id   INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+sync integer not null default 0, 
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+transplant_comment1 TEXT,  
+transplant_comment2 TEXT,  
+transplant_comment3 TEXT,  
+transplant_comment4 TEXT,  
+transplant_comment5 TEXT,
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id) );
+
+
+
+create table if not exists bike_performance_and_efficiency( 
+id integer primary key auto_increment, 
+userid integer not null, 
+seasonid integer not null, 
+kms varchar(100) not null, 
+fuel varchar(100) not null, 
+fuel_price varchar(100) not null, 
+sync integer not null default 0, 
+created_at varchar(100) not null, 
+datetimes varchar(100) not null, 
+foreign key(userid) references users(id), 
+foreign key(seasonid) references seasons(id) 
+);
+
+
+CREATE TABLE if not exists crop_measurement ( 
+id INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+crop_age integer, 
+avg_plant_height TEXT, 
+avg_crop_vigor TEXT, 
+datetimes varchar(100) not null, 
+avg_crop_density TEXT , 
+foreign key(userid) references users(id), 
+foreign key(seasonid) references seasons(id), 
+foreign key(growerid) references growers(id));
+
+CREATE TABLE if not exists soil_moisture ( 
+id  INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+soil_structure TEXT, 
+moisture_state TEXT, 
+datetimes varchar(100) not null, 
+field_irrigation TEXT , 
+foreign key(userid) references users(id), 
+foreign key(seasonid) references seasons(id), 
+foreign key(growerid) references growers(id));
+
+
+CREATE TABLE if not exists crop_nutrition ( 
+id INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+basal_type TEXT, 
+basal_app_rate TEXT, 
+basal_app_date TEXT, 
+topping_type TEXT, 
+topping_app_rate TEXT, 
+topping_app_date TEXT, 
+datetimes varchar(100) not null, 
+crop_symptoms TEXT , 
+foreign key(userid) references users(id), 
+foreign key(seasonid) references seasons(id), 
+foreign key(growerid) references growers(id));
+
+
+
+
+
+
+CREATE TABLE if not exists pest_management ( 
+id  INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+observed_pest TEXT, 
+pest_effect_severity TEXT, 
+pest_treated_group integer not null, 
+applied_pesticide TEXT, 
+datetimes varchar(100) not null, 
+pesticide_app_date TEXT , 
+foreign key(userid) references users(id), 
+foreign key(seasonid) references seasons(id), 
+foreign key(growerid) references growers(id));
+
+
+
+CREATE TABLE if not exists disease_management ( 
+id INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+observed_disease TEXT, 
+disease_effect_severity TEXT, 
+disease_treated_group TEXT, 
+applied_fungicide TEXT, 
+datetimes varchar(100) not null, 
+fungicide_app_date TEXT , 
+foreign key(userid) references users(id), 
+foreign key(seasonid) references seasons(id), 
+foreign key(growerid) references growers(id));
+
+
+
+CREATE TABLE if not exists field_maintanance ( 
+id  INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+weed_level TEXT, 
+weed_control_eff TEXT, 
+herbicide_applied TEXT, 
+sucker_eff TEXT, 
+sucker_chem TEXT, 
+gapping TEXT, 
+datetimes varchar(100) not null, 
+population_uniformity TEXT , 
+foreign key(userid) references users(id), 
+foreign key(seasonid) references seasons(id), 
+foreign key(growerid) references growers(id));
+
+create table if not exists grower_geofence_entry_point(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+entry_time varchar(100) not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetimes varchar(100) not null,
+description varchar(100),
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+create table if not exists grower_geofence_exit_point(
+id integer primary key auto_increment,
+userid integer not null,
+seasonid integer not null,
+growerid integer not null,
+exit_time varchar(100) not null,
+minutes_with_grower double(100,4) not null,
+latitude varchar(100) not null,
+longitude varchar(100) not null,
+sync integer not null default 0,
+created_at varchar(100) not null,
+datetimes varchar(100) not null,
+description varchar(100) ,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id)
+);
+
+
+CREATE TABLE if not exists harvesting_maturity (
+id  INTEGER PRIMARY KEY auto_increment, 
+userid integer not null, 
+growerid integer not null, 
+latitude TEXT not null, 
+longitude TEXT not null, 
+created_at TEXT not null, 
+datetimes varchar(100) not null,
+seasonid integer not null, 
+MaturityStage TEXT, 
+LeafColor TEXT, 
+LeafTexture TEXT,
+LeafThickness TEXT,
+LeafElasticity TEXT,
+LeafGloss TEXT,
+MidribThickness TEXT,
+PercentageMature TEXT,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id));
+
+
+
+
+CREATE TABLE if not exists harvesting_readiness (
+id  INTEGER PRIMARY KEY auto_increment, 
+userid integer not null, 
+growerid integer not null, 
+latitude TEXT not null, 
+longitude TEXT not null, 
+created_at TEXT not null, 
+datetimes varchar(100) not null,
+seasonid integer not null, 
+harvest_readiness TEXT, 
+harvest_date TEXT, 
+harvest_action TEXT,
+delay_reason TEXT,
+quality_expected TEXT,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id) );
+
+
+
+
+CREATE TABLE if not exists harvesting_method (
+id  INTEGER PRIMARY KEY auto_increment, 
+userid integer not null, 
+growerid integer not null, 
+latitude TEXT not null, 
+longitude TEXT not null, 
+created_at TEXT not null, 
+datetimes varchar(100) not null,
+seasonid integer not null, 
+harvest_method TEXT, 
+leaf_type TEXT, 
+harvest_sequence TEXT,
+handling_method TEXT,
+damage_observed TEXT, 
+leaves_per_harvest TEXT,
+harvest_interval TEXT,
+leaf_loss_est TEXT,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id) );
+
+
+
+
+
+
+
+CREATE TABLE if not exists harvesting_labour (
+id  INTEGER PRIMARY KEY auto_increment, 
+userid integer not null, 
+growerid integer not null, 
+latitude TEXT not null, 
+longitude TEXT not null, 
+created_at TEXT not null, 
+datetimes varchar(100) not null,
+seasonid integer not null, 
+labour_availability TEXT, 
+workers_experienced TEXT, 
+harvest_speed TEXT,
+time_of_harvest TEXT,
+transport_readiness TEXT,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id) );
+
+
+
+
+
+
+CREATE TABLE if not exists harvesting_sanitation (
+id  INTEGER PRIMARY KEY auto_increment, 
+userid integer not null, 
+growerid integer not null, 
+latitude TEXT not null, 
+longitude TEXT not null, 
+created_at TEXT not null, 
+datetimes varchar(100) not null,
+seasonid integer not null, 
+field_cleanliness TEXT, 
+diseased_leaves TEXT, 
+pest_infestation TEXT,
+tools_sanitation TEXT,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id) );
+
+
+
+
+
+CREATE TABLE if not exists harvesting_weather (
+id  INTEGER PRIMARY KEY auto_increment, 
+userid integer not null, 
+growerid integer not null, 
+latitude TEXT not null, 
+longitude TEXT not null, 
+created_at TEXT not null, 
+datetimes varchar(100) not null,
+seasonid integer not null, 
+weather_condition TEXT, 
+temperature TEXT, 
+humidity TEXT,
+rain_risk TEXT,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id) );
+
+
+
+
+
+
+CREATE TABLE if not exists harvesting_quality (
+id  INTEGER PRIMARY KEY auto_increment, 
+userid integer not null, 
+growerid integer not null, 
+latitude TEXT not null, 
+longitude TEXT not null, 
+created_at TEXT not null, 
+datetimes varchar(100) not null,
+seasonid integer not null, 
+bruising_risk TEXT, 
+overheating TEXT, 
+uneven_curing TEXT,
+expected_grade TEXT,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id) );
+
+
+CREATE TABLE if not exists harvesting_comments (
+id  INTEGER PRIMARY KEY auto_increment, 
+userid integer not null, 
+growerid integer not null, 
+latitude TEXT not null, 
+longitude TEXT not null, 
+created_at TEXT not null, 
+datetimes varchar(100) not null,
+seasonid integer not null, 
+harvest_timing_remark TEXT, 
+handling_remark TEXT, 
+quality_remark TEXT,
+expected_grade_remark TEXT,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id) );
+
+
+
+CREATE TABLE if not exists flowering_ripening_stage ( 
+id  INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+sync integer not null default 0, 
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+crop_topped boolean not null,  
+crop_topping_height double,  
+crop_remaining_leaves integer not null, 
+crop_topping_uniformity TEXT, 
+suckers_per_plant integer not null, 
+sucker_chem TEXT, 
+sucker_eff TEXT, 
+sucker_app_date TEXT, 
+crop_maturity_stage TEXT, 
+harvest_ready_pct double, 
+expected_first_picking TEXT, 
+datetimes varchar(100) not null, 
+foreign key(userid) references users(id), 
+foreign key(seasonid) references seasons(id), 
+foreign key(growerid) references growers(id));
+
+
+
+
+
+
+CREATE TABLE if not exists nutrient_stress ( 
+id  INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+sync integer not null default 0, 
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+crop_stage TEXT not null,  
+nitrogen_level TEXT,  
+phosphorus_level TEXT, 
+potassium_level TEXT, 
+field_moisture TEXT not null, 
+field_drought boolean not null, 
+field_drought_severity TEXT, 
+datetimes varchar(100) not null, 
+foreign key(userid) references users(id), 
+foreign key(seasonid) references seasons(id), 
+foreign key(growerid) references growers(id));
+
+
+
+
+
+
+
+
+CREATE TABLE if not exists flowering_pest_diseases ( 
+id  INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+sync integer not null default 0, 
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+crop_stage TEXT not null,  
+pest_name TEXT,  
+pest_severity TEXT, 
+pest_treated boolean, 
+pesticide_applied TEXT not null, 
+pesticide_app_date TEXT, 
+disease_name TEXT, 
+disease_severity TEXT, 
+disease_treated boolean, 
+sanitation_status TEXT, 
+datetimes varchar(100) not null, 
+foreign key(userid) references users(id), 
+foreign key(seasonid) references seasons(id), 
+foreign key(growerid) references growers(id));
+
+
+
+
+
+
+
+
+
+CREATE TABLE if not exists flowering_field_management ( 
+id  INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+sync integer not null default 0, 
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+weeding_done integer not null,  
+weeds_level TEXT,  
+herbicide TEXT, 
+harvest_ready integer not null, 
+ripening_percent integer not null, 
+expected_weight double not null, 
+labor_availability TEXT, 
+uniformity_score TEXT , 
+datetimes varchar(100) not null, 
+foreign key(userid) references users(id), 
+foreign key(seasonid) references seasons(id), 
+foreign key(growerid) references growers(id));
+
+
+
+
+
+
+CREATE TABLE if not exists flowering_remarks ( 
+id  INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+sync integer not null default 0, 
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+harvesting_recommendations TEXT,  
+nutrition_management TEXT,  
+sucker_control_remark TEXT, 
+pest_disease_treatment TEXT, 
+field_sanitation TEXT, 
+datetimes varchar(100) not null, 
+foreign key(userid) references users(id), 
+foreign key(seasonid) references seasons(id), 
+foreign key(growerid) references growers(id));
+
+
+CREATE TABLE if not exists blocked_growers ( 
+id  INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+foreign key(userid) references users(id), 
+foreign key(seasonid) references seasons(id), 
+foreign key(growerid) references growers(id));
+
+
+CREATE TABLE if not exists barn_structure (
+id INTEGER PRIMARY KEY auto_increment, 
+userid integer not null, 
+growerid integer not null, 
+latitude TEXT not null, 
+longitude TEXT not null, 
+sync integer not null default 0,
+datetimes varchar(100) not null,
+created_at TEXT not null, 
+seasonid integer not null, 
+barn_number TEXT, 
+barn_type TEXT, 
+barn_roof TEXT, 
+barn_walls TEXT, 
+barn_doors TEXT,
+barn_stability TEXT,
+barn_floor TEXT,
+barn_termite_rot TEXT ,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+
+
+CREATE TABLE if not exists barn_ventilation( 
+id INTEGER PRIMARY KEY auto_increment, 
+userid integer not null, 
+growerid integer not null, 
+latitude TEXT not null, 
+longitude TEXT not null, 
+sync integer not null default 0,
+created_at TEXT not null, 
+datetimes varchar(100) not null,
+seasonid integer not null, 
+barn_number TEXT, 
+vent_type TEXT, 
+vent_condition TEXT, 
+vent_count TEXT,
+vent_ease TEXT,
+airflow_obstruction TEXT ,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+
+
+
+CREATE TABLE if not exists barn_heatsource( 
+id INTEGER PRIMARY KEY auto_increment, 
+userid integer not null, 
+growerid integer not null, 
+latitude TEXT not null, 
+longitude TEXT not null, 
+sync integer not null default 0,
+created_at TEXT not null, 
+datetimes varchar(100) not null,
+seasonid integer not null, 
+barn_number TEXT, 
+heat_source TEXT, 
+flue_intact TEXT, 
+smoke_leakages TEXT,
+temperature_control TEXT,
+thermometer TEXT,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+
+
+CREATE TABLE if not exists barn_humidity (
+id INTEGER PRIMARY KEY auto_increment, 
+userid integer not null, 
+growerid integer not null, 
+latitude TEXT not null, 
+longitude TEXT not null, 
+sync integer not null default 0,
+created_at TEXT not null, 
+datetimes varchar(100) not null,
+seasonid integer not null, 
+barn_number TEXT, 
+humidity_retain TEXT, 
+moisture_release TEXT, 
+roof_leaks TEXT,
+dripping TEXT,
+drainange TEXT,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+
+
+CREATE TABLE if not exists barn_loading_capacity (
+id INTEGER PRIMARY KEY auto_increment, 
+userid integer not null, 
+growerid integer not null, 
+latitude TEXT not null, 
+longitude TEXT not null, 
+sync integer not null default 0,
+created_at TEXT not null, 
+datetimes varchar(100) not null,
+seasonid integer not null, 
+barn_number TEXT, 
+tiers_poles_condition TEXT, 
+tier_spacing TEXT, 
+barn_capacity TEXT,
+overloading_risk TEXT,
+unloading_safety TEXT,
+barn_ha_capacity TEXT ,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+
+CREATE TABLE if not exists barn_fire_safety( 
+id INTEGER PRIMARY KEY auto_increment, 
+userid integer not null, 
+growerid integer not null, 
+latitude TEXT not null, 
+longitude TEXT not null, 
+sync integer not null default 0,
+created_at TEXT not null, 
+datetimes varchar(100) not null,
+seasonid integer not null, 
+barn_number TEXT, 
+firebreak_cleared TEXT, 
+chimney_safety TEXT, 
+heat_source_outside TEXT,
+fire_fighting TEXT,
+electric_wiring_safe TEXT ,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+CREATE TABLE if not exists barn_environment (
+id INTEGER PRIMARY KEY auto_increment, 
+userid integer not null, 
+growerid integer not null, 
+latitude TEXT not null, 
+longitude TEXT not null, 
+sync integer not null default 0,
+created_at TEXT not null, 
+datetimes varchar(100) not null,
+seasonid integer not null, 
+barn_number TEXT, 
+cleanliness TEXT, 
+observed_mold TEXT, 
+drainage TEXT,
+flood_risk TEXT,
+wind_vulnerability TEXT,
+accessibility TEXT ,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id));
+
+
+
+
+CREATE TABLE if not exists barn_remarks (
+id INTEGER PRIMARY KEY auto_increment, 
+userid integer not null, 
+growerid integer not null, 
+latitude TEXT not null, 
+longitude TEXT not null, 
+sync integer not null default 0,
+created_at TEXT not null, 
+datetimes varchar(100) not null,
+seasonid integer not null, 
+barn_number TEXT, 
+overall_status TEXT, 
+key_issues TEXT, 
+recommendations TEXT ,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+CREATE TABLE if not exists crop_population( 
+id INTEGER PRIMARY KEY auto_increment, 
+userid integer not null, 
+growerid integer not null, 
+latitude TEXT not null, 
+longitude TEXT not null, 
+sync integer not null default 0,
+created_at TEXT not null, 
+datetimes varchar(100) not null,
+seasonid integer not null, 
+hectarage TEXT, 
+variety TEXT, 
+crop_pop_rate TEXT, 
+num_of_plants TEXT,
+estimated_yield TEXT ,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id));
+
+
+
+CREATE TABLE if not exists crop_population_remarks( 
+id INTEGER PRIMARY KEY auto_increment, 
+userid integer not null, 
+growerid integer not null, 
+latitude TEXT not null, 
+longitude TEXT not null, 
+sync integer not null default 0,
+created_at TEXT not null, 
+datetimes varchar(100) not null,
+seasonid integer not null, 
+overall_status TEXT, 
+crop_pop_remarks TEXT, 
+crop_pop_recommendations TEXT ,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+
+
+CREATE TABLE if not exists tobacco_curing ( 
+id  INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+sync integer not null default 0,  
+barn_number TEXT,  
+loading_density TEXT,  
+leaf_arrangement TEXT,  
+airflow TEXT,  
+curing_uniformity TEXT,  
+tiers_condition TEXT , 
+datetimes varchar(100) not null, 
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id));
+
+CREATE TABLE if not exists yellowing_stage ( 
+id  INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+sync integer not null default 0,  
+barn_number TEXT,  
+yellowing_start_date TEXT,  
+yellowing_end_date TEXT,  
+yellowing_temperature TEXT,  
+relative_humidity TEXT,  
+ventilation TEXT,  
+uniformity_yellowing TEXT,  
+green_patches TEXT,  
+leaf_pliability TEXT,  
+yellowing_status TEXT , 
+datetimes varchar(100) not null, 
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id));
+
+
+CREATE TABLE if not exists lamina_stage ( 
+id  INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+sync integer not null default 0,  
+barn_number TEXT,  
+lamina_start_date TEXT,  
+lamina_end_date TEXT,  
+lamina_temperature TEXT,  
+lamina_ventilation TEXT,  
+lamina_uniformity TEXT,  
+lamina_texture TEXT,  
+color_fixed TEXT,  
+over_drying TEXT,  
+lamina_status  TEXT , 
+datetimes varchar(100) not null, 
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id));
+
+CREATE TABLE if not exists midrib_stage ( 
+id  INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+sync integer not null default 0,  
+barn_number TEXT,  
+midrib_start_date TEXT,  
+midrib_end_date TEXT,  
+midrib_temperature TEXT,  
+midrib_fully_dry TEXT,  
+snaps_cleanly TEXT,  
+smoke_contamination TEXT,  
+midrib_mold_observed TEXT,  
+midrib_status TEXT , 
+datetimes varchar(100) not null, 
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id));
+
+CREATE TABLE if not exists curing_environment ( 
+id  INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+sync integer not null default 0,  
+barn_number TEXT,  
+monitoring_frequency TEXT,  
+vent_strategy TEXT,  
+heat_source TEXT,  
+smoke_emissions TEXT,  
+env_accessibility TEXT,  
+smoke_contamination TEXT,  
+env_overall_status TEXT , 
+datetimes varchar(100) not null, 
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id));
+
+CREATE TABLE if not exists curing_leaf_quality ( 
+id  INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+sync integer not null default 0,  
+barn_number TEXT,  
+leaf_colour TEXT,  
+curing_leaf_texture TEXT,  
+leaf_uniformity TEXT,  
+mould_presence TEXT , 
+datetimes varchar(100) not null, 
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id));
+
+
+
+CREATE TABLE if not exists curing_comments ( 
+id  INTEGER PRIMARY KEY auto_increment,  
+userid integer not null,  
+growerid integer not null,  
+latitude TEXT not null,  
+longitude TEXT not null,  
+created_at TEXT not null,  
+seasonid integer not null,  
+sync integer not null default 0,  
+curing_stage TEXT,  
+curing_remarks TEXT , 
+datetimes varchar(100) not null, 
+foreign key(userid) references users(id), 
+foreign key(growerid) references growers(id), 
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+
+CREATE TABLE if not exists leaf_grading_quality (
+id INTEGER PRIMARY KEY auto_increment,
+userid integer not null,
+growerid integer not null,
+latitude TEXT not null,
+longitude TEXT not null,
+created_at TEXT not null,
+seasonid integer not null,
+grade_separation TEXT,
+leaf_position_separation TEXT,
+color_uniformity TEXT,
+texture_consistency TEXT,
+ripeness_accuracy TEXT,
+foreign_matter TEXT,
+excessive_midribs TEXT,
+overall_quality TEXT,
+sync integer not null default 0,
+datetimes varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+CREATE TABLE if not exists handling_conditioning (
+id INTEGER PRIMARY KEY auto_increment,
+userid integer not null,
+growerid integer not null,
+latitude TEXT not null,
+longitude TEXT not null,
+created_at TEXT not null,
+seasonid integer not null,
+over_handled TEXT,
+leaf_breakage TEXT,
+re_drying TEXT,
+proper_conditioning TEXT,
+sync integer not null default 0,
+datetimes varchar(100) not null, 
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+
+
+CREATE TABLE if not exists packaging_baling (
+id INTEGER PRIMARY KEY auto_increment,
+userid integer not null,
+growerid integer not null,
+latitude TEXT not null,
+longitude TEXT not null,
+created_at TEXT not null,
+seasonid integer not null,
+packaging_type TEXT,
+bale_density TEXT,
+leaf_alignment TEXT,
+wrapping_intact TEXT,
+bale_contamination TEXT,
+bale_labeling TEXT,
+sync integer not null default 0,
+datetimes varchar(100) not null, 
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+
+CREATE TABLE if not exists storage_transport (
+id INTEGER PRIMARY KEY auto_increment,
+userid integer not null,
+growerid integer not null,
+latitude TEXT not null,
+longitude TEXT not null,
+created_at TEXT not null,
+seasonid integer not null,
+storage_dry TEXT,
+bale_density TEXT,
+bales_raised TEXT,
+rodent_damage TEXT,
+transport_ready TEXT,
+sync integer not null default 0,
+datetimes varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+
+CREATE TABLE if not exists overall_grading (
+id INTEGER PRIMARY KEY auto_increment,
+userid integer not null,
+growerid integer not null,
+latitude TEXT not null,
+longitude TEXT not null,
+created_at TEXT not null,
+seasonid integer not null,
+grading_status TEXT,
+packaging_suitability TEXT,
+market_readiness TEXT,
+estimated_price_impact TEXT,
+overall_recommendations TEXT,
+sync integer not null default 0,
+datetimes varchar(100) not null,
+foreign key(userid) references users(id),
+foreign key(growerid) references growers(id),
+foreign key(seasonid) references seasons(id));
+
+
+
+
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- TABLE 1: fuel_requests
+-- Mirrors Android: TABLE_REQUESTS = "fuel_requests"
+-- ─────────────────────────────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS fuel_requests (
+    id                  INT             AUTO_INCREMENT PRIMARY KEY,
+    field_officer_id    INT             NOT NULL,
+    week_start_date     VARCHAR(100)    NOT NULL,
+    week_end_date       VARCHAR(100)    NOT NULL,
+    status              VARCHAR(20)     NOT NULL DEFAULT 'PENDING',
+    total_distance_km   DECIMAL(10, 2)  DEFAULT 0,
+    total_fuel_litres   DECIMAL(10, 2)  DEFAULT 0,
+    fuel_rate           DECIMAL(10, 4)  DEFAULT 0,
+    is_km_per_litre     TINYINT(1)      DEFAULT 1,  -- 1 = km/L mode, 0 = L/km mode
+    officer_notes       TEXT,
+    manager_notes       TEXT,
+    optimised_route_json TEXT,
+    seasonid            INT             NOT NULL,
+    created_at          VARCHAR(100)    NOT NULL,
+    datetimes           VARCHAR(100)    NOT NULL,
+
+    UNIQUE KEY uq_officer_week (field_officer_id, week_start_date),
+    INDEX idx_season    (seasonid),
+    INDEX idx_status    (status),
+    INDEX idx_week      (week_start_date),
+
+    FOREIGN KEY (field_officer_id) REFERENCES users(id),
+    FOREIGN KEY (seasonid)         REFERENCES seasons(id)
+);
+
+
+
+
+
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- TABLE 2: fuel_request_growers
+-- Mirrors Android: TABLE_GROWERS_FUEL_REQUEST = "fuel_request_growers"
+-- ─────────────────────────────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS fuel_request_growers (
+    id              INT             AUTO_INCREMENT PRIMARY KEY,
+    growerid        INT             NOT NULL,
+    latitude        DECIMAL(10, 7),
+    longitude       DECIMAL(10, 7),
+    planned_day     VARCHAR(10),           -- MON, TUE, WED, THU, FRI, SAT, SUN
+    leg_distance_km DECIMAL(10, 2),
+    visit_order     INT,
+    userid          INT             NOT NULL,
+    seasonid        INT             NOT NULL,
+    created_at      VARCHAR(100)    NOT NULL,
+    datetimes       VARCHAR(100)    NOT NULL,
+
+    INDEX idx_grower  (growerid),
+    INDEX idx_user    (userid),
+    INDEX idx_season  (seasonid),
+
+    FOREIGN KEY (userid)   REFERENCES users(id),
+    FOREIGN KEY (growerid) REFERENCES growers(id),
+    FOREIGN KEY (seasonid) REFERENCES seasons(id)
+);
+
+
+
+
+-- ╔══════════════════════════════════════════════════════════════════╗
+--  GMS — Location Tracking Schema
+--  Database: gms_db
+--
+--  Run once on EACH CLIENT'S server.
+--  Safe to re-run — all statements use IF NOT EXISTS / OR REPLACE.
+--
+--  Tables:
+--   1. field_officers      — officer profiles (may already exist in GMS)
+--   2. device_locations    — GPS pings from Android devices
+--
+--  View:
+--   device_last_location   — latest ping per device with officer info
+-- ╚══════════════════════════════════════════════════════════════════╝
+
+
+-- ════════════════════════════════════════════════════════════════════
+--  1. FIELD OFFICERS
+--     Stores officer profiles. The location tables JOIN on officer_id.
+--     Skip this if your GMS already has a field_officers table —
+--     just make sure it has at least id, name, and phone columns.
+-- ════════════════════════════════════════════════════════════════════
+
+CREATE TABLE IF NOT EXISTS field_officers (
+    id           INT UNSIGNED     AUTO_INCREMENT PRIMARY KEY,
+    userid          INT             NOT NULL,
+    name         VARCHAR(150)     NOT NULL,
+    phone        VARCHAR(20)      NULL,
+    email        VARCHAR(150)     NULL,
+    company_code VARCHAR(10)      NULL,           -- e.g. 'ACME' — matches LocationWorker
+    status       ENUM('active','inactive','suspended')
+                                  NOT NULL DEFAULT 'active',
+    created_at   DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at   DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+                                  ON UPDATE CURRENT_TIMESTAMP,
+
+    INDEX idx_status       (status),
+    INDEX idx_company_code (company_code),
+    FOREIGN KEY (userid)   REFERENCES users(id)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- ════════════════════════════════════════════════════════════════════
+--  2. DEVICE LOCATIONS
+--     One row per GPS ping received from a field officer's device.
+--     Receives pings from three sources:
+--       realtime      — Android → internet → device_location.php
+--       offline_queue — Android queue → synced via device_location_batch.php
+--       sms           — Android → SMS → hub → sms_location_receiver.php
+-- ════════════════════════════════════════════════════════════════════
+
+CREATE TABLE IF NOT EXISTS device_locations (
+    id               BIGINT UNSIGNED  AUTO_INCREMENT PRIMARY KEY,
+    device_id        VARCHAR(64)      NOT NULL,       -- Android ANDROID_ID
+    officer_id       INT UNSIGNED     NULL,            -- FK → field_officers.id
+    latitude         DECIMAL(10, 7)   NOT NULL,
+    longitude        DECIMAL(10, 7)   NOT NULL,
+    accuracy         FLOAT            NULL,            -- metres
+    altitude         FLOAT            NULL,            -- metres above sea level
+    speed            FLOAT            NULL,            -- m/s
+    battery_level    TINYINT UNSIGNED NULL,            -- 0–100 %
+    device_timestamp DATETIME         NULL,            -- GPS time from device
+    source           ENUM('realtime','offline_queue','sms')
+                                      NOT NULL DEFAULT 'realtime',
+    created_at       DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (officer_id) REFERENCES field_officers(id) ON DELETE SET NULL,
+
+    INDEX idx_device_created  (device_id, created_at DESC),
+    INDEX idx_officer_created (officer_id, created_at DESC),
+    INDEX idx_created_at      (created_at DESC),
+    INDEX idx_source          (source)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- ════════════════════════════════════════════════════════════════════
+--  VIEW: device_last_location
+--  Latest ping per device joined with officer info.
+--  Used by device_tracker.php dashboard.
+-- ════════════════════════════════════════════════════════════════════
+
+CREATE OR REPLACE VIEW device_last_location AS
+    SELECT
+        dl.id,
+        dl.device_id,
+        dl.officer_id,
+        fo.name            AS officer_name,
+        fo.phone           AS officer_phone,
+        fo.status          AS officer_status,
+        dl.latitude,
+        dl.longitude,
+        dl.accuracy,
+        dl.altitude,
+        dl.speed,
+        dl.battery_level,
+        dl.source,
+        dl.device_timestamp,
+        dl.created_at      AS last_seen,
+        TIMESTAMPDIFF(MINUTE, dl.created_at, NOW()) AS minutes_ago
+    FROM device_locations dl
+    INNER JOIN (
+        SELECT device_id, MAX(id) AS max_id
+        FROM device_locations
+        GROUP BY device_id
+    ) latest ON dl.id = latest.max_id
+    LEFT JOIN field_officers fo ON dl.officer_id = fo.id;
+
+
+-- ════════════════════════════════════════════════════════════════════
+--  AUTO-PRUNE EVENT (optional)
+--  Removes pings older than 30 days automatically every night.
+--  Requires event_scheduler = ON in MySQL config.
+--  The PHP files also prune on each write, so this is a safety net.
+-- ════════════════════════════════════════════════════════════════════
+
+-- SET GLOBAL event_scheduler = ON;
+
+-- CREATE EVENT IF NOT EXISTS gms_prune_old_locations
+--     ON SCHEDULE EVERY 1 DAY
+--     STARTS CURRENT_TIMESTAMP
+--     DO
+--         DELETE FROM device_locations
+--         WHERE created_at < DATE_SUB(NOW(), INTERVAL 30 DAY);
+
+
+-- ════════════════════════════════════════════════════════════════════
+--  MIGRATION — already have device_locations without the source column?
+-- ════════════════════════════════════════════════════════════════════
+
+-- ALTER TABLE device_locations
+--     ADD COLUMN source ENUM('realtime','offline_queue','sms')
+--     NOT NULL DEFAULT 'realtime'
+--     AFTER device_timestamp;
+
+-- ALTER TABLE device_locations
+--     MODIFY COLUMN officer_id INT UNSIGNED NULL,
+--     ADD CONSTRAINT fk_dl_officer
+--         FOREIGN KEY (officer_id) REFERENCES field_officers(id) ON DELETE SET NULL;
+
+
+-- ════════════════════════════════════════════════════════════════════
+--  SAMPLE DATA — uncomment to test the tracker dashboard
+-- ════════════════════════════════════════════════════════════════════
+
+-- INSERT INTO field_officers (name, phone, company_code) VALUES
+--     ('John Moyo',     '0771234567', 'ACME'),
+--     ('Alice Chipo',   '0772345678', 'ACME'),
+--     ('Tendai Nkosi',  '0773456789', 'ACME'),
+--     ('Grace Sibanda', '0774567890', 'ACME');
+
+-- INSERT INTO device_locations (device_id, officer_id, latitude, longitude, accuracy, battery_level, source) VALUES
+--     ('device_aabbcc', 1, -17.8292, 31.0522, 12, 78, 'realtime'),
+--     ('device_ddeeff', 2, -17.8150, 31.0680, 20, 15, 'sms'),
+--     ('device_112233', 3, -17.8400, 31.0400,  8, 55, 'offline_queue'),
+--     ('device_445566', 4, -17.8500, 31.0600, 35,  8, 'sms');
+
+
+-- ════════════════════════════════════════════════════════════════════
+--  HANDY QUERIES
+-- ════════════════════════════════════════════════════════════════════
+
+-- All devices, latest ping:
+-- SELECT * FROM device_last_location ORDER BY last_seen DESC;
+
+-- Devices not seen in 2+ hours (possibly lost):
+-- SELECT * FROM device_last_location WHERE minutes_ago > 120;
+
+-- Location trail for one device (last 24 hrs):
+-- SELECT latitude, longitude, battery_level, source, created_at
+-- FROM device_locations
+-- WHERE device_id = 'YOUR_DEVICE_ID'
+--   AND created_at >= NOW() - INTERVAL 24 HOUR
+-- ORDER BY created_at ASC;
+
+-- Ping count by source (internet vs SMS vs offline queue):
+-- SELECT source, COUNT(*) AS total
+-- FROM device_locations
+-- GROUP BY source;
+
+-- Officers with low battery devices:
+-- SELECT officer_name, officer_phone, battery_level, last_seen
+-- FROM device_last_location
+-- WHERE battery_level <= 20
+-- ORDER BY battery_level ASC;
+
+-- Officers only reachable via SMS (likely no data bundle):
+-- SELECT dl.device_id, fo.name, fo.phone, COUNT(*) AS sms_pings
+-- FROM device_locations dl
+-- LEFT JOIN field_officers fo ON dl.officer_id = fo.id
+-- WHERE source = 'sms'
+-- GROUP BY dl.device_id, fo.name, fo.phone
+-- ORDER BY sms_pings DESC;
+
+-- Devices that went silent today (had pings yesterday, none today):
+-- SELECT DISTINCT device_id FROM device_locations
+-- WHERE created_at BETWEEN NOW() - INTERVAL 48 HOUR AND NOW() - INTERVAL 24 HOUR
+-- AND device_id NOT IN (
+--     SELECT DISTINCT device_id FROM device_locations
+--     WHERE created_at >= NOW() - INTERVAL 24 HOUR
+-- );
+
+
+
+
+ALTER TABLE fuel_requests
+ADD no_of_growers text not null;
+
+
+
+
+
+
+
+ALTER TABLE seedbed_location ADD datetimes TEXT;
+ALTER TABLE barn_location ADD datetimes TEXT;
+ALTER TABLE lat_long ADD datetimes TEXT;
+ALTER TABLE grower_farm ADD datetimes TEXT;
+
+ALTER TABLE visits
+ADD times varchar(100);
+
+ALTER TABLE tobacco_transplanting
+ADD no_of_plants varchar(100) default 0;
+
+ALTER TABLE prices
+ADD splitid integer default 0;
+
+ALTER TABLE loans
+ADD splitid integer default 0;
+
+
+ALTER TABLE landprep_ridging
+ADD datetimes varchar(100) not null;
+  
+ALTER TABLE landprep_comments
+ADD datetimes varchar(100) not null;
+ 
+ALTER TABLE seedbed_comments
+ADD datetimes varchar(100) not null;
+
+ALTER TABLE seedbed_management
+ADD datetimes varchar(100) not null;
+
+ALTER TABLE seedbed_leafcolor
+ADD datetimes varchar(100) not null;
+
+ALTER TABLE seed_germination
+ADD datetimes varchar(100) not null;
+
+ALTER TABLE seedling_growth_vigour
+ADD datetimes varchar(100) not null;
+
+ALTER TABLE seedbed_soil_health
+ADD datetimes varchar(100) not null;
+
+
+ALTER TABLE diseases_pest_control
+ADD datetimes varchar(100) not null;
+
+
+ALTER TABLE landprep_discing
+ADD datetimes varchar(100) not null;
+
+
+ALTER TABLE landprep_ploughing
+ADD datetimes varchar(100) not null;
+
+
+
+
+ALTER TABLE transplanting_comments
+ADD datetimes varchar(100) not null;
+
+
+ALTER TABLE tobacco_transplanting
+ADD datetimes varchar(100) not null;
+
+
+ALTER TABLE bale_counting_redo
+ADD batch_no integer not null default 0;
+
+
+ALTER TABLE bale_counting_redo
+ADD sell_date text not null;
+
+ALTER TABLE bale_counting_redo
+ADD lot text not null;
+
+ALTER TABLE bale_counting_redo
+ADD grower_num text not null;
+
+
+ALTER TABLE bale_counting_redo
+ADD new_mass double(100,4) not null;
+
+
+ALTER TABLE bale_counting_redo
+ADD old_barcode text not null;
+
+ALTER TABLE user_finger_print
+ADD description text not null;
+
+ALTER TABLE grower_finger_print
+ADD description text not null;
+
+
 insert into documents_descriptions(description)value("Grower Id");
 insert into documents_descriptions(description)value("Grower Image");
 insert into documents_descriptions(description)value("Grower Contract");
@@ -5978,6 +7767,10 @@ insert into performance_types(description) value("System Tasks");
 insert into performance_types(description) value("Bike Maintenance");
 insert into performance_types(description) value("Training");
 insert into performance_types(description) value("Other");
+
+
+insert into performance_types(description) value("CTL Related");
+
 
 
 
@@ -6056,10 +7849,11 @@ insert into charges(name) value("Agronomy");
 insert into download_growers_rule(rule) value(0);
 
 
-insert into product_type(name) value("Fertilizer");
-insert into product_type(name) value("Seed");
-insert into product_type(name) value("Chemicals");
-insert into product_type(name) value("Hessian");
+insert into product_type(name) value("LandPack-Fertilizer");
+insert into product_type(name) value("Seedbed Pack");
+insert into product_type(name) value("LandPack-Chemicals");
+insert into product_type(name) value("Packaging");
+insert into product_type(name) value("Other");
 
 
 insert into selling_points(name) value("Rusape");
@@ -6236,8 +8030,6 @@ ALTER TABLE scheme_hectares_products
 MODIFY COLUMN quantity double(100,3) default 0;
 
 
-ALTER TABLE loan_payments
-ADD reference_num varchar(255) not null;
 
 ALTER TABLE loan_payments
 ADD payment_date varchar(255) not null;
@@ -6281,7 +8073,7 @@ ADD location varchar(100) not null;
 
 
 ALTER TABLE loans
-ADD comment varchar(100) not null;
+ADD comments varchar(100) not null;
 
 ALTER TABLE loans
 ADD adjustment_quantity double(100,4) not null;
@@ -6327,3 +8119,12 @@ ADD swapped integer not null default 0;
 
 ALTER TABLE transactions
 ADD purchasing_order_received_productsid int;
+
+
+ALTER TABLE reverse_all_growers_otp
+ADD growerid integer not null;
+
+
+ALTER TABLE product_type
+ADD fetch_order integer not null default 0;
+

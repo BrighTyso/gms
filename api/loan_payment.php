@@ -73,126 +73,126 @@ if (isset($data->seasonid) && isset($data->userid)  && isset($data->amount) && i
 
 
 
-    $sql = "Select id from accounts_branch limit 1";
-    $result = $conn->query($sql);
+//     $sql = "Select id from accounts_branch limit 1";
+//     $result = $conn->query($sql);
      
-     $branch_id_count=$result->num_rows;
+//      $branch_id_count=$result->num_rows;
 
-     if ($result->num_rows > 0) {
-       // output data of each row
-       while($row = $result->fetch_assoc()) {
-        // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
-        // $temp=array("main_account"=>$row["main_account"],"sub_acc"=>$row["sub_acc"],"balance_side"=>$row["balance_side"],"main_account_id"=>$row["id"],"sub_account_id"=>$row["sub_account_id"]);
-        // array_push($response,$temp);
+//      if ($result->num_rows > 0) {
+//        // output data of each row
+//        while($row = $result->fetch_assoc()) {
+//         // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+//         // $temp=array("main_account"=>$row["main_account"],"sub_acc"=>$row["sub_acc"],"balance_side"=>$row["balance_side"],"main_account_id"=>$row["id"],"sub_account_id"=>$row["sub_account_id"]);
+//         // array_push($response,$temp);
 
-        $account_branchid=$row['id'];
+//         $account_branchid=$row['id'];
 
-       }
-     }
-
-
+//        }
+//      }
 
 
-     $sql1 = "Select id from customers  where  name='$name' and growerid=$growerid";
-     $result = $conn->query($sql1);
+
+
+//      $sql1 = "Select id from customers  where  name='$name' and growerid=$growerid";
+//      $result = $conn->query($sql1);
    
-    if ($result->num_rows > 0) {
-     // output data of each row
-     while($row = $result->fetch_assoc()) {
+//     if ($result->num_rows > 0) {
+//      // output data of each row
+//      while($row = $result->fetch_assoc()) {
 
-         $found=$row['id'];
-         $customerid=$row['id'];
+//          $found=$row['id'];
+//          $customerid=$row['id'];
      
-         }
+//          }
 
-       }
-
-
+//        }
 
 
 
 
- if ($found==0){
 
-  $grower_farm_sql = "INSERT INTO customers(userid,seasonid,name,email,phone,address,created_at,growerid,contact_person) VALUES ($userid,$seasonid,'$name','$email','$phone','$area','$created_at',$growerid,'')";
-     //$sql = "select * from login";
-     if ($conn->query($grower_farm_sql)===TRUE) {
+
+//  if ($found==0){
+
+//   $grower_farm_sql = "INSERT INTO customers(userid,seasonid,name,email,phone,address,created_at,growerid,contact_person) VALUES ($userid,$seasonid,'$name','$email','$phone','$area','$created_at',$growerid,'')";
+//      //$sql = "select * from login";
+//      if ($conn->query($grower_farm_sql)===TRUE) {
      
-       $last_id = $conn->insert_id;
-       $customerid= $conn->insert_id;
+//        $last_id = $conn->insert_id;
+//        $customerid= $conn->insert_id;
 
-     }else{
+//      }else{
 
     
-     }
+//      }
 
 
-  if ($customerid>0 && $account_receivableid==0) {
+//   if ($customerid>0 && $account_receivableid==0) {
     
-    $grower_farm_sql = "INSERT INTO accounts_receivable_notes(userid,seasonid,currencyid,customer_id,note_date,due_date,original_amount,outstanding_amount,description,status,created_at) VALUES ($userid,$seasonid,$currencyid,$customerid,'$created_at','$created_at',0,0,'$description','Open','$created_at')";
-     //$sql = "select * from login";
-     if ($conn->query($grower_farm_sql)===TRUE) {
+//     $grower_farm_sql = "INSERT INTO accounts_receivable_notes(userid,seasonid,currencyid,customer_id,note_date,due_date,original_amount,outstanding_amount,description,status,created_at) VALUES ($userid,$seasonid,$currencyid,$customerid,'$created_at','$created_at',0,0,'$description','Open','$created_at')";
+//      //$sql = "select * from login";
+//      if ($conn->query($grower_farm_sql)===TRUE) {
      
       
-     }
+//      }
 
-  }
-
-
-}
+//   }
 
 
+// }
 
-$sql = "Select main_accounts.description as main_account,main_accounts.id,balancing_side.description as balance_side,sub_accounts.description as sub_acc , sub_accounts.id as sub_account_id from main_accounts join sub_accounts on main_accounts.id=sub_accounts.main_accountid join main_account_balancing_side on main_account_balancing_side.main_accountid=main_accounts.id join balancing_side on main_account_balancing_side.balancing_sideid=balancing_side.id where sub_accounts.description='Cash In Bank' order by main_accounts.id limit 1";
-$result = $conn->query($sql);
+
+
+// $sql = "Select main_accounts.description as main_account,main_accounts.id,balancing_side.description as balance_side,sub_accounts.description as sub_acc , sub_accounts.id as sub_account_id from main_accounts join sub_accounts on main_accounts.id=sub_accounts.main_accountid join main_account_balancing_side on main_account_balancing_side.main_accountid=main_accounts.id join balancing_side on main_account_balancing_side.balancing_sideid=balancing_side.id where sub_accounts.description='Cash In Bank' order by main_accounts.id limit 1";
+// $result = $conn->query($sql);
  
- if ($result->num_rows > 0) {
-   // output data of each row
-   while($row = $result->fetch_assoc()) {
-    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
-    // $temp=array("main_account"=>$row["main_account"],"sub_acc"=>$row["sub_acc"],"balance_side"=>$row["balance_side"],"main_account_id"=>$row["id"],"sub_account_id"=>$row["sub_account_id"]);
-    // array_push($response,$temp);
+//  if ($result->num_rows > 0) {
+//    // output data of each row
+//    while($row = $result->fetch_assoc()) {
+//     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+//     // $temp=array("main_account"=>$row["main_account"],"sub_acc"=>$row["sub_acc"],"balance_side"=>$row["balance_side"],"main_account_id"=>$row["id"],"sub_account_id"=>$row["sub_account_id"]);
+//     // array_push($response,$temp);
 
-    $payment_typeid=$row['sub_account_id'];
+//     $payment_typeid=$row['sub_account_id'];
 
-   }
- }
-
-
+//    }
+//  }
 
 
 
- $sql = "Select main_accounts.description as main_account,main_accounts.id,balancing_side.description as balance_side,sub_accounts.description as sub_acc , sub_accounts.id as sub_account_id from main_accounts join sub_accounts on main_accounts.id=sub_accounts.main_accountid join main_account_balancing_side on main_account_balancing_side.main_accountid=main_accounts.id join balancing_side on main_account_balancing_side.balancing_sideid=balancing_side.id where sub_accounts.description='Accounts Receivable' order by main_accounts.id limit 1";
-$result = $conn->query($sql);
+
+
+//  $sql = "Select main_accounts.description as main_account,main_accounts.id,balancing_side.description as balance_side,sub_accounts.description as sub_acc , sub_accounts.id as sub_account_id from main_accounts join sub_accounts on main_accounts.id=sub_accounts.main_accountid join main_account_balancing_side on main_account_balancing_side.main_accountid=main_accounts.id join balancing_side on main_account_balancing_side.balancing_sideid=balancing_side.id where sub_accounts.description='Accounts Receivable' order by main_accounts.id limit 1";
+// $result = $conn->query($sql);
  
- if ($result->num_rows > 0) {
-   // output data of each row
-   while($row = $result->fetch_assoc()) {
-    // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
-    // $temp=array("main_account"=>$row["main_account"],"sub_acc"=>$row["sub_acc"],"balance_side"=>$row["balance_side"],"main_account_id"=>$row["id"],"sub_account_id"=>$row["sub_account_id"]);
-    // array_push($response,$temp);
+//  if ($result->num_rows > 0) {
+//    // output data of each row
+//    while($row = $result->fetch_assoc()) {
+//     // echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+//     // $temp=array("main_account"=>$row["main_account"],"sub_acc"=>$row["sub_acc"],"balance_side"=>$row["balance_side"],"main_account_id"=>$row["id"],"sub_account_id"=>$row["sub_account_id"]);
+//     // array_push($response,$temp);
 
-    $sub_accountid=$row['sub_account_id'];
+//     $sub_accountid=$row['sub_account_id'];
 
-   }
- }
+//    }
+//  }
 
 
 
-  $account_receivableid=0;
+//   $account_receivableid=0;
 
-  $sql1 = "Select id from accounts_receivable_notes  where  customer_id=$customerid and seasonid=$seasonid";
-   $result = $conn->query($sql1);
+//   $sql1 = "Select id from accounts_receivable_notes  where  customer_id=$customerid and seasonid=$seasonid";
+//    $result = $conn->query($sql1);
  
-  if ($result->num_rows > 0) {
-   // output data of each row
-   while($row = $result->fetch_assoc()) {
+//   if ($result->num_rows > 0) {
+//    // output data of each row
+//    while($row = $result->fetch_assoc()) {
 
-   $account_receivableid=$row['id'];
+//    $account_receivableid=$row['id'];
    
-   }
+//    }
 
- }
+//  }
 
 
 
@@ -227,10 +227,9 @@ $result = $conn->query($sql);
      }
 
 
+//&& $customerid==0
 
-
-     if ($loan_found==0 && $customerid>0 && $growerid>0) {
-
+     if ($loan_found==0  && $growerid>0) {
 
         $user_sql = "INSERT INTO loan_payments(userid,seasonid,growerid,amount,mass,created_at,description,receipt_number,reference_num,payment_date,bales) VALUES ($userid,$seasonid,$growerid,'$amount','$mass','$created_at','Recovery','R1111','$ref','$payment_date',$bales)";
          //$sql = "select * from login";
@@ -245,18 +244,22 @@ $result = $conn->query($sql);
                if ($conn->query($user_sql)===TRUE) {
 
 
-                $credit_sql = "INSERT INTO transactions(userid,account_branchid,seasonid,currencyid,description,receipt_num,amount,debit_sub_accountsid,credit_sub_accountsid,receivable_note_id,receivable_note_paymentsid,created_at) VALUES ($userid,$account_branchid,$seasonid,$currencyid,'Recovery','$receipt_num',$original_amount,$payment_typeid,$sub_accountid,$account_receivableid,$last_id,'$created_at')";
-                 //$sql = "select * from login";
-                 if ($conn->query($credit_sql)===TRUE) {
 
-
-                    $temp=array("response"=>"success");
+                $temp=array("response"=>"success");
                     array_push($response,$temp);
+
+                // $credit_sql = "INSERT INTO transactions(userid,account_branchid,seasonid,currencyid,description,receipt_num,amount,debit_sub_accountsid,credit_sub_accountsid,receivable_note_id,receivable_note_paymentsid,created_at) VALUES ($userid,$account_branchid,$seasonid,$currencyid,'Recovery','$receipt_num',$original_amount,$payment_typeid,$sub_accountid,$account_receivableid,$last_id,'$created_at')";
+                //  //$sql = "select * from login";
+                //  if ($conn->query($credit_sql)===TRUE) {
+
+
+                //     $temp=array("response"=>"success");
+                //     array_push($response,$temp);
                     
-                  }else{
-                    $temp=array("response"=>$conn->error);
-                    array_push($response,$temp);
-                  }
+                //   }else{
+                //     $temp=array("response"=>$conn->error);
+                //     array_push($response,$temp);
+                //   }
                 
                }else{
                 $temp=array("response"=>$conn->error);
@@ -271,18 +274,21 @@ $result = $conn->query($sql);
 
 
 
-              $credit_sql = "INSERT INTO transactions(userid,account_branchid,seasonid,currencyid,description,receipt_num,amount,debit_sub_accountsid,credit_sub_accountsid,receivable_note_id,receivable_note_paymentsid,created_at) VALUES ($userid,$account_branchid,$seasonid,$currencyid,'Recovery','$receipt_num',$original_amount,$payment_typeid,$sub_accountid,$account_receivableid,$last_id,'$created_at')";
-                 //$sql = "select * from login";
-                 if ($conn->query($credit_sql)===TRUE) {
-
-
-                    $temp=array("response"=>"success update");
+                $temp=array("response"=>"success update");
                      array_push($response,$temp);
+
+              // $credit_sql = "INSERT INTO transactions(userid,account_branchid,seasonid,currencyid,description,receipt_num,amount,debit_sub_accountsid,credit_sub_accountsid,receivable_note_id,receivable_note_paymentsid,created_at) VALUES ($userid,$account_branchid,$seasonid,$currencyid,'Recovery','$receipt_num',$original_amount,$payment_typeid,$sub_accountid,$account_receivableid,$last_id,'$created_at')";
+              //    //$sql = "select * from login";
+              //    if ($conn->query($credit_sql)===TRUE) {
+
+
+              //       $temp=array("response"=>"success update");
+              //        array_push($response,$temp);
                     
-                  }else{
-                    $temp=array("response"=>$conn->error);
-                    array_push($response,$temp);
-                  }
+              //     }else{
+              //       $temp=array("response"=>$conn->error);
+              //       array_push($response,$temp);
+              //     }
 
              
                 
